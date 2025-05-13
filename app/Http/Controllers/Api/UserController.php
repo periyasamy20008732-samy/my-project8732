@@ -11,7 +11,26 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+<<<<<<< HEAD
     
+=======
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+>>>>>>> efb3858ceaa94a5283bbc7d05946b724a55cab23
     /**
      * Store a newly created resource in storage.
      */
@@ -21,6 +40,7 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(),
         [
+<<<<<<< HEAD
               
                 'name'=>['required'],          
                 'email'=>['email', 'unique:users,email'],
@@ -29,6 +49,34 @@ class UserController extends Controller
                 'password'=>['required','min:8','confirmed'],
                 'password_confirmation'=>['required']       
                     
+=======
+                //'user_level'=>['user_level'],
+                // 'store_id'=>['store_id'], 
+                'name'=>['required'],          
+                'email'=>['email', 'unique:users,email'], 
+                //'country_code'=>['country_code'], 
+                // 'mobile'=>['required','mobile','unique:users,mobile'], 
+                'country_code'=>['required'], 
+                'mobile' => ['required', 'numeric', 'unique:users,mobile'],
+                'password'=>['required','min:8','confirmed'],
+                'password_confirmation'=>['required'],         
+                //'whatsapp_no'=>['whatsapp_no'], 
+                // 'user_card'=>['user_card'], 
+                // 'profile_image'=>['profile_image'], 
+                // 'dob'=>['dob'], 
+                //  'count_id'=>['count_id'], 
+                // 'employee_code'=>['employee_code'],         
+                // 'warehouse_id'=>['warehouse_id'], 
+                // 'current_latitude'=>['current_latitude'], 
+                // 'current_longitude'=>['current_longitude'], 
+                // 'zone'=>['zone'], 
+                // 'code'=>['code'], 
+                // 'status'=>['status'],  
+                // 'mobile_verify'=>['mobile_verify'],  
+                // 'email_verify'=>['email_verify'],  
+                // 'ban'=>['ban'], 
+                // 'created_by'=>['created_by']          
+>>>>>>> efb3858ceaa94a5283bbc7d05946b724a55cab23
 
         ]);
 
@@ -61,10 +109,14 @@ class UserController extends Controller
 
                             }catch(\Exception $e){
                                     DB::rollBack();
+<<<<<<< HEAD
                                    // p($e->getMessage());
                                    echo'<pre>';
                                    print_r($e->getMessage());
                                    echo '</pre>';
+=======
+                                    p($e->getMessage());
+>>>>>>> efb3858ceaa94a5283bbc7d05946b724a55cab23
                                     $result=null;
                             }
                             if($result!= null){
@@ -155,7 +207,11 @@ class UserController extends Controller
 
                     return response()->json([
                         'message' => 'User Not Found',
+<<<<<<< HEAD
                          'data'=>null,                       
+=======
+                         'data'=>$null,                       
+>>>>>>> efb3858ceaa94a5283bbc7d05946b724a55cab23
                         'status' => 0
                     ], 200);
 
