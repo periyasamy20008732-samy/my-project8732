@@ -61,7 +61,10 @@ class UserController extends Controller
 
                             }catch(\Exception $e){
                                     DB::rollBack();
-                                    p($e->getMessage());
+                                   // p($e->getMessage());
+                                   echo'<pre>';
+                                   print_r($e->getMessage());
+                                   echo '</pre>';
                                     $result=null;
                             }
                             if($result!= null){
@@ -152,7 +155,7 @@ class UserController extends Controller
 
                     return response()->json([
                         'message' => 'User Not Found',
-                         'data'=>$null,                       
+                         'data'=>null,                       
                         'status' => 0
                     ], 200);
 
