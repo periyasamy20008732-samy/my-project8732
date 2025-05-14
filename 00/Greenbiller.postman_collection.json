@@ -1,0 +1,439 @@
+{
+	"info": {
+		"_postman_id": "d44341b4-ce19-4c89-903e-a43c7629d006",
+		"name": "Greenbiller",
+		"description": "## 👋 Introduction\n\nThe API testing workspace is designed to provide a collaborative environment for developers and testers to thoroughly test APIs before they are released to production.\n\nThis workspace is equipped with different collections that can help you perform various tests for your APIs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44304062"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "apikey"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_level",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "store_id",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Super Admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "country_code",
+									"value": "91",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "9020583270",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Admin@143",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Admin@143",
+									"type": "text"
+								},
+								{
+									"key": "whatsapp_no",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "user_card",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "count_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "employee_code",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "warehouse_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "current_latitude",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "current_longitude",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "zone",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"description": "1 for active  0 for inactive",
+									"type": "text"
+								},
+								{
+									"key": "mobile_verify",
+									"value": "1",
+									"description": "1 for verify 0 for notverify",
+									"type": "text"
+								},
+								{
+									"key": "email_verify",
+									"value": "1",
+									"description": "1 for verify 0 for notverify",
+									"type": "text"
+								},
+								{
+									"key": "ban",
+									"value": "0",
+									"description": "1 for ban 0 for unban",
+									"type": "text"
+								},
+								{
+									"key": "created_by",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This api url will fech all the users in the usertable"
+					},
+					"response": []
+				},
+				{
+					"name": "Login useing password",
+					"request": {
+						"auth": {
+							"type": "apikey"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "country_code",
+									"value": "91",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "9020583270",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Admin@143",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "This api url will fech all the users in the usertable"
+					},
+					"response": []
+				},
+				{
+					"name": "User details",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_level",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "store_id",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Super Admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "admin@admin.com",
+									"type": "text"
+								},
+								{
+									"key": "country_code",
+									"value": "91",
+									"type": "text"
+								},
+								{
+									"key": "mobile",
+									"value": "9020583270",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Admin@143",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Admin@143",
+									"type": "text"
+								},
+								{
+									"key": "whatsapp_no",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "user_card",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "profile_image",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "count_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "employee_code",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "warehouse_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "current_latitude",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "current_longitude",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "zone",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"description": "1 for active  0 for inactive",
+									"type": "text"
+								},
+								{
+									"key": "mobile_verify",
+									"value": "1",
+									"description": "1 for verify 0 for notverify",
+									"type": "text"
+								},
+								{
+									"key": "email_verify",
+									"value": "1",
+									"description": "1 for verify 0 for notverify",
+									"type": "text"
+								},
+								{
+									"key": "ban",
+									"value": "0",
+									"description": "1 for ban 0 for unban",
+									"type": "text"
+								},
+								{
+									"key": "created_by",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"2"
+							]
+						},
+						"description": "This api url will fech all the users in the usertable"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "2ca995af6cdf739c9c41cf29b356ebdc",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
