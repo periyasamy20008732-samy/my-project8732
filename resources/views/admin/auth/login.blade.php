@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 		
         <!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="{{ asset('admin-assets/plugins/fontawesome/css/fontawesome.min.css"') }}>
+		<link rel="stylesheet" href="{{ asset('admin-assets/plugins/fontawesome/css/fontawesome.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('admin-assets/plugins/fontawesome/css/all.min.css') }}">
 		
 		<!-- Main CSS -->
@@ -44,7 +44,16 @@
                                     <img src="{{ asset('logo.png')}}"  alt="">
                                 </a>
                             </div>
-                            <form action="index.html">
+                              @if ($errors->any())
+            <div class="alert alert-danger">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+       {{--  <form method="POST" action="{{ route('login') }}"> --}}
+             <form method="POST" action="{{ route('login.submit') }}">
+            @csrf
+                           
                                 <div class="login-userset">
                                     <div class="login-userheading">
                                         <h3>Sign In</h3>
@@ -53,14 +62,14 @@
                                     <div class="form-login">
                                         <label class="form-label">Email Address</label>
                                         <div class="form-addons">
-                                            <input type="text" class="form-control">
+                                           <input type="email" name="email" required>
                                             <img src="{{ asset('admin-assets/img/icons/mail.svg')}}" alt="img">
                                         </div>
                                     </div>
                                     <div class="form-login">
                                         <label>Password</label>
                                         <div class="pass-group">
-                                            <input type="password" class="pass-input">
+                                               <input type="password" name="password" required>
                                             <span class="fas toggle-password fa-eye-slash"></span>
                                         </div>
                                     </div>
@@ -69,7 +78,7 @@
                                             <div class="col-6">
                                                 <div class="custom-control custom-checkbox">
                                                     <label class="checkboxs ps-4 mb-0 pb-0 line-height-1">
-                                                        <input type="checkbox">
+                                                        <input type="checkbox" name="remember">
                                                         <span class="checkmarks"></span>Remember me
                                                     </label>
                                                 </div>
@@ -80,7 +89,7 @@
                                         </div>
                                     </div>
                                     <div class="form-login">
-                                        <button class="btn btn-login" type="submit">Sign In</button>
+                                        <button class="btn btn-login" type="submit" name="login"> Sign In</button>
                                     </div>
                                    
                                 </div>

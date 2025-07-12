@@ -31,11 +31,17 @@ return new class extends Migration
        $table->string('current_longitude')->nullable(); 
        $table->string('zone')->nullable(); 
        $table->string('otp')->nullable(); 
+       $table->string('expires_at')->nullable(); 
        $table->string('mobile_verify')->nullable(); 
        $table->string('email_verify')->nullable(); 
        $table->string('status')->nullable(); 
        $table->string('ban')->nullable(); 
        $table->string('created_by')->nullable(); 
+       $table->string('subcription_id')->nullable(); 
+       $table->string('subcription_start')->nullable(); 
+       $table->string('subcription_end')->nullable(); 
+        $table->string('license_key')->nullable(); 
+
             $table->rememberToken();
             $table->timestamps();
         });

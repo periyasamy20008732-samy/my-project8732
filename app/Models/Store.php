@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Store extends Model
+{
+    protected $table='store';
+
+    protected $fillable = [ 
+    'user_id', 'store_code', 'slug', 'store_name', 'store_website', 'email', 'mobile', 'phone',
+     'website', 'store_logo', 'logo', 'country', 'state', 'city', 'address', 'postcode', 'gst_no', 'vat_no', 'pan_no', 'upi_id', 'upi_code', 
+     'bank_details', 'cid', 'category_init', 'item_init', 'supplier_init', 'purchase_init', 'purchase_return_init', 'customer_init', 'sales_init', 
+     'sales_return_init', 'expense_init', 'accounts_init', 'journal_init', 'cust_advance_init', 'quotation_init', 'money_transfer_init', 'sales_payment_init', 
+     'sales_return_payment_init', 'purchase_payment_init', 'purchase_return_payment_init', 'expense_payment_init', 'sms_status', 'language_id', 'currency_id', 
+     'currency_placement', 'timezone', 'date_format', 'time_format', 'default_sales_discount', 'currencywsymbol_id', 'regno_key', 'fav_icon', 'purchase_code', 
+     'change_return', 'sales_invoice_format_id', 'pos_invoice_format_id', 'sales_invoice_footer_text', 'round_off', 'decimals', 'qty_decimals', 'smtp_host', 
+     'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_status', 'sms_url', 'if_msg91', 'msg91_apikey', 'sms_senderid', 'sms_dltid', 'sms_msg', 'if_modelno', 
+     'if_serialno', 'if_cod', 'if_pickupatestore', 'if_fixeddelivery', 'delivery_charge', 'if_handlingcharge', 'handling_charge', 'signature', 'show_signature',
+      't_and_c_status', 't_and_c_status_pos', 'number_to_words', 'if_customerapp', 'if_deliveryapp', 'if_onesignal', 'onesignal_id', 'onesignal_key', 'if_otp', 
+      'current_subscription_id', 'invoice_view', 'previous_balancebit', 'default_account_id', 'status', 'created_by'
+
+    ];
+}

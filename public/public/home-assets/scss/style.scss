@@ -1,0 +1,91 @@
+/*!--------------------
+Template Name: Digitics - Creative Digital Agency & Tech Firm Template
+Author: tempticspro
+Version: 1.0
+
+CSS INDEX
+=================== 
+01. CUSTOM PROPERTIES
+02. GLOBAL
+03. Components
+04. Sidebar
+05. Header
+06. Banner
+07. About
+08. Ticker
+09. Why Choose Us
+10. Work Process
+11. Services
+12. Offering
+13. FAQ
+14. Case Study
+15. Contact & Reviews
+16. Blog
+17. CTA
+18. Footer
+19. Clients
+20. App Ad
+21. Pricing
+22. Features
+23. Functions
+24. Solutions
+
+--- INNER PAGES
+25. About Page
+26. Services Page
+27. Service Details Page
+28. Project Details Page
+29. Team Page
+30. Team Details Page
+31. Blog Page
+32. Blog Details Page
+33. 404 Page
+34. Contact Page
+35. FAQ Page
+36. Pricing Page
+
+*/
+
+@import "main/breakpoints";
+@import "main/variables";
+@import "main/global";
+@import "main/components";
+
+// sections
+@import "sections/sidebar";
+@import "sections/header";
+@import "sections/banner";
+@import "sections/about";
+@import "sections/ticker";
+@import "sections/why-choose-us";
+@import "sections/work-process";
+@import "sections/services";
+@import "sections/offering";
+@import "sections/faq";
+@import "sections/case-study";
+@import "sections/contact-reviews";
+@import "sections/blog";
+@import "sections/cta";
+@import "sections/footer";
+
+// page 2
+@import "sections/clients";
+@import "sections/app-ad";
+@import "sections/pricing";
+@import "sections/features";
+@import "sections/functions";
+@import "sections/solutions";
+
+// inner pages
+@import "pages/p-about";
+@import "pages/p-services";
+@import "pages/service-details";
+@import "pages/project-details";
+@import "pages/p-team";
+@import "pages/team-details";
+@import "pages/p-blog";
+@import "pages/blog-details";
+@import "pages/404";
+@import "pages/p-contact";
+@import "pages/p-faq";
+@import "pages/p-pricing";

@@ -5,6 +5,8 @@ use Laravel\Passport\Passport;
 use Carbon\CarbonInterval;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +29,8 @@ class AppServiceProvider extends ServiceProvider
       Passport::tokensExpireIn(CarbonInterval::days(15));
       Passport::refreshTokensExpireIn(CarbonInterval::days(30));
     Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
-    }
+
+    View::addNamespace('Users', app_path('Modules/Users/Views'));
+}
+
 }

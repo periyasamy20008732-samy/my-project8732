@@ -34,7 +34,7 @@
                 <div class="ul-header-bottom-right">
                     <div class="ul-header-2-bottom-btns">
                         <a href="contact.html" class="ul-2-btn d-xxs-none">Log In</a>
-                        {{-- <a href="services.html" class="ul-2-btn d-xxs-none">Try For Free</a> --}}
+                        <a  href="{{ route('admin.login.form') }}"  class="ul-2-btn d-xxs-none">Admin</a> 
                     </div>
                     <button class="ul-header-sidebar-opener d-lg-none d-inline-flex"><i class="flaticon-right-arrow"></i></button>
                 </div>
