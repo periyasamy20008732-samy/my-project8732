@@ -9,7 +9,7 @@
 						<div class="add-item d-flex">
 							<div class="page-title">
 								<h4>Customer List</h4>
-								<h6>Manage your Customer</h6>
+								<h6>Manage your warehouse</h6>
 							</div>
 						</div>
 						<ul class="table-top-head">
@@ -142,9 +142,8 @@
 													<a class="me-2 p-2" href="#">
 														<i data-feather="eye" class="feather-eye"></i>
 													</a>
-													<a class="me-2 p-2"   href="{{ route('admin.customers.update', ['id' => $customers]) }}"data-bs-toggle="modal" data-bs-target="#edit-units">
+													<a class="me-2 p-2"  href="{{ route('customers.update', $customers->id) }}" data-bs-toggle="modal" data-bs-target="#edit-units">
 														<i data-feather="edit" class="feather-edit"></i>
-														
 													</a>
 													<a class="confirm-text p-2" href="javascript:void(0);">
 														<i data-feather="trash-2" class="feather-trash-2"></i>
@@ -154,7 +153,365 @@
 											</td>
 										</tr>	
 										 @endforeach
-                                     
+                                       {{--  <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-15.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Rose</a>
+												</div>
+											</td>
+											<td>
+												201
+											</td>
+											<td>Rose</td>
+											<td>
+												rose@exmple.com
+											</td>
+											<td>+11367529510  </td>
+											<td>USA</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-16.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Benjamin</a>
+												</div>
+											</td>
+											<td>
+												203
+											</td>
+											<td>Benjamin</td>
+											<td>
+												benjamin@exmple.com
+											</td>
+											<td>+15362789414 </td>
+											<td>Japan</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-17.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Kaitlin</a>
+												</div>
+											</td>
+											<td>
+												204
+											</td>
+											<td>Kaitlin</td>
+											<td>
+												kaitlin@exmple.com
+											</td>
+											<td>+18513094627 </td>
+											<td>Austria</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-18.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Lilly</a>
+												</div>
+											</td>
+											<td>
+												205
+											</td>
+											<td>Lilly</td>
+											<td>
+												lilly@exmple.com
+											</td>
+											<td>+14678219025 </td>
+											<td>India</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-19.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Freda</a>
+												</div>
+											</td>
+											<td>
+												206
+											</td>
+											<td>Freda</td>
+											<td>
+												freda@exmple.com
+											</td>
+											<td>+10913278319 </td>
+											<td>France</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/customer/people-customer-07.jpg" class="people-customer-walk" alt="product">
+													</a>
+													<a href="javascript:void(0);">Walk-in-Customer</a>
+												</div>
+											</td>
+											<td>
+												01
+											</td>
+											<td>Walk-in-Customer</td>
+											<td>
+												customer01@exmple.com
+											</td>
+											<td>+19125852947 </td>
+											<td>Belgium</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-06.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Maybelle</a>
+												</div>
+											</td>
+											<td>
+												207
+											</td>
+											<td>Maybelle</td>
+											<td>
+												maybelle@exmple.com
+											</td>
+											<td>+19125852947 </td>
+											<td>Italy</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/users/user-10.jpg" alt="product">
+													</a>
+													<a href="javascript:void(0);">Ellen</a>
+												</div>
+											</td>
+											<td>
+												208
+											</td>
+											<td>Ellen</td>
+											<td>
+												ellen@exmple.com
+											</td>
+											<td>+19756194733 </td>
+											<td>Canada</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	
+
+                                        <tr>
+											<td>
+												<label class="checkboxs">
+													<input type="checkbox">
+													<span class="checkmarks"></span>
+												</label>
+											</td>											
+											<td>
+												<div class="userimgname cust-imgname">
+													<a href="javascript:void(0);" class="product-img">
+														<img src="assets/img/customer/people-customer-07.jpg" class="people-customer-walk" alt="product">
+													</a>
+													<a href="javascript:void(0);">Walk-in-Customer</a>
+												</div>
+											</td>
+											<td>
+												02
+											</td>
+											<td>Walk-in-Customer</td>
+											<td>
+                                                customer02@exmple.com
+											</td>
+											<td>+19167850925 </td>
+											<td>Greece</td>
+											<td class="action-table-data">
+												<div class="edit-delete-action">
+													<a class="me-2 p-2" href="#">
+														<i data-feather="eye" class="feather-eye"></i>
+													</a>
+													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
+														<i data-feather="edit" class="feather-edit"></i>
+													</a>
+													<a class="confirm-text p-2" href="javascript:void(0);">
+														<i data-feather="trash-2" class="feather-trash-2"></i>
+													</a>
+												</div>
+												
+											</td>
+										</tr>	 --}}
 										
 									</tbody>
 								</table>
@@ -183,7 +540,7 @@
 							</div>
 							<div class="modal-body custom-modal-body">
 								{{-- <form action="customers.html"> --}}
-									<form action="{{ route(name: 'admin.customers.store') }}" method="POST">
+									<form action="{{ route('customers.store') }}" method="POST">
     @csrf
 									<div class="modal-title-head people-cust-avatar">
 										<h6>Avatar</h6>
@@ -284,7 +641,7 @@
 								
 							
 								@foreach($customer as $customers)
-    <form action="{{ route('admin.customers.update', $customers->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('customers.update', $customers->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -324,7 +681,7 @@
 										<div class="col-lg-4 pe-0">
 											<div class="input-blocks">
 												<label class="mb-2">Phone</label>
-												<input class="form-control form-control-lg group_formcontrol" id="phone" name="phone2" type="text">
+												<input class="form-control form-control-lg group_formcontrol" id="phone2" name="phone2" type="text">
 											</div>
 										</div>
 										<div class="col-lg-12 pe-0">

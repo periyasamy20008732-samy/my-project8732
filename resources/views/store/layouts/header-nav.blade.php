@@ -268,10 +268,10 @@
 								<span class="user-role">Super Admin</span> --}}
 
 								<span class="user-detail">
- <span>{{ Auth::user()->name }}</span>
- <span>{{ Auth::user()->id }}</span>
-<span>
-    {{ Auth::user()->user_level == 1 ? 'Super Admin' : 'Manager' }}
+    <span class="user-name">
+        {{ Auth::guard('admin')->user()?->name ?? 'Guest' }}
+    </span>
+    <span class="user-role">Super Admin</span>
 </span>
 
 							</span>

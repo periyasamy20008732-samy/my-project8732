@@ -142,7 +142,7 @@
 													<a class="me-2 p-2" href="#">
 														<i data-feather="eye" class="feather-eye"></i>
 													</a>
-													<a class="me-2 p-2"   href="{{ route('admin.customers.update', ['id' => $customers]) }}"data-bs-toggle="modal" data-bs-target="#edit-units">
+													<a class="me-2 p-2"   href="{{ route('admin.customers.edit', $customers->id) }}"data-bs-toggle="modal" data-bs-target="#edit-units">
 														<i data-feather="edit" class="feather-edit"></i>
 														
 													</a>

@@ -51,7 +51,7 @@
         @endif
 
        {{--  <form method="POST" action="{{ route('login') }}"> --}}
-             <form method="POST" action="{{ route('login') }}">
+             <form method="POST" action="{{ route('store_login') }}">
             @csrf
                            
                                 <div class="login-userset">

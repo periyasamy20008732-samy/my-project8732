@@ -1,42 +1,61 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\Dashboard;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 
-
-
-
-
-// Home page
+// ---------- Home page ----------
 Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/admin/dashboard', [Dashboard::class, 'dashboard'])->name('admin.dashboard');
 
-// Admin login page (custom blade)
-Route::get('/admin', function () {
-    return view('admin.auth.login');
-})->name('admin.login.form');
+Route::get('/customerview', function () {
+    return view('admin.customer.customerview');
+});
 
-// User login routes (controller-based)
+
+// Login routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Admin routes - requires authentication
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-
-    Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customer');
-    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
-    Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('customers.update');
+// Dashboard (protected)
+Route::prefix('admin')
+    ->middleware('auth')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+      Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
+      //  Route::post('/customer', [CustomerController::class, 'store'])->name('customers.store');
+        //Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('customers.update');
     
-    Route::view('/package', 'admin.package')->name('admin.package');
-    Route::view('/tax', 'admin.tax')->name('admin.tax');
-    Route::view('/unit', 'admin.unit')->name('admin.unit');
-    Route::view('/core', 'admin.core')->name('admin.core');
-    Route::view('/country', 'admin.country')->name('admin.country');
-});
+
+       // Order matters! Put /edit route above /{id}
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+
+
+     Route::get('/tax', [PackageController::class, 'index'])->name('tax');
+        Route::get('/unit', [PackageController::class, 'index'])->name('unit');
+        Route::get('/country', [PackageController::class, 'index'])->name('country');
+       
+        Route::get('/package', [PackageController::class, 'index'])->name('package'); 
+        // Add more routes here
+    });
+
+
+
+    /*
+
+
+    Route::prefix('admin')
+    ->middleware('auth')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    });*/

@@ -20,7 +20,7 @@ class RouteServiceProvider extends ServiceProvider
     parent::boot();
 
     $this->loadAppRoutes();
-    $this->loadModuleRoutes();
+    //$this->loadModuleRoutes();
 }
 
 protected function loadAppRoutes(): void
@@ -35,12 +35,12 @@ protected function loadAppRoutes(): void
     });
 }
 
-protected function loadModuleRoutes(): void
-{
-    foreach (glob(app_path('Modules/*/routes.php')) as $routeFile) {
-        Route::middleware('web')
-            ->group($routeFile);
-    }
-}
+///protected function loadModuleRoutes(): void
+//{
+   // foreach (glob(app_path('Modules/*/routes.php')) as $routeFile) {
+       // Route::middleware('web')
+      //      ->group($routeFile);
+   // }
+//}
 
 }
