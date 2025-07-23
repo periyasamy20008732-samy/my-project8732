@@ -5,8 +5,8 @@
 					<div class="page-header">
 						<div class="add-item d-flex">
 							<div class="page-title">
-								<h4>Units</h4>
-								<h6>Manage your units</h6>
+								<h4>Packages</h4>
+								<h6>Manage your Packages</h6>
 							</div>
 						</div>
 						<ul class="table-top-head">
@@ -106,15 +106,16 @@
 													<span class="checkmarks"></span>
 												</label>
 											</th>
-											<th>Unit</th>
-											<th>Short name</th>
-											<th>No of Products</th>
+											<th>Package Name</th>
+											<th>ValidityDate</th>
+											<th>price</th>
 											<th>Created On</th>
 											<th>Status</th>
 											<th class="no-sort">Action</th>
 										</tr>
 									</thead>
 									<tbody>
+									
 										<tr>
 											<td>
 												<label class="checkboxs">
@@ -126,126 +127,6 @@
 											<td>PC</td>
 											<td>25</td>
 											<td>25 May 2023</td>
-											<td><span class="badge badge-linesuccess">Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>Kilogram </td>
-											<td>KG</td>
-											<td>15</td>
-											<td>24 Jun 2023</td>
-											<td><span class="badge badge-linesuccess">Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>Gram </td>
-											<td>G</td>
-											<td>47</td>
-											<td>23 Jul 2023</td>
-											<td><span class="badge badge-linesuccess">Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>Meter</td>
-											<td>M</td>
-											<td>28</td>
-											<td>22 Aug 2023</td>
-											<td><span class="badge badge-linesuccess">Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>Liter</td>
-											<td>L</td>
-											<td>47</td>
-											<td>21 Sep 2023</td>
-											<td><span class="badge badge-linesuccess">Active</span></td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>
-											<td>Kilo</td>
-											<td>K</td>
-											<td>74</td>
-											<td>20 Sep 2023</td>
 											<td><span class="badge badge-linesuccess">Active</span></td>
 											<td class="action-table-data">
 												<div class="edit-delete-action">

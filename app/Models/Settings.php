@@ -73,6 +73,7 @@ class Settings extends Model
         'sms_msg', 
         'maintenance_mode', 
         'app_maintenance_mode', 
-        'device_id_check_reg'
+        'device_id_check_reg',
+        'zigocloud_app_id'
     ];
 }

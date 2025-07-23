@@ -1,332 +1,405 @@
 @extends('admin.layouts.app')
+
 @section('content')
-
 <div class="page-wrapper">
-				<div class="content settings-content">
-					<div class="page-header settings-pg-header">
-						<div class="add-item d-flex">
-							<div class="page-title">
-								<h4>Settings</h4>
-								<h6>Manage your settings on portal</h6>
-							</div>
-						</div>
-						<ul class="table-top-head">
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw" class="feather-rotate-ccw"></i></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-chevron-up"></i></a>
-							</li>
-						</ul>
-					</div>
-					<div class="row">
-						<div class="col-xl-12">
-							 <div class="settings-wrapper d-flex">
-								<div class="sidebars settings-sidebar theiaStickySidebar" id="sidebar2">
-									<div class="sidebar-inner slimscroll">
-										<div id="sidebar-menu5" class="sidebar-menu">
-											<ul>
-												<li class="submenu-open">
-													<ul>
-														<li class="submenu">
-															<a href="javascript:void(0);"><i data-feather="settings"></i><span>General Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="general-settings.html">Profile</a></li>
-																<li><a href="security-settings.html">Security</a></li>
-																<li><a href="notification.html">Notifications</a></li>
-																<li><a href="connected-apps.html">Connected Apps</a></li>
-															</ul>
-														</li>
-														<li class="submenu">
-															<a href="javascript:void(0);"><i data-feather="airplay"></i><span>Website Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="system-settings.html">System Settings</a></li>
-																<li><a href="company-settings.html">Company Settings </a></li>
-																<li><a href="localization-settings.html">Localization</a></li>
-																<li><a href="prefixes.html">Prefixes</a></li>
-																<li><a href="preference.html">Preference</a></li>
-																<li><a href="appearance.html">Appearance</a></li>
-																<li><a href="social-authentication.html">Social Authentication</a></li>
-																<li><a href="language-settings.html">Language</a></li>
-															</ul>
-														</li>
-														<li class="submenu">
-															<a href="javascript:void(0);"><i data-feather="archive"></i><span>App Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="invoice-settings.html">Invoice</a></li>
-																<li><a href="printer-settings.html">Printer </a></li>
-																<li><a href="pos-settings.html">POS</a></li>
-																<li><a href="custom-fields.html">Custom Fields</a></li>
-															</ul>
-														</li>
-														<li class="submenu">
-															<a href="javascript:void(0);"><i data-feather="server"></i><span>System Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="email-settings.html">Email</a></li>
-																<li><a href="sms-gateway.html">SMS Gateways</a></li>
-																<li><a href="otp-settings.html">OTP</a></li>
-																<li><a href="gdpr-settings.html">GDPR Cookies</a></li>
-															</ul>
-														</li>
-														<li class="submenu">
-															<a href="javascript:void(0);" class="active subdrop"><i data-feather="credit-card"></i><span>Financial Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="payment-gateway-settings.html">Payment Gateway</a></li>
-																<li><a href="bank-settings-grid.html">Bank Accounts </a></li>
-																<li><a href="tax-rates.html" class="active">Tax Rates</a></li>
-																<li><a href="currency-settings.html">Currencies</a></li>
-															</ul>
-														</li>
-														<li class="submenu">
-															<a href="javascript:void(0);"><i data-feather="layout"></i><span>Other Settings</span><span class="menu-arrow"></span></a>
-															<ul>
-																<li><a href="storage-settings.html">Storage</a></li>
-																<li><a href="ban-ip-address.html">Ban IP Address </a></li>
-															</ul>
-														</li>
-													</ul>								
-												</li>
-												
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="settings-page-wrap w-50">
-									<div class="setting-title">
-										<h4>Tax Rates</h4>
-									</div>
-									<div class="page-header bank-settings justify-content-end">
-										<div class="page-btn">
-											<a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-tax"><i data-feather="plus-circle" class="me-2"></i>Add New Tax Rate</a>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-lg-12">
-											<div class="card table-list-card">
-												<div class="card-body">
-													<div class="table-top">
-														<div class="search-set">
-															<div class="search-input">
-																<a href="" class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
-															</div>
-														</div>
-													</div>
-													<div class="table-responsive">
-														<table class="table datanew">
-															<thead>
-																<tr>
-																	<th class="no-sort">
-																		<label class="checkboxs">
-																			<input type="checkbox" id="select-all">
-																			<span class="checkmarks"></span>
-																		</label>
-																	</th>
-																	<th>Name</th>
-																	<th>Tax rates% </th>
-																	<th>Created On</th>
-																	<th class="no-sort text-end">Action</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr>
-																	<td>
-																		<label class="checkboxs">
-																			<input type="checkbox">
-																			<span class="checkmarks"></span>
-																		</label>
-																	</td>
-																	<td>
-																		VAT
-																	</td>
-																	<td>
-																		16
-																	</td>
-																	<td>
-																		12 Jul 2023		
-																	</td>
-																	<td class="action-table-data justify-content-end">
-																		<div class="edit-delete-action">
-																			<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-tax">
-																				<i data-feather="edit" class="feather-edit"></i>
-																			</a>
-																			<a class="confirm-text p-2" href="javascript:void(0);">
-																				<i data-feather="trash-2" class="feather-trash-2"></i>
-																			</a>
-																		</div>
-																		
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<label class="checkboxs">
-																			<input type="checkbox">
-																			<span class="checkmarks"></span>
-																		</label>
-																	</td>
-																	<td>
-																		TGST
-																	</td>
-																	<td>
-																		14
-																	</td>
-																	<td>
-																		17 Jul 2023				
-																	</td>
-																	<td class="action-table-data justify-content-end">
-																		<div class="edit-delete-action">
-																			<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-tax">
-																				<i data-feather="edit" class="feather-edit"></i>
-																			</a>
-																			<a class="confirm-text p-2" href="javascript:void(0);">
-																				<i data-feather="trash-2" class="feather-trash-2"></i>
-																			</a>
-																		</div>
-																		
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<label class="checkboxs">
-																			<input type="checkbox">
-																			<span class="checkmarks"></span>
-																		</label>
-																	</td>
-																	<td>
-																		HST
-																	</td>
-																	<td>
-																		12
-																	</td>
-																	<td>
-																		23 Jul 2023			
-																	</td>
-																	<td class="action-table-data justify-content-end">
-																		<div class="edit-delete-action">
-																			<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-tax">
-																				<i data-feather="edit" class="feather-edit"></i>
-																			</a>
-																			<a class="confirm-text p-2" href="javascript:void(0);">
-																				<i data-feather="trash-2" class="feather-trash-2"></i>
-																			</a>
-																		</div>
-																	</td>
-																</tr>																	
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>						
-						</div>
-					</div>
-				</div>
-			</div>
+    <div class="content">
+        <div class="page-header">
+            <div class="add-item d-flex">
+                <div class="page-title">
+                    <h4>Packages</h4>
+                    <h6>Manage your Packages</h6>
+                </div>
+            </div>                                                                         
+            <ul class="table-top-head">
+                <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('admin-assets/img/icons/pdf.svg') }}" alt="pdf"></a></li>
+                <li><a data-bs-toggle="tooltip" title="Excel"><img src="{{ asset('admin-assets/img/icons/excel.svg') }}" alt="excel"></a></li>
+                <li><a data-bs-toggle="tooltip" title="Print"><i data-feather="printer"></i></a></li>
+                <li><a data-bs-toggle="tooltip" title="Refresh"><i data-feather="rotate-ccw"></i></a></li>
+                <li><a data-bs-toggle="tooltip" title="Collapse" id="collapse-header"><i data-feather="chevron-up"></i></a></li>
+            </ul>
+            <div class="page-btn">
+                <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units"><i data-feather="plus-circle" class="me-2"></i>Add New Package</a>
+            </div>
         </div>
-		<!-- /Main Wrapper -->
 
+        <div class="card table-list-card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table datanew">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Package Name</th>
+                                <th>Validity Date</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($package as $packages)
 
-<!-- Add Tax Rates -->
-		<div class="modal fade" id="add-tax">
-			<div class="modal-dialog modal-dialog-centered custom-modal-two">
-				<div class="modal-content">
-					<div class="page-wrapper-new p-0">
-						<div class="content">
-							<div class="modal-header border-0 custom-modal-header">
-								<div class="page-title">
-									<h4>Add Tax Rates</h4>
-								</div>
-								<div class="status-toggle modal-status d-flex justify-content-between align-items-center ms-auto me-2">
-									<input type="checkbox" id="user1" class="check" checked>
-									<label for="user1" class="checktoggle">	</label>
-								</div>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $packages->package_name }}</td>
+                                <td>{{ $packages->validity_date }}</td>
+                                <td>{{ $packages->price }}</td>
+                                <td>
+                                    <span class="badge badge-linesuccess">{{ $packages->status }}</span>
+                                </td>
+                               {{--  <td class="action-table-data">
+                                    <div class="edit-delete-action">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ $packages->id }}">
+                                            <img src="{{ asset('admin-assets/img/icons/edit.svg') }}" alt="Edit">
+                                        </a>
+
+								<form action="{{ route('admin.package.destroy', $packages->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this package?')">
+								@csrf
+								@method('DELETE')
+								<button type="submit" style="border: none; background: transparent; padding: 0;">
+									<img src="{{ asset('admin-assets/img/icons/delete.svg') }}" alt="Delete">
 								</button>
-							</div>
-							<div class="modal-body custom-modal-body">
-								<form action="tax-rates.html">
-									<div class="row">
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">Name <span> *</span></label>
-												<input type="text" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-0">
-												<label class="form-label">Tax Rate % <span> *</span></label>
-												<input type="text" class="form-control">
-											</div>
-										</div>
-									</div>
-									<div class="modal-footer-btn">
-										<button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Add Tax Rates -->
+							</form>
+                                    </div>
+                                </td> --}}
 
-		<!-- Edit Tax Rates -->
-		<div class="modal fade" id="edit-tax">
-			<div class="modal-dialog modal-dialog-centered custom-modal-two">
-				<div class="modal-content">
-					<div class="page-wrapper-new p-0">
-						<div class="content">
-							<div class="modal-header border-0 custom-modal-header">
-								<div class="page-title">
-									<h4>Edit Tax Rates</h4>
-								</div>
-								<div class="status-toggle modal-status d-flex justify-content-between align-items-center ms-auto me-2">
-									<input type="checkbox" id="user4" class="check" checked>
-									<label for="user4" class="checktoggle">	</label>
-								</div>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body custom-modal-body">
-								<form action="tax-rates.html">
-									<div class="row">
-										<div class="col-lg-12">
-											<div class="mb-3">
-												<label class="form-label">Name <span> *</span></label>
-												<input type="text" class="form-control" value="VAT">
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-0">
-												<label class="form-label">Tax Rate % <span> *</span></label>
-												<input type="text" class="form-control" value="16">
-											</div>
-										</div>
-									</div>
-									<div class="modal-footer-btn">
-										<button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-submit">Save Changes</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="customizer-links" id="setdata">
-			<ul class="sticky-sidebar">
-				<li class="sidebar-icons">
-					<a href="#" class="navigation-add" data-bs-toggle="tooltip" data-bs-placement="left"
-						data-bs-original-title="Theme">
-						<i data-feather="settings" class="feather-five"></i>
-					</a>
-				</li>
-			</ul>
-		</div>
+
+								<td class="action-table-data">
+    <div class="edit-delete-action d-flex">
+        <!-- Edit Button -->
+        <a href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ $packages->id }}" class="me-2">
+            <img src="{{ asset('admin-assets/img/icons/edit.svg') }}" alt="Edit">
+        </a>
+
+        <!-- Delete Button with SweetAlert -->
+        <form id="delete-form-{{ $packages->id }}" action="{{ route('admin.package.destroy', $packages->id) }}" method="POST" style="display: inline;">
+            @csrf
+            @method('DELETE')
+            <button type="button" class="delete-btn" data-id="{{ $packages->id }}" style="border: none; background: transparent; padding: 0;">
+                <img src="{{ asset('admin-assets/img/icons/delete.svg') }}" alt="Delete">
+            </button>
+        </form>
+    </div>
+</td>
+                            </tr>
+
+                            <!-- Edit Modal for each package -->
+                            <div class="modal fade" id="editModal{{ $packages->id }}">
+                                <div class="modal-dialog modal-dialog-centered custom-modal-two">
+                                    <div class="modal-content">
+                                        <div class="page-wrapper-new p-0">
+                                            <div class="content">
+                                                <div class="modal-header border-0 custom-modal-header">
+                                                    <div class="page-title">
+                                                        <h4>Edit Package</h4>
+                                                    </div>
+                                                    <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                                                </div>
+                                                <div class="modal-body custom-modal-body">
+                                                    <form method="POST" action="{{ route('admin.package.update', $packages->id) }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Package Name</label>
+                                                            <input type="text" class="form-control" name="package_name" value="{{ $packages->package_name }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Validity Date</label>
+                                                            <input type="date" class="form-control" name="validity_date" value="{{ $packages->validity_date }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Price</label>
+                                                            <input type="text" class="form-control" name="price" value="{{ $packages->price }}" required>
+                                                        </div>
+                                                        <div class="modal-footer-btn">
+                                                            <button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-submit">Save Changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Unit Modal -->
+<div class="modal fade" id="add-units">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Create Package</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+
+						@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+                        <form action="{{ route('admin.package.store') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="package_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Validity</label>
+                                <input type="date" class="form-control" name="validity_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Price</label>
+                                <input type="text" class="form-control" name="price" required>
+                            </div>
+                            <div class="modal-footer-btn">
+                                <button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-submit">Create Package</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    // Script for delete confirmation
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form-' + id).submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endpush
+
+@push('scripts')
+@if(session('success'))
+<script>
+    // Script for success alert
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: '{{ session('success') }}',
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
+@endpush
+
+@push('scripts')
+ <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript">
+$(function () {
+    var baseUrl = $('meta[name=app-url]').attr("content");
+    let url = baseUrl + '/admin/tax';
+
+    // create a datatable
+    $('#projects_table').DataTable({
+        processing: true,
+        ajax: url,
+        order: [[0, "desc"]],
+        columns: [
+            { data: 'tax_name' },
+            { data: 'tax' },
+            { data: 'action' }
+        ],
+    });
+});
+
+function reloadTable() {
+    $('#projects_table').DataTable().ajax.reload();
+}
+
+$("#save-project-btn").click(function (event) {
+    event.preventDefault();
+    if ($("#update_id").val() === "") {
+        storeTax();
+    } else {
+        updateTax();
+    }
+});
+
+function createTax() {
+    $("#alert-div").html("");
+    $("#error-div").html("");
+    $("#update_id").val("");
+    $("#tax_name").val("");
+    $("#tax").val("");
+    $("#form-modal").modal('show');
+}
+
+function storeTax() {
+    $("#save-project-btn").prop('disabled', true);
+    let url = $('meta[name=app-url]').attr("content") + "/admin/tax";
+    let data = {
+        tax_name: $("#tax_name").val(),
+        tax: $("#tax").val(),
+    };
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: url,
+        type: "POST",
+        data: data,
+        success: function () {
+            $("#save-project-btn").prop('disabled', false);
+            let successHtml = '<div class="alert alert-success" role="alert"><b>Tax Created Successfully</b></div>';
+            $("#alert-div").html(successHtml);
+            $("#tax_name").val("");
+            $("#tax").val("");
+            reloadTable();
+            $("#form-modal").modal('hide');
+        },
+        error: function (response) {
+            $("#save-project-btn").prop('disabled', false);
+            let errors = response.responseJSON.errors || {};
+            let errorHtml = '<div class="alert alert-danger" role="alert">' +
+                '<b>Validation Error!</b><ul>' +
+                (errors.tax_name ? '<li>' + errors.tax_name[0] + '</li>' : '') +
+                (errors.tax ? '<li>' + errors.tax[0] + '</li>' : '') +
+                '</ul></div>';
+            $("#error-div").html(errorHtml);
+        }
+    });
+}
+
+function editTax(id) {
+    let url = $('meta[name=app-url]').attr("content") + "/admin/tax/" + id;
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (response) {
+            let tax = response.tax;
+            $("#alert-div").html("");
+            $("#error-div").html("");
+            $("#update_id").val(tax.id);
+            $("#tax_name").val(tax.tax_name);
+            $("#tax").val(tax.tax);
+            $("#form-modal").modal('show');
+        },
+        error: function (response) {
+            console.log(response.responseJSON);
+        }
+    });
+}
+
+function updateTax() {
+    $("#save-project-btn").prop('disabled', true);
+    let url = $('meta[name=app-url]').attr("content") + "/admin/tax/" + $("#update_id").val();
+    let data = {
+        tax_name: $("#tax_name").val(),
+        tax: $("#tax").val(),
+    };
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: url,
+        type: "PUT",
+        data: data,
+        success: function () {
+            $("#save-project-btn").prop('disabled', false);
+            let successHtml = '<div class="alert alert-success" role="alert"><b>Tax Updated Successfully</b></div>';
+            $("#alert-div").html(successHtml);
+            $("#tax_name").val("");
+            $("#tax").val("");
+            reloadTable();
+            $("#form-modal").modal('hide');
+        },
+        error: function (response) {
+            $("#save-project-btn").prop('disabled', false);
+            let errors = response.responseJSON.errors || {};
+            let errorHtml = '<div class="alert alert-danger" role="alert">' +
+                '<b>Validation Error!</b><ul>' +
+                (errors.tax_name ? '<li>' + errors.tax_name[0] + '</li>' : '') +
+                (errors.tax ? '<li>' + errors.tax[0] + '</li>' : '') +
+                '</ul></div>';
+            $("#error-div").html(errorHtml);
+        }
+    });
+}
+
+function showTax(id) {
+    $("#name-info").html("");
+    $("#description-info").html("");
+    let url = $('meta[name=app-url]').attr("content") + "/admin/tax/" + id;
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (response) {
+            let tax = response.tax;
+            $("#name-info").html(tax.tax_name);
+            $("#description-info").html(tax.tax);
+            $("#view-modal").modal('show');
+        },
+        error: function (response) {
+            console.log(response.responseJSON);
+        }
+    });
+}
+
+function deleteTax(id) {
+    let url = $('meta[name=app-url]').attr("content") + "/admin/tax/" + id;
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: url,
+        type: "DELETE",
+        success: function () {
+            let successHtml = '<div class="alert alert-success" role="alert"><b>Tax Deleted Successfully</b></div>';
+            $("#alert-div").html(successHtml);
+            reloadTable();
+        },
+        error: function (response) {
+            console.log(response.responseJSON);
+        }
+    });
+}
+</script>
+
+@endpush
+
+@endsection

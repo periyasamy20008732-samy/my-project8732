@@ -16,19 +16,19 @@ class LoginSeeder extends Seeder
         ];
 
         foreach ($roles as $data) {
-            // Find or create the role in user_level table
             $userLevel = User_level::firstOrCreate(
                 ['role' => $data['role']],
                 ['name' => $data['name']]
             );
 
-            // Create or update the user and link the user_level_id
             User::updateOrCreate(
                 ['email' => $data['email']],
                 [
                     'name' => $data['name'],
                     'user_level' => $userLevel->id,
-                    'password' => bcrypt('123'), // add default password
+                    'password' => bcrypt('123'),
+                    //'profile_photo' => 'uploads/users/default.png',
+                    'profile_image' => 'admin-assets/img/profiles/profile.png',
                 ]
             );
         }

@@ -8,53 +8,58 @@ use App\Models\Customer;
 
 class CustomerController extends Controller
 {
-    public function index()
-    {
-        $customer = Customer::all();
-        return view('admin.customer', compact('customer'));
-    }
+    // Show all packages
 
+   public function index()
+{
+    $customers = Customer::latest()->get(); // plural
+    $totalCustomers = $customers->count();
+
+    return view('admin.customer', compact('customers', 'totalCustomers'));
+}
+
+
+    // Store new package
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email',
-            'phone' => 'required|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'description' => 'nullable|string|max:1000',
+        $request->validate([
+            'package_name' => 'required|string|max:255',
+            'validity_date' => 'required|date',
+            'price' => 'required|numeric',
         ]);
 
-        Customer::create($validated);
-
-        return redirect()->route('admin.customers.index')->with('success', 'Customer created successfully.');
-    }
-
-    public function update(Request $request, $id)
-    {
-        $customer = Customer::findOrFail($id);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:customers,email,' . $id,
-            'phone' => 'required|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'description' => 'nullable|string|max:1000',
+        Customer::create([
+            'package_name' => $request->package_name,
+            'validity_date' => $request->validity_date,
+            'price' => $request->price,
+            'status' => 'Active', // default status
         ]);
 
-        $customer->update($validated);
-
-        return redirect()->route('admin.customers.index')->with('success', 'Customer updated successfully.');
+        return redirect()->back()->with('success', 'Package created successfully.');
     }
 
+    // Update package (Optional if you want to build Edit logic)
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'package_name' => 'required|string|max:255',
+        'validity_date' => 'required|date',
+        'price' => 'required|numeric',
+    ]);
+
+    $package = Customer::findOrFail($id);
+    $package->update([
+        'package_name' => $request->package_name,
+        'validity_date' => $request->validity_date,
+        'price' => $request->price,
+    ]);
+
+    return redirect()->back()->with('success', 'Package updated successfully.');
+}
+    // (Optional) Delete package
     public function destroy($id)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->delete();
-
-        return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully.');
+        Customer::destroy($id);
+        return redirect()->back()->with('success', 'Package deleted successfully.');
     }
 }

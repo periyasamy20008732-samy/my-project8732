@@ -14,7 +14,9 @@
 
 
     <!-- Template Main JS File -->
-    <script src="{{asset('assets/js/main.js')}}"></script>
+    <script src="{{asset('admin-iassets/js/main.js')}}"></script>
+<!-- Add SweetAlert2 CDN -->
+       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <!-- jQuery -->

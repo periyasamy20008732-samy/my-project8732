@@ -6,10 +6,11 @@ use Carbon\CarbonInterval;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-
+use App\Models\Settings;
 
 class AppServiceProvider extends ServiceProvider
 {
+
     /**
      * Register any application services.
      */
@@ -31,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
     Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
 
     View::addNamespace('Users', app_path('Modules/Users/Views'));
+
+    $settings = Settings::first();
+    View::share('settings', $settings);
 }
+
 
 }
