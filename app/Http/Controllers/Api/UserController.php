@@ -5,21 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Settings;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Services\SmsService;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
-
+use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function register(Request $request)
+   public function register(Request $request)
     {
 
 
@@ -149,161 +146,95 @@ class UserController extends Controller
     }
 
 
-    /**
-     * geting user data
-     */
+
 
     public function getUser(string $id)
     {
-
-
-        $result = User::find($id);
-
-        if (is_null($result)) {
-
-            return response()->json([
-                'message' => 'User Not Found',
-                'data' => null,
-                'status' => 0
-            ], 200);
-
-        } else {
-
-            return response()->json([
-                'message' => 'Details Found',
-                'data' => $result,
-                'status' => 1
-            ], 200);
-
-        }
-
-    }
-
-
-
-
-    public function update111(Request $request, $id)
-    {
         $user = User::find($id);
 
         if (!$user) {
             return response()->json([
                 'status' => false,
-                'message' => 'User not found.'
+                'message' => 'User not found.',
+                'data' => null
             ], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            /*'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users,email,' . $id],
-            'country_code' => ['required'],
-            'mobile' => ['required', 'numeric', 'unique:users,mobile,' . $id],
-            'profile_image' => 'sometimes|file|image|max:2048',
-            'password' => ['nullable', 'min:6']*/
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-
-
-        // Only update fillable fields
-        $data = $request->only($user->getFillable());
-
-        // Hash password if provided
-        if (!empty($request->password)) {
-            $data['password'] = md5($request->password);
-        } else {
-            unset($data['password']); // Prevent null overwrite
-        }
-
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $directory = 'storage/category/';
-            $imageName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path($directory), $imageName);
-            $data['profile_image'] = $directory . $imageName;
-        }
-
-        $user->update($data);
-
-
-        //  $user->update($data);
-
         return response()->json([
             'status' => true,
-            'message' => 'User details updated successfully.',
+            'message' => 'User details found.',
             'data' => $user
         ]);
     }
 
-
-
-
-    public function update11(Request $request, $id)
+    public function sendOtp(Request $request, SmsService $smsService)
     {
-        $user = User::find($id);
+        $request->validate(['mobile' => 'required']);
 
-        if (!$user) {
-            return response()->json([
-                'status' => false,
-                'message' => 'User not found.'
-            ], 404);
-        }
+        $otp = rand(1000, 9999);
+        $expiresAt = now()->addMinutes(5);
 
-        $validator = Validator::make($request->all(), [
+        // Save OTP in user_otps table (recommended) or users table temporarily
+        DB::table('users')->updateOrInsert(
+            ['mobile' => $request->mobile],
+            ['otp' => $otp, 'expires_at' => $expiresAt, 'created_at' => now(), 'updated_at' => now()]
+        );
 
-            'profile_image' => 'sometimes|file|image|max:2048',
-            'password' => ['nullable', 'min:6']
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $data = $request->all();
-
-        // Securely hash the password
-        if (!empty($request->password)) {
-            $data['password'] = md5($request->password);
-        } else {
-            unset($data['password']);
-        }
-
-        // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $directory = 'storage/category/';
-            $imageName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path($directory), $imageName);
-            $data['profile_image'] = $directory . $imageName;
-
-            // Optional: Delete old image file if you want to clean up storage
-            // if ($user->profile_image && file_exists(public_path($user->profile_image))) {
-            //     unlink(public_path($user->profile_image));
-            // }
-        }
-
-        $user->update($data);
+        $message = str_replace('{code}', $otp, DB::table('site_config')->value('sms_msg') ?? 'Your OTP code is {code}');
+        $smsResponse = $smsService->send($request->mobile, $message);
 
         return response()->json([
             'status' => true,
-            'message' => 'User details updated successfully.',
-            'data' => $user
+            'message' => 'OTP sent successfully.',
+            'otp' => app()->environment('local') ? $otp : null,
+            'sms_response' => $smsResponse
         ]);
     }
 
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required',
+            'otp' => 'required'
+        ]);
 
-    public function update(Request $request, $id)
+        $otpRecord = DB::table('users')
+            ->where('mobile', $request->mobile)
+            ->where('otp', $request->otp)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$otpRecord) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid or expired OTP.'
+            ], 401);
+        }
+
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if ($user) {
+            $token = $user->createToken('access_token')->accessToken;
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP verified. Login successful.',
+                'access_token' => $token,
+                'data' => $user,
+                'redirect_to' => '/user/home',
+                'is_existing_user' => true
+            ]);
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP verified. Redirect to registration.',
+                'redirect_to' => '/register',
+                'is_existing_user' => false
+            ]);
+        }
+    }
+
+  public function update(Request $request, $id)
     {
         $user = User::find($id);
 
@@ -316,10 +247,9 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
-            'email' => ['required', 'email', 'unique:userupdate,email,' . $id],
+            'email' => ['required', 'email', 'unique:users,email,' . $id],
             'country_code' => ['required'],
-            'mobile' => ['required', 'numeric', 'unique:userupdate,mobile,' . $id],
-            'profile_image' => 'sometimes|file|image|max:2048',
+            'mobile' => ['required', 'numeric', 'unique:users,mobile,' . $id],
             'password' => ['nullable', 'min:6']
         ]);
 
@@ -357,194 +287,93 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
-    /*
-        public function sendOtp(Request $request, SmsService $smsService)
-        {
-            $validator = Validator::make($request->all(), [
-                'name'       => 'required|string|max:255|unique:users,name',
-                'mobile'      => 'required|string|max:20|unique:users,mobile',
-                'email'       => 'nullable|email|max:255|unique:users,email',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
 
-            $config  = DB::table('site_config')->where('id', 1)->first();
-            $message = str_replace('{code}', $otp, $config->sms_msg ?? 'Your OTP code is {code}');
-            $smsResponse = $smsService->send($request->mobile, $message);
 
+public function checkSession(Request $request)
+{
+    try {
+        $user = auth()->user(); // Auth from token (e.g., Laravel Passport)
+
+        if (!$user) {
             return response()->json([
-                'status' => true,
-                'message' => 'OTP sent. Verify to register your account.',
-                'otp' => app()->environment('local') ? $otp : null,
-                'sms_response' => $smsResponse
-            ]);
-        }*/
-    //public function sendOtp(Request $request)
-    /* public function sendOtp(Request $request, SmsService $smsService)
-       {
-           $request->validate([
-               'mobile' => 'required'
-           ]);
-
-           $otp = rand(100000, 999999);
-           $expiresAt = now()->addMinutes(5);
-
-           // Store or update OTP
-           $data=User::updateOrCreate(
-               ['mobile' => $request->mobile],
-               ['otp' => $otp, 'expires_at' => $expiresAt],
-               [ 'license_key'=>$randomInt = rand(1000, 9999)]
-           );
-
-           DB::beginTransaction();
-
-                               try{
-
-                                   $result= User::create($data);
-                                   DB::Commit();
-                                   $token=$result->createToken('access_token')->accessToken;
-
-                               }catch(\Exception $e){
-                                       DB::rollBack();
-                                      // p($e->getMessage());
-                                      echo'<pre>';
-                                      print_r   ($e->getMessage());
-                                      echo '</pre>';
-                                       $result=null;
-                               }
-
-           $config  = DB::table('site_config')->where('id', 1)->first();
-           $message = str_replace('{code}', $otp, $config->sms_msg ?? 'Your OTP code is {code}');
-           $smsResponse = $smsService->send($request->mobile, $message);
-
-           return response()->json([
-                'access_token'=>$token,
-               'status' => true,
-               'message' => 'OTP sent. Verify to register your account.',
-               'otp' => app()->environment('local') ? $otp : null,
-               'sms_response' => $smsResponse
-           ]);
-         //  return response()->json(['message' => 'OTP sent successfully','data' => $result]);
-       } */
-
-    public function sendOtp(Request $request, SmsService $smsService)
-    {
-        $request->validate([
-            'mobile' => 'required'
-        ]);
-
-        $otp = rand(100000, 999999);
-        $expiresAt = now()->addMinutes(5);
-
-        // Store OTP in a temporary table (e.g., user_otps)
-        DB::table('users')->updateOrInsert(
-            //['mobile' => $request->mobile],
-            [
-                'otp' => $otp,
-                'expires_at' => $expiresAt,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
-        );
-
-        // Check if this is an existing user
-        // $user = User::where('mobile', $request->mobile)->first();
-
-        // Send OTP via SMS
-        $config = DB::table('site_config')->where('id', 1)->first();
-        $message = str_replace('{code}', $otp, $config->sms_msg ?? 'Your OTP code is {code}');
-        $smsResponse = $smsService->send($request->mobile, $message);
-
-        return response()->json([
-            'access_token' => null, // No token until OTP is verified
-            'status' => true,
-            'message' => 'OTP sent. Verify to proceed.',
-            'otp' => app()->environment('local') ? $otp : null, // show OTP only in local
-            'sms_response' => $smsResponse
-            // 'is_existing_user' => $user ? true : false
-        ]);
-    }
-
-
-    public function verifyOtp(Request $request)
-    {
-        $request->validate([
-            'otp' => 'required'
-        ]);
-
-        // Check OTP in user_otps table
-        $otpRecord = DB::table('users')
-            ->where('otp', $request->otp)
-            ->where('expires_at', '>', now())
-            ->first();
-
-        if (!$otpRecord) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid or expired OTP'
+                'success' => false,
+                'is_logged_in' => false,
+                'user_exists' => false,
+                'message' => 'Session expired or invalid. Please login.',
+                'status' => 401
             ], 401);
         }
 
-        // Check if user exists
-        $user = User::where('mobile', $request->mobile)->first();
+        $userData = User::find($user->id); // or $user if already loaded
 
-        if ($user) {
-            // User exists – issue token and go to home
-            //   $token = $user->createToken('access_token')->plainTextToken;
-            $token = $user->createToken('access_token')->accessToken;
-
+        if (!$userData) {
             return response()->json([
-                'message' => 'Login successful',
-                'access_token' => $token,
-                'status' => true,
-                'redirect_to' => '/user/home'
-            ]);
-        } else {
-            // User doesn't exist – go to register page
-            return response()->json([
-                'status' => true,
-                'message' => 'OTP verified. Redirect to registration.',
-                'redirect_to' => '/register'
-            ]);
+                'success' => false,
+                'is_logged_in' => false,
+                'user_exists' => false,
+                'message' => 'User does not exist.',
+                'status' => 404
+            ], 404);
         }
+
+        if ($userData->is_blocked || $userData->status == 'inactive' || $userData->deleted_at) {
+            return response()->json([
+                'success' => true,
+                'is_logged_in' => false,
+                'user_exists' => true,
+                'user_blocked' => true,
+                'message' => 'User is blocked or deactivated.',
+                'status' => 403
+            ], 403);
+        }
+
+        $settings = Settings::first();
+
+        if ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1) {
+            return response()->json([
+                'success' => true,
+                'is_logged_in' => false,
+                'user_exists' => true,
+                'maintenance' => true,
+                'message' => 'App is under maintenance.',
+                'status' => 503
+            ], 503);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User is logged in.',
+            'is_logged_in' => true,
+            'user_exists' => true,
+            'user_blocked' => false,
+            'user' => [
+                'id' => $userData->id,
+                'name' => $userData->name,
+                'email' => $userData->email,
+                'mobile' => $userData->mobile,
+                'profile_image' => $userData->profile_image ?? '',
+                'status' => $userData->status,
+            ],
+            'settings' => [
+               // 'latest_version' => $settings->app_version,
+                //'announcement' => $settings->site_description ?? '',
+                'settings' => $settings,
+            ],
+            'status' => 200
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('CheckSession Error: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Internal server error. Please try again later.',
+            'status' => 500
+        ], 500);
     }
+}
 
-    /*
-        public function veriffyOtp(Request $request)
-        {
-            $request->validate([
-                'mobile' => 'required',
-                'otp' => 'required'
-            ]);
 
-            $record = User::where('mobile', $request->mobile)
-                ->where('otp', $request->otp)
-                ->where('expires_at', '>', now())
-                ->first();
 
-            if (!$record) {
-                return response()->json(['message' => 'Invalid or expired OTP'], 401);
-            }
-
-            // OTP is valid, check if user exists
-            $user = User::where('mobile', $request->mobile)->first();
-
-            if ($user) {
-                // Log the user in (if desired)
-                // Auth::login($user);
-
-                return response()->json(['redirect_to' => '/user/home']); // existing user
-            } else {
-                return response()->json(['redirect_to' => '/register']); // new user
-            }
-        }*/
 }

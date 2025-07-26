@@ -30,6 +30,8 @@ Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
       Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
      
 
@@ -44,13 +46,23 @@ Route::prefix('admin')
     Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
+   // Route::get('/dashboard', [PackageController::class, 'dashboard'])->name('dashboard');
+
+
     Route::get('/packages', [PackageController::class, 'index'])->name('package');
     Route::post('/packages', [PackageController::class, 'store'])->name('package.store');
     Route::put('/packages/{id}', [PackageController::class, 'update'])->name('package.update');
     Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('package.destroy');
 
  
-    Route::get('/tax', [PackageController::class, 'index'])->name('tax');
+    //Route::get('/tax', [PackageController::class, 'index'])->name('tax');
+
+   Route::get('/tax', function () {
+    return view('admin.tax');
+})->name('tax');
+ 
+Route::resource('projects', TaxController::class);
+
 
     
     Route::get('/unit', [PackageController::class, 'index'])->name('unit');

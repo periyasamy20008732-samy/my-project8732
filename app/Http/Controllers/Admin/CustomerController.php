@@ -10,13 +10,20 @@ class CustomerController extends Controller
 {
     // Show all packages
 
-   public function index()
+ /*  public function index()
 {
     $customers = Customer::latest()->get(); // plural
     $totalCustomers = $customers->count();
-
     return view('admin.customer', compact('customers', 'totalCustomers'));
-}
+}*/
+
+ public function index()
+    {
+        // This method can still be used for listing customers elsewhere
+        $customers = Customer::latest()->get();
+        return view('admin.customer', compact('customers'));
+    }
+    
 
 
     // Store new package

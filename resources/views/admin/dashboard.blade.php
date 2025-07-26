@@ -57,8 +57,10 @@
                 <div class="col-xl-3 col-sm-6 col-12 d-flex">
                     <div class="dash-count">
                         <div class="dash-counts">
-                            <h6>Total Customers: <strong>{{ $totalCustomers }}</strong></h6>
-                            <h5>Customers</h5>
+                            <h4><strong>{{ $totalCustomers }}</strong></h4>
+                            <a href="{{ route('admin.customer') }}">  
+                                <h5>Customers</h5>
+                            </a>
                         </div>
                         <div class="dash-imgs">
                             <i data-feather="user"></i>
@@ -68,8 +70,10 @@
                 <div class="col-xl-3 col-sm-6 col-12 d-flex">
                     <div class="dash-count das1">
                         <div class="dash-counts">
-                            <h4>110</h4>
-                            <h5>Suppliers</h5>
+                            <h4>{{ $totalPackage }}</h4>
+                            <a href="{{ route('admin.package') }}">
+                            <h5>Packages</h5>
+                            </a>
                         </div>
                         <div class="dash-imgs">
                             <i data-feather="user-check"></i>
@@ -83,7 +87,8 @@
                             <h5>Purchase Invoice</h5>
                         </div>
                         <div class="dash-imgs">
-                            <img src="admin-assets/img/icons/file-text-icon-01.svg" class="img-fluid" alt="icon">
+                            <i data-feather="file-text"></i>
+                            
                         </div>
                     </div>
                 </div>
