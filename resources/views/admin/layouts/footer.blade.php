@@ -14,7 +14,7 @@
 
 
     <!-- Template Main JS File -->
-    <script src="{{asset('admin-iassets/js/main.js')}}"></script>
+    <script src="{{asset('admin-assets/js/main.js')}}"></script>
 <!-- Add SweetAlert2 CDN -->
        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -42,6 +42,39 @@
 	<!-- Custom JS -->
 	<script src="{{asset('admin-assets/js/theme-script.js')}}"></script>	
 		<script src="{{asset('admin-assets/js/script.js')}}"></script>
+
+<!-- jQuery (must be loaded before DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+<!-- Feather icons (optional, for icons used in blade) -->
+<script src="https://unpkg.com/feather-icons"></script>
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+
+
+
+        <script>
+	$(document).ready(function() {
+    $('.submenu > a').on('click', function(e) {
+        e.preventDefault();
+        var $submenu = $(this).next('ul');
+        if (!$submenu.is(':visible')) {
+            $('.submenu ul').slideUp(300);
+            $submenu.slideDown(300);
+        } else {
+            $submenu.slideUp(300);
+        }
+    });
+});
+
+</script>
 
 </body>
 

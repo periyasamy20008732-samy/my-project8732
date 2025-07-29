@@ -35,7 +35,7 @@
                                 <i data-feather="smartphone"></i><span>Package</span><span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ route('admin.package') }}">Package Settings</a></li>
+                                <li><a href="{{ route('admin.package.index') }}">Package Settings</a></li>
                             </ul>
                         </li>
 

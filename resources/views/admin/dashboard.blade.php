@@ -71,7 +71,7 @@
                     <div class="dash-count das1">
                         <div class="dash-counts">
                             <h4>{{ $totalPackage }}</h4>
-                            <a href="{{ route('admin.package') }}">
+                            <a href="{{ route('admin.package.index') }}">
                             <h5>Packages</h5>
                             </a>
                         </div>

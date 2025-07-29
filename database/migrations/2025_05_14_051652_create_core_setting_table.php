@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('site_email')->nullable();
             $table->string('whatsapp_no')->nullable();
             $table->string('sendgrid_API')->nullable();
+            $table->string('google_map_API')->nullable();
+
             $table->string('if_googlemap')->nullable();
             $table->string('if_firebase')->nullable();
             $table->string('firebase_config')->nullable();
@@ -55,6 +57,11 @@ return new class extends Migration
             $table->string('if_onesignal')->nullable();
             $table->string('onesignal_id')->nullable();
             $table->string('onesignal_key')->nullable();
+            $table->string('if_smtp')->nullable();
+            $table->string('if_sendgrid')->nullable();
+
+
+
             $table->string('smtp_host')->nullable();
             $table->string('smtp_port')->nullable();
             $table->string('smtp_username')->nullable();

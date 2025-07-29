@@ -375,5 +375,21 @@ public function checkSession(Request $request)
 }
 
 
+public function logout(Request $request)
+{
+    // Revoke current token
+    $request->user()->token()->revoke();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Logged out successfully.'
+    ]);
+}
+
+
+
+
+
+
 
 }

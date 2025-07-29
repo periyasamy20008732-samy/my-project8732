@@ -229,7 +229,7 @@
                                 <div class="new-employee-field">
                                     <div class="mb-0"> 
                                         <div class="image-upload mb-0">
-                                            <input type="file" name="min_logo">
+                                            <input type="file" name="fav_icon">
                                             <div class="image-uploads">
                                                 <h4>Browse</h4>
                                             </div>

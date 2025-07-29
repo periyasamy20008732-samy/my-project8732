@@ -5,58 +5,57 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Packages;
+use Yajra\DataTables\Facades\DataTables;
 
 class PackageController extends Controller
 {
-    // Show all packages
-    public function index()
+    public function index(Request $request)
     {
-        $package = Packages::latest()->get();
-        return view('admin.package', compact('package'));
+        if ($request->ajax()) {
+            $data = Packages::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    return '<span class="badge badge-linesuccess">' . $row->status . '</span>';
+                })
+                ->addColumn('action', function ($row) {
+                    return '<div class="edit-delete-action d-flex">
+                        <form id="delete-form-' . $row->id . '" action="' . route('admin.package.destroy', $row->id) . '" method="POST" style="display:inline;">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="button" class="delete-btn" data-id="' . $row->id . '" style="border: none; background: transparent; padding: 0;">
+                                <img src="' . asset('admin-assets/img/icons/delete.svg') . '" alt="Delete">
+                            </button>
+                        </form>
+                    </div>';
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
+        return view('admin.package');
     }
 
-    // Store new package
     public function store(Request $request)
     {
         $request->validate([
-            'package_name' => 'required|string|max:255',
+            'package_name' => 'required',
             'validity_date' => 'required|date',
             'price' => 'required|numeric',
-            
         ]);
 
         Packages::create([
             'package_name' => $request->package_name,
             'validity_date' => $request->validity_date,
             'price' => $request->price,
-            'status' => 'Active', // default status
+            'status' => $request->status == 'Active' ? 'Active' : 'Inactive',
         ]);
 
-        return redirect()->back()->with('success', 'Package created successfully.');
+        return redirect()->route('admin.package.index')->with('success', 'Package created successfully.');
     }
 
-    // Update package (Optional if you want to build Edit logic)
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'package_name' => 'required|string|max:255',
-        'validity_date' => 'required|date',
-        'price' => 'required|numeric',
-    ]);
-
-    $package = Packages::findOrFail($id);
-    $package->update([
-        'package_name' => $request->package_name,
-        'validity_date' => $request->validity_date,
-        'price' => $request->price,
-    ]);
-
-    return redirect()->back()->with('success', 'Package updated successfully.');
-}
-    // (Optional) Delete package
     public function destroy($id)
     {
-        Packages::destroy($id);
-        return redirect()->back()->with('success', 'Package deleted successfully.');
+        Packages::findOrFail($id)->delete();
+        return redirect()->route('admin.package.index')->with('success', 'Package deleted successfully.');
     }
 }
