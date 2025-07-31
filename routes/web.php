@@ -2,21 +2,27 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\StoreLoginController;
+use App\Http\Controllers\Auth\WebLoginController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
+use App\Http\Controllers\Payment\RazorpayPaymentController;
+
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
 
-// ---------- Home Website ----------
+// ---------- Home Website Start----------//
+
 Route::get('/', function () {
     return view('index');
 });
 Route::get('/pricing', function () {
     return view('pricing');
 });
+Route::get('/pricing', [PackageController::class, 'home_index'])->name('packages');
+
 Route::get('/about-us', function () {
     return view('about');
 });
@@ -28,18 +34,26 @@ Route::get('/contact-us', function () {
     return view('contact');
 });
 
-// Route::get('pricing', function () {
-//     return view('admin.package');
-// });
-Route::get('/pricing', [PackageController::class, 'home_index'])->name('packages');
+Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
+Route::post('/paynow/order', [RazorpayPaymentController::class, 'createOrder'])->name('razorpay.order');
+Route::post('/paynow/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 // ---------- Home Website End ----------
 
+// ---------- Account start ----------
+
+Route::get('/account', [WebLoginController::class, 'showLoginForm'])->name('accountlogin.form');
+Route::post('/account/login', [WebLoginController::class, 'login'])->name('accountlogin');
+
+// ---------- Account End ----------
+
+// ---------- Admin side ----------
+
 
 //Admin Login routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
-Route::post('/login', [LoginController::class, 'login'])->name('login');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
+Route::post('admin/login', [LoginController::class, 'login'])->name('login');
+Route::post('admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
@@ -83,8 +97,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
 });
 
+// ---------- Admin side END ----------//
+
+// ---------- Store side Start ----------//
 
 //Store Login Routes 
+
 Route::get('/store', [StoreLoginController::class, 'showLoginForm'])->name('storelogin.form');
 Route::post('/store/login', [StoreLoginController::class, 'login'])->name('storelogin');
 Route::get('/store/register', [StoreLoginController::class, 'showRegisterForm'])->name('storeregister.form');
@@ -103,6 +121,8 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
 });
 
+
+// ---------- Store Side End ----------//
 
 
 /*

@@ -44,8 +44,9 @@
 
             <div class="ul-header-bottom-right">
                 <div class="ul-header-2-bottom-btns">
-                    <a href="javascript:void(0)" class="ul-2-btn d-xxs-none" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Log In</a>
+                    <!-- <a href="javascript:void(0)" class="ul-2-btn d-xxs-none" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Log In</a> -->
+                    <a href="/account" class="ul-2-btn d-xxs-none">Log In</a>
 
                 </div>
                 <button class="ul-header-sidebar-opener d-lg-none d-inline-flex"><i
@@ -62,24 +63,29 @@
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <form action="" method="post">
-
+        <form action="{{ url('/login') }}" method="post">
+            @csrf
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Mobile</label>
                 <div class="row">
                     <div class="col-3">
-                        <select name="store_id" id="store_id" class="form-control selectpicker" data-live-search="true">
+                        <select name="country_code" class="form-control selectpicker" data-live-search="true" required>
                             <option value="91">+91</option>
                             <option value="971">+971</option>
                         </select>
                     </div>
-                    <div class="col-9"> <input type="email" class="form-control" id="exampleFormControlInput1"
-                            placeholder="Enter Phone"></div>
+                    <div class="col-9"> <input type="tel" class="form-control" id="exampleFormControlInput1"
+                            placeholder="Enter Phone" maxlength="10" minlength="10" required></div>
                 </div>
 
             </div>
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary col-12">Get OTP -></button>
+                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleFormControlInput1" placeholder="*****" required>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary col-12">Login</button>
             </div>
 
         </form>
