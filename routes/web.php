@@ -28,7 +28,10 @@ Route::get('/contact-us', function () {
     return view('contact');
 });
 
-
+// Route::get('pricing', function () {
+//     return view('admin.package');
+// });
+Route::get('/pricing', [PackageController::class, 'home_index'])->name('packages');
 
 // ---------- Home Website End ----------
 
