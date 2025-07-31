@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-   public function index()
+   /*public function index()
     {
         $user = Auth::user();
 
@@ -23,7 +23,7 @@ class DashboardController extends Controller
         }
 
         abort(403, 'Unauthorized role.');
-    } 
+    } */
 
    /*     public function dashboard()
     {
@@ -35,6 +35,17 @@ class DashboardController extends Controller
 
     } */
   
+        public function index()
+{
+    $user = Auth::user();
+
+    if (in_array($user->user_level, [1, 2,3])) {
+        return view('admin.dashboard', ['user' => $user]);
+    }
+
+    abort(403, 'Unauthorized role.');
+}
+
     public function dashboard()
     {
         // Fetch data for dashboard

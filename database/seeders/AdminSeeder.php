@@ -20,6 +20,8 @@ class AdminSeeder extends Seeder
             ['name' => 'Biller ', 'role' => '8'],
             ['name' => 'Executive', 'role' => '9'],
             ['name' => 'Customer', 'role' => '10'],
+            ['name' => 'Reseller', 'role' => '11'],
+
         ];
 
         foreach ($roles as $role) {

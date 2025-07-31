@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
-   public function register(Request $request)
+  /* public function register(Request $request)
     {
 
 
@@ -75,10 +75,11 @@ class UserController extends Controller
                 //ok
 
                 return response()->json([
-                    'access_token' => $token,
-                    'data' => $result,
-                    'message' => 'User Register Successfully',
-                    'status' => 1
+                     'status' => true,
+                     'message' => 'User Register Successfully',
+                     'access_token' => $token,
+                     'data' => $result,
+                     'is_existing_user' => true
                 ], 200);
 
             } else {
@@ -94,9 +95,6 @@ class UserController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
 
     public function login(Request $request)
     {
@@ -130,7 +128,7 @@ class UserController extends Controller
 
                 return response()->json([
                     'access_token' => $token,
-                    'user' => $user,
+                   // 'user' => $user->toArray(),
                     'message' => 'User login successfully',
                     'status' => 1
                 ], 200);
@@ -143,9 +141,80 @@ class UserController extends Controller
 
         }
 
+    }*/
+
+
+        public function register(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => ['required', 'string'],
+        'country_code' => ['required'],
+        'mobile' => ['required', 'numeric', 'unique:users,mobile'],
+        'password' => ['required', 'min:6']
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors()
+        ], 422);
     }
 
+    $user = User::create([
+        'name' => $request->name,
+        'country_code' => $request->country_code,
+        'mobile' => $request->mobile,
+        'password' => Hash::make($request->password), // 🔐 SECURE
+    ]);
 
+    $token = method_exists($user, 'createToken') ? $user->createToken('auth_token')->accessToken : null;
+
+    return response()->json([
+        'access_token' => $token,
+        'user' => $user->toArray(),
+        'message' => 'User registered successfully',
+        'status' => 1
+    ], 201);
+}
+
+//use Illuminate\Support\Facades\Hash;
+
+public function login(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'country_code' => ['required'],
+        'mobile' => ['required', 'numeric'],
+        'password' => ['required']
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // Find user by mobile and country code
+    $user = User::where('country_code', $request->country_code)
+        ->where('mobile', $request->mobile)
+        ->first();
+
+    if ($user && Hash::check($request->password, $user->password)) {
+        $token = method_exists($user, 'createToken') ? $user->createToken('auth_token')->accessToken : null;
+
+        return response()->json([
+            'access_token' => $token,
+            'user' => $user->toArray(),
+            'message' => 'User login successfully',
+            'status' => 1
+        ], 200);
+    } else {
+        return response()->json([
+            'message' => 'Invalid credentials',
+            'status' => 0
+        ], 401);
+    }
+}
 
 
     public function getUser(string $id)
@@ -166,7 +235,7 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
-
+/*
     public function sendOtp(Request $request, SmsService $smsService)
     {
         $request->validate(['mobile' => 'required']);
@@ -232,7 +301,77 @@ class UserController extends Controller
                 'is_existing_user' => false
             ]);
         }
+    }*/
+
+ public function sendOtp(Request $request, SmsService $smsService)
+{
+    $request->validate(['mobile' => 'required']);
+
+    $otp = rand(1000, 9999);
+    $expiresAt = now()->addMinutes(5);
+
+    // Store OTP temporarily (in cache, not DB)
+    cache()->put('otp_' . $request->mobile, [
+        'otp' => $otp,
+        'expires_at' => $expiresAt
+    ], $expiresAt);
+
+    $message = str_replace('{code}', $otp, DB::table('site_config')->value('sms_msg') ?? 'Your OTP code is {code}');
+    $smsResponse = $smsService->send($request->mobile, $message);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'OTP sent successfully.',
+        'otp' => app()->environment('local') ? $otp : null,
+        'sms_response' => $smsResponse
+    ]);
+}
+public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'mobile' => 'required',
+        'otp' => 'required'
+    ]);
+
+    $cached = cache()->get('otp_' . $request->mobile);
+
+    if (!$cached || $cached['otp'] != $request->otp || now()->greaterThan($cached['expires_at'])) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Invalid or expired OTP.'
+        ], 401);
     }
+
+    // OTP is valid — now check if mobile exists in DB
+    $user = User::where('mobile', $request->mobile)->first();
+
+    // Clear OTP after use
+    cache()->forget('otp_' . $request->mobile);
+
+    if ($user) {
+        // Generate login token
+        $token = $user->createToken('access_token')->accessToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP verified. Login successful.',
+            'access_token' => $token,
+            'data' => $user,
+            'redirect_to' => '/user/home',
+            'is_existing_user' => true
+        ]);
+    } else {
+        // No user exists — redirect to registration
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP verified. Redirect to registration.',
+            'redirect_to' => '/register',
+            'is_existing_user' => false
+        ]);
+    }
+}
+
+
 
   public function update(Request $request, $id)
     {

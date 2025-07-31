@@ -41,6 +41,7 @@ class PackageController extends Controller
             'package_name' => 'required',
             'validity_date' => 'required|date',
             'price' => 'required|numeric',
+            
         ]);
 
         Packages::create([
@@ -48,6 +49,11 @@ class PackageController extends Controller
             'validity_date' => $request->validity_date,
             'price' => $request->price,
             'status' => $request->status == 'Active' ? 'Active' : 'Inactive',
+            'if_webpanel' => $request->if_webpanel == '1' ? '1' : '0',
+
+            
+            // $setting->app_maintenance_mode = $request->has('maintenance_mode') ? 1 : 0;
+
         ]);
 
         return redirect()->route('admin.package.index')->with('success', 'Package created successfully.');

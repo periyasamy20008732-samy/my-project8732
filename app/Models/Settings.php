@@ -75,6 +75,7 @@ class Settings extends Model
         'app_maintenance_mode', 
         'device_id_check_reg',
         'zigocloud_app_id',
+        'zigocloud_app_signin',
         'if_sendgrid',
     ];
 }

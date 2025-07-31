@@ -81,9 +81,17 @@
                                 <input type="text" class="form-control" name="price" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Status</label><br>
+                                <label class="form-label">Status</label>
                                 <input type="checkbox" class="form-check-input" name="status" value="Active"> Active
                             </div>
+                            <div class="mb-3 row">
+                                <label class="col-lg-4 col-form-label" for="maintenanceSwitch">if_webpanel</label>
+                                <div class="col-lg-6">
+                                    <div class="form-check form-switch">
+                                        <input name="if_webpanel" type="checkbox" class="form-check-input" value="1">
+                                    </div>
+                                </div>
+                            </div> 
                             <div class="modal-footer-btn">
                                 <button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-submit">Create Package</button>

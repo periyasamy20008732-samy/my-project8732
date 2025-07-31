@@ -9,19 +9,19 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
 
-class LoginController extends Controller
+class StoreLoginController extends Controller
 {
     public function showLoginForm()
-    {
-        return view('admin.auth.login');
-    }
-
-    public function store_showLoginForm()
     {
         return view('store.auth.login');
     }
 
-/*public function login(Request $request)
+    public function showRegisterForm()
+    {
+        return view('store.auth.register');
+    }
+
+   /*  public function login(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -31,16 +31,15 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('store.dashboard');
         }
 
         throw ValidationException::withMessages([
             'login' => 'Invalid email or password.',
         ]);
-    }*/
+    } */
 
-
-public function login(Request $request)
+        public function login(Request $request)
 {
     $credentials = $request->validate([
         'email' => ['required', 'email'],
@@ -62,21 +61,19 @@ public function login(Request $request)
     if (Auth::attempt($credentials, $request->boolean('remember'))) {
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('store.dashboard');
     }
 
     throw ValidationException::withMessages([
         'login' => 'Invalid email or password.',
     ]);
 }
-
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
 
         return redirect()->route('login.form');
     }
