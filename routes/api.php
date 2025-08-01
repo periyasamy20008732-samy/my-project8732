@@ -49,6 +49,8 @@ use App\Http\Controllers\Api\PosController;
 use App\Http\Controllers\Api\PosholdItemsController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\WarehouseItemContrtoller;
+use App\Http\Controllers\Api\BusinessProfileController;
+
 
 
 
@@ -390,6 +392,12 @@ Route::middleware('auth:api')->group(function () {
   Route::get('/supplier/ind-view', [SupplierController::class, 'single_show']);
   Route::get('/warehouse/ind-view', [WarehouseController::class, 'single_show']);
   Route::get('/warehouseitem/ind-view', [WarehouseItemContrtoller::class, 'single_show']);
+
+
+  //BusinessProfileController
+  Route::post('/profile-create', [BusinessProfileController::class, 'store']);
+  Route::get('/profile-view/{id}', [BusinessProfileController::class, 'profileshow']);
+  Route::put('/profile-update/{id}', [BusinessProfileController::class, 'profileupdate']);
 
 
 });
