@@ -10,9 +10,9 @@ class BusinessProfile extends Model
     protected $table ='business_profile';
     protected $fillable =[ 
 
-        //     'name',
-        //     'phone',
-        //    'tin',
+            'name',
+            'phone',
+           'tin',
            'email',
            'pincode',
            'address',
