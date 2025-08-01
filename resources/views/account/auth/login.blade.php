@@ -11,9 +11,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @if(!empty($settings->fav_icon))
-        <link rel="icon" href="{{ asset('storage/core/' . $settings->fav_icon) }}" type="image/png">
+    <link rel="icon" href="{{ asset('storage/core/' . $settings->fav_icon) }}" type="image/png">
     @else
-        <link rel="icon" href="{{ asset('admin-assets/img/logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('admin-assets/img/logo.png') }}" type="image/png">
     @endif
 
     <title>{{ $settings->site_title ?? 'Green Biller' }} | Account</title>
@@ -25,10 +25,18 @@
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             @if (Auth::check())
-                <script>
-                    window.location.href = "{{ route('account.dashboard') }}";
-                </script>
+            <script>
+            window.location.href = "{{ route('account.dashboard') }}";
+            </script>
             @endif
+
+            Object { status: "fail", message: "Payment verification failed: SQLSTATE[42S22]: Column not found: 1054
+            Unknown column 'package_id' in 'field list' (Connection: mysql, SQL: insert into `payment` (`user_id`,
+            `package_id`, `validity_date`, `payment_id`, `payment_status`, `if_webpanel`, `if_android`, `if_windows`,
+            `if_customerapp`, `if_deliveryapp`, `if_exicutiveapp`, `if_multistore`, `if_numberof_store`, `price`,
+            `image`, `updated_at`, `created_at`) values (27, 8, 2025-07-18, pay_R08q3NU93zzkxj, success, 1, ?, ?, ?, ?,
+            ?, ?, ?, 111100, ?, 2025-08-01 16:48:01, 2025-08-01 16:48:01))" }
+
             <main>
                 <div class="container">
                     <div class="row justify-content-center">

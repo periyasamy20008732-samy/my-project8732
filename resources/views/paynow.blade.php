@@ -188,6 +188,7 @@
 
                 <input type="text" name="mobile" value="{{ $user->mobile }}" hidden>
                 <input type="text" name="email" value="{{ $user->email }}" hidden>
+                <input type="text" name="package_id" value="{{ $package->id }}" hidden>
                 <input type="text" name="amount" value="{{ $package->price }}" hidden>
                 <!-- <button type="submit">Pay Now</button> -->
 
@@ -241,7 +242,8 @@
                         order_id: response.razorpay_order_id,
                         signature: response.razorpay_signature,
                         id: '{{ $user->id }}',
-                        store_id: '{{ $user->store_id }}'
+                        store_id: '{{ $user->store_id }}',
+                        package_id: '{{ $user->package_id }}'
                     })
                 })
                 // .then(res => res.text())
@@ -261,7 +263,7 @@
                 .catch(error => {
                     console.error('Error in payment success fetch:',
                         error); // 👈 Catch parse/connection errors
-                    window.location.href = "{{ route('razorpay.fail.view') }}";
+                    // window.location.href = "{{ route('razorpay.fail.view') }}";
                 });
         },
         "modal": {
