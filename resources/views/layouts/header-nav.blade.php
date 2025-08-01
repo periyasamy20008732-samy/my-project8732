@@ -47,7 +47,26 @@
                     <!-- <a href="javascript:void(0)" class="ul-2-btn d-xxs-none" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Log In</a> -->
                     @if (Auth::check())
-                        <a href="{{ route('account.dashboard') }}" class="ul-2-btn d-xxs-none">{{Auth::user()->name }}</a>
+                        <div class="dropdown">
+                            <a href="javascript:void(0)" class="ul-2-btn d-xxs-none" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">{{Auth::user()->name }}</a>
+
+
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{{ route('account.dashboard') }}">My Account</a></li>
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                </li>
+
+                                <form id="logout-form" action="{{ route('account.logout') }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                </form>
+
+                            </ul>
+                        </div>
+
                     @else
                         <a href="/account" class="ul-2-btn d-xxs-none">Log In</a>
                     @endif

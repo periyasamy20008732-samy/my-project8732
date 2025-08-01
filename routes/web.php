@@ -38,12 +38,17 @@ Route::get('/contact-us', function () {
 
 //Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
 
-//Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow']);
 Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow'])->name('paynow');
-
 Route::post('/paynow/order', [RazorpayPaymentController::class, 'createOrder'])->name('razorpay.order');
 Route::post('/paynow/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
+Route::get('/paynow/success', function () {
+    return view('success'); // ✅ No "razorpay." prefix
+})->name('razorpay.success.view');
+
+Route::get('/paynow/failed', function () {
+    return view('fail'); // ✅ No "razorpay." prefix
+})->name('razorpay.fail.view');
 // ---------- Home Website End ----------
 
 // ---------- Account start ----------
@@ -52,7 +57,6 @@ Route::get('/account', [WebLoginController::class, 'showLoginForm'])->name('acco
 Route::get('/account/login-password', [WebLoginController::class, 'showLoginpasswordForm'])->name('accountloginpassword.form');
 Route::get('/account/signup', [WebLoginController::class, 'showsignupForm'])->name('accountsignup.form');
 Route::post('/account/login', [WebLoginController::class, 'login'])->name('accountlogin');
-
 Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('getotp');
 Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
 

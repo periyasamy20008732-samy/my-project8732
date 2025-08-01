@@ -183,6 +183,9 @@
             <form method="POST" action="{{ route('razorpay.order') }}">
                 @csrf
                 <input type="text" name="username" value="{{ $user->name }}" hidden>
+                <input type="text" name="user_id" id="user_id" value="{{ $user->id }}" hidden>
+                <input type="text" name="store_id" id="store_id" value="{{ $user->store_id }}" hidden>
+
                 <input type="text" name="mobile" value="{{ $user->mobile }}" hidden>
                 <input type="text" name="email" value="{{ $user->email }}" hidden>
                 <input type="text" name="amount" value="{{ $package->price }}" hidden>
@@ -212,48 +215,74 @@
     </center>
 
     @if(isset($orderId))
-        <script>
-            var options = {
-                "key": "{{ $razorpayKey }}",
-                "amount": "{{ $amount }}",
-                "currency": "INR",
-                "name": "Test App",
-                "description": "Test Transaction",
-                "order_id": "{{ $orderId }}",
-                "prefill": {
-                    "name": "{{ $user->name }}",
-                    "email": "{{ $user->email }}",
-                    "contact": "{{ $user->mobile }}"
-                },
-                "handler": function (response) {
-                    // Send payment details to Laravel backend
-                    fetch('{{ route("razorpay.success") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            payment_id: response.razorpay_payment_id,
-                            order_id: response.razorpay_order_id,
-                            signature: response.razorpay_signature
-                        })
-                    }).then(res => res.text())
-                        .then(msg => alert("Payment Success! " + msg));
-                },
-                "modal": {
-                    "ondismiss": function () {
-                        alert("Payment was cancelled or failed.");
-                        // Optionally redirect or show a message
+    <script>
+    var options = {
+        "key": "{{ $razorpayKey }}",
+        "amount": "{{ $amount }}",
+        "currency": "INR",
+        "name": "Test App",
+        "description": "Test Transaction",
+        "order_id": "{{ $orderId }}",
+        "prefill": {
+            "name": "{{ $user->name }}",
+            "email": "{{ $user->email }}",
+            "contact": "{{ $user->mobile }}"
+        },
+        "handler": function(response) {
+            // Send payment details to Laravel backend
+            fetch('{{ route("razorpay.success") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        payment_id: response.razorpay_payment_id,
+                        order_id: response.razorpay_order_id,
+                        signature: response.razorpay_signature,
+                        id: '{{ $user->id }}',
+                        store_id: '{{ $user->store_id }}'
+                    })
+                })
+                // .then(res => res.text())
+                // .then(msg => alert("Payment Success! " + msg));
+                .then(res => res.json())
+                .then(data => {
+
+                    // alert(data);
+                    console.log('Payment response:', data); // 👈 Check console
+                    if (data.status === 'success') {
+                        window.location.href = "{{ route('razorpay.success.view') }}" + "?payment_id=" +
+                            data.transaction_id;
+                    } else {
+                        window.location.href = "{{ route('razorpay.fail.view') }}";
                     }
-                },
-                "theme": {
-                    "color": "#528FF0"
-                }
-            };
-            var rzp = new Razorpay(options);
-            rzp.open();
-        </script>
+                })
+                .catch(error => {
+                    console.error('Error in payment success fetch:',
+                        error); // 👈 Catch parse/connection errors
+                    window.location.href = "{{ route('razorpay.fail.view') }}";
+                });
+        },
+        "modal": {
+            "ondismiss": function() {
+                // alert("Payment was cancelled or failed.");
+                // Optionally redirect or show a message
+                window.location.href = "{{ route('razorpay.fail.view') }}"; // load fail blade
+
+            }
+        },
+        "theme": {
+            "color": "#528FF0"
+        }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+    // document.getElementById("checkoutBtn").onclick = function(e) {
+    //     e.preventDefault();
+    //     rzp.open();
+    // };
+    </script>
     @endif
 </body>
 
