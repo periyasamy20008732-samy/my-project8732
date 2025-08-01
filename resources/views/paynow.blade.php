@@ -51,7 +51,7 @@
         </div>
 
 
-        tet
+
 
         <div class="payment-methods">
             <!-- <div class="payment-method-title">
