@@ -50,6 +50,9 @@
             </div>
         </div>
 
+
+        tet
+
         <div class="payment-methods">
             <!-- <div class="payment-method-title">
                 <i class="fas fa-credit-card"></i> Payment Method
