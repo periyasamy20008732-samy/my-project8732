@@ -46,8 +46,11 @@
                 <div class="ul-header-2-bottom-btns">
                     <!-- <a href="javascript:void(0)" class="ul-2-btn d-xxs-none" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Log In</a> -->
-                    <a href="/account" class="ul-2-btn d-xxs-none">Log In</a>
-
+                    @if (Auth::check())
+                        <a href="{{ route('account.dashboard') }}" class="ul-2-btn d-xxs-none">{{Auth::user()->name }}</a>
+                    @else
+                        <a href="/account" class="ul-2-btn d-xxs-none">Log In</a>
+                    @endif
                 </div>
                 <button class="ul-header-sidebar-opener d-lg-none d-inline-flex"><i
                         class="flaticon-right-arrow"></i></button>

@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Payment\RazorpayPaymentController;
+use App\Http\Controllers\Account\PaymentController;
+
 
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,11 @@ Route::get('/contact-us', function () {
     return view('contact');
 });
 
-Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
+//Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
+
+//Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow']);
+Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow'])->name('paynow');
+
 Route::post('/paynow/order', [RazorpayPaymentController::class, 'createOrder'])->name('razorpay.order');
 Route::post('/paynow/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
@@ -43,7 +49,20 @@ Route::post('/paynow/success', [RazorpayPaymentController::class, 'paymentSucces
 // ---------- Account start ----------
 
 Route::get('/account', [WebLoginController::class, 'showLoginForm'])->name('accountlogin.form');
+Route::get('/account/login-password', [WebLoginController::class, 'showLoginpasswordForm'])->name('accountloginpassword.form');
+Route::get('/account/signup', [WebLoginController::class, 'showsignupForm'])->name('accountsignup.form');
 Route::post('/account/login', [WebLoginController::class, 'login'])->name('accountlogin');
+
+Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('getotp');
+Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
+
+
+Route::prefix('account')->middleware(['auth'])->name('account.')->group(function () {
+
+    Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
+    Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
+
+});
 
 // ---------- Account End ----------
 
@@ -52,8 +71,8 @@ Route::post('/account/login', [WebLoginController::class, 'login'])->name('accou
 
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
-Route::post('admin/login', [LoginController::class, 'login'])->name('login');
-Route::post('admin/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
+Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 

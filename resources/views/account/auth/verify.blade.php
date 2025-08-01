@@ -38,38 +38,18 @@
                                     <center><img src="{{ asset('storage/core/' . $settings->web_logo) }}"
                                             style="width: 50%;"></center>
 
-                                    <h3 class="text-center font-weight-light my-4">Login</h3>
+                                    <h3 class="text-center font-weight-light my-4">Verify</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" action="{{ route('getotp') }}">
+                                    <form method="POST" action="{{ route('verifyotp') }}">
                                         @csrf
+
+                                        <input type="text" name="mobile" value="{{ $mobile }}" hidden>
                                         <div class="form-floating mb-3">
-
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <label for="inputEmail"></label>
-                                                    <select name="country_code" class="form-control selectpicker"
-                                                        data-live-search="true" required>
-                                                        <option value="91">+91</option>
-                                                        <option value="971">+971</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-8">
-                                                    <label for="inputEmail">Mobile</label>
-                                                    <input name="mobile" class="form-control" id="inputEmail" type="tel"
-                                                        required />
-
-                                                </div>
-                                            </div>
-
-
-
+                                            <input class="form-control" id="inputPassword" type="text" placeholder="otp"
+                                                name="otp" required minlength="4" maxlength="4" />
+                                            <label for="inputPassword">OTP</label>
                                         </div>
-                                        <!-- <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputPassword" type="password"
-                                                placeholder="Password" />
-                                            <label for="inputPassword">Password</label>
-                                        </div> -->
                                         <!-- <div class="form-check mb-3">
                                             <input class="form-check-input" id="inputRememberPassword" type="checkbox"
                                                 value="" />
@@ -77,17 +57,12 @@
                                                 Password</label>
                                         </div> -->
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                            <a class="small" href="{{ route('accountloginpassword.form') }}">login
-                                                useing
-                                                password</a>
-                                            <button type="submit" class="btn btn-primary">Get OTP
-                                                -></button>
+                                            <button type="submit" class="btn btn-primary">Verify</button>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="{{ route('accountsignup.form') }}">Need an account? Sign
-                                            up!</a></div>
+                                    <div class="small"><a href="#">Resend</a></div>
                                 </div>
                             </div>
                         </div>
