@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Account\PaymentController;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use Session;
 
 class RazorpayPaymentController extends Controller
 {
-    public function index()
-    {
-        return view('paynow');
-    }
+    // public function index(Request $request)
+    // {
+    //     return view('paynow');
+    // }
 
     public function createOrder(Request $request)
     {
@@ -20,7 +21,7 @@ class RazorpayPaymentController extends Controller
 
         $orderData = [
             'receipt' => 'rcptid_' . uniqid(),
-            'amount' => 100, // Amount in paise (50000 = ₹500)
+            'amount' => ($request->amount) * 100, // Amount in paise (50000 = ₹500)
             'currency' => 'INR'
         ];
 
@@ -31,7 +32,16 @@ class RazorpayPaymentController extends Controller
         return view('paynow', [
             'orderId' => $orderId,
             'razorpayKey' => env('RAZORPAY_KEY'),
-            'amount' => $orderData['amount']
+            'amount' => $orderData['amount'],
+            'user' => (object) [
+                'name' => $request->username,
+                'email' => $request->email,
+                'mobile' => $request->mobile
+            ],
+            'package' => (object) [
+                'package_name' => 'Your Package Name',
+                'price' => $request->amount / 100
+            ]
         ]);
     }
 

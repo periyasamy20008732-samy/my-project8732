@@ -65,11 +65,11 @@
 
 
                                         </div>
-                                        <!-- <div class="form-floating mb-3">
+                                        <div class="form-floating mb-3">
                                             <input class="form-control" id="inputPassword" type="password"
                                                 placeholder="Password" />
                                             <label for="inputPassword">Password</label>
-                                        </div> -->
+                                        </div>
                                         <!-- <div class="form-check mb-3">
                                             <input class="form-check-input" id="inputRememberPassword" type="checkbox"
                                                 value="" />
@@ -77,11 +77,9 @@
                                                 Password</label>
                                         </div> -->
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                            <a class="small" href="{{ route('accountloginpassword.form') }}">login
-                                                useing
-                                                password</a>
-                                            <button type="submit" class="btn btn-primary">Get OTP
-                                                -></button>
+                                            <a class="small" href="{{ route('accountlogin.form') }}">OTP
+                                                login</a>
+                                            <button type="submit" class="btn btn-primary">Login</button>
                                         </div>
                                     </form>
                                 </div>
