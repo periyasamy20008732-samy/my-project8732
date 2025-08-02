@@ -10,7 +10,12 @@
     <meta name="keywords" content="{{ $settings->meta_keywords ?? 'admin, pos, bootstrap, responsive, business' }}">
     <meta name="author" content="{{ $settings->meta_author ?? 'Dreamguys - Bootstrap Admin Template' }}">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     
 
 
@@ -21,7 +26,7 @@
     @if(!empty($settings->fav_icon))
         <link rel="icon" href="{{ asset('storage/core/' . $settings->fav_icon) }}" type="image/png">
     @else
-        <link rel="icon" href="{{ asset('admin-assets/img/logo.png') }}" type="image/png">
+        <link rel="icon" href="{{ asset('logo1.jpeg') }}" type="image/png">
     @endif
 
     <!-- Bootstrap CSS -->

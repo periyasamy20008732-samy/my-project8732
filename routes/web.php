@@ -58,14 +58,16 @@ Route::post('admin/logout', [LoginController::class, 'logout'])->name('logout');
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
     Route::resource('package', PackageController::class);
+    Route::resource('customer', CustomerController::class);
+
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
+/*
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
     Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
     Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
-    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');*/
 
     Route::get('/tax', [TaxController::class, 'index'])->name('tax');
 
