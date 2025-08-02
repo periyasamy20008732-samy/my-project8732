@@ -82,12 +82,11 @@
 							<a class="dropdown-item" href="general-settings.html"><i class="me-2" data-feather="settings"></i>Settings</a>
 							<hr class="m-0">
 							{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}" ><img src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a> --}}
-							<a class="dropdown-item logout pb-0" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout
+							<a class="dropdown-item logout pb-0" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img src={{ "admin-assets/img/icons/log-out.svg" }} class="me-2" alt="img">Logout
 							</a>
-
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-    @csrf
-</form>
+							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+								@csrf
+							</form>
 
 						</div>
 					</div>

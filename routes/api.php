@@ -50,6 +50,8 @@ use App\Http\Controllers\Api\PosholdItemsController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\WarehouseItemContrtoller;
 use App\Http\Controllers\Api\BusinessProfileController;
+use App\Http\Controllers\Api\NotificationController;
+
 
 
 
@@ -399,7 +401,10 @@ Route::middleware('auth:api')->group(function () {
   Route::get('/profile-view/{id}', [BusinessProfileController::class, 'profileshow']);
   Route::put('/profile-update/{id}', [BusinessProfileController::class, 'profileupdate']);
 
-
+  //NotificationController
+  Route::post('/notification-create', [NotificationController::class, 'store']);
+// Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
+// Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
 });
 
 //Packages CRUD

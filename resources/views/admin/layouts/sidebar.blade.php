@@ -3,55 +3,71 @@
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
+                <!-- Dashboard -->
+                 <li class="submenu-open">
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}" class="subdrop active">
+                                <i data-feather="grid"></i><span>Dashboard</span>
+                            </a>
+                        </li>
+                    </li>
+
+                                
+
+                <!-- Peoples -->
                 <li class="submenu-open">
-                    <h6 class="submenu-hdr">Main</h6>
+                    <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-
-                        <!-- Dashboard -->
-                        <li class="submenu">
-                            <a href="javascript:void(0);" class="subdrop active">
-                                <i data-feather="grid"></i><span>Dashboard</span><span class="menu-arrow"></span>
+                        <li>
+                            <a href="{{ route('admin.customer.index') }}">
+                                <i data-feather="user"></i> <span>Customers</span>
                             </a>
-                            <ul>
-                                <li>
-                                    <a href="{{ route('admin.dashboard') }}" class="active">Admin Dashboard</a>
-                                </li>
-                            </ul>
                         </li>
+                    </ul>
+                </li>
 
-                        <!-- Customer -->
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i data-feather="user"></i><span>Customer</span><span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ route('admin.customer') }}">Customer Settings</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Package -->
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i data-feather="smartphone"></i><span>Package</span><span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ route('admin.package.index') }}">Package Settings</a></li>
-                            </ul>
-                        </li>
-
+                <!-- Settings -->
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Settings</h6>
+                    <ul>
                         <!-- Core Settings -->
                         <li class="submenu">
                             <a href="javascript:void(0);">
-                                <i data-feather="settings"></i><span>Core settings</span><span class="menu-arrow"></span>
+                                <i data-feather="settings"></i>
+                                <span>Core Settings</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
                             <ul>
                                 <li><a href="{{ route('admin.tax') }}" >Tax Settings</a></li>
                                 <li><a href="{{ route('admin.unit') }}" >Unit Settings</a></li>
                                 <li><a href="{{ route('admin.country') }}">Country Settings</a></li>
-                                <li><a href="{{ route('admin.settings') }}" >Settings</a></li>
                             </ul>
                         </li>
 
+                        <!-- Website Settings -->
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <i data-feather="globe"></i>
+                                <span>Website Settings</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ route('admin.settings') }}" >Settings</a></li>
+
+                            </ul>
+                        </li>
+
+                        <!-- Logout -->
+                        <li>
+                           
+
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+                                    <i data-feather="log-out"></i> <span>Logout</span>
+
+							</a>
+							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+								@csrf
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>
