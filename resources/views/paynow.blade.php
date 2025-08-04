@@ -180,11 +180,17 @@
         </form> -->
 
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
             <form method="POST" action="{{ route('razorpay.order') }}">
                 @csrf
                 <input type="text" name="username" value="{{ $user->name }}" hidden>
+                <input type="text" name="user_id" id="user_id" value="{{ $user->id }}" hidden>
+                <input type="text" name="store_id" id="store_id" value="{{ $user->store_id }}" hidden>
+
                 <input type="text" name="mobile" value="{{ $user->mobile }}" hidden>
                 <input type="text" name="email" value="{{ $user->email }}" hidden>
+                <input type="text" name="package_id" value="{{ $package->id }}" hidden>
                 <input type="text" name="amount" value="{{ $package->price }}" hidden>
                 <!-- <button type="submit">Pay Now</button> -->
 
@@ -194,6 +200,12 @@
                 </button>
 
             </form>
+
+            <form action="{{ route('phonepe.payment') }}" method="POST">
+                @csrf
+                <button type="submit">Pay with PhonePe</button>
+            </form>
+
 
             <!-- <div class="checkout-success" id="checkoutSuccess" style="display:none;">
                 <i class="fas fa-check-circle"></i>
@@ -236,15 +248,38 @@
                         body: JSON.stringify({
                             payment_id: response.razorpay_payment_id,
                             order_id: response.razorpay_order_id,
-                            signature: response.razorpay_signature
+                            signature: response.razorpay_signature,
+                            id: '{{ $user->id }}',
+                            store_id: '{{ $user->store_id }}',
+                            package_id: '{{ $user->package_id }}'
                         })
-                    }).then(res => res.text())
-                        .then(msg => alert("Payment Success! " + msg));
+                    })
+                        // .then(res => res.text())
+                        // .then(msg => alert("Payment Success! " + msg));
+                        .then(res => res.json())
+                        .then(data => {
+
+                            // alert(data);
+                            console.log('Payment response:', data); // 👈 Check console
+                            if (data.status === 'success') {
+                                window.location.href = "{{ route('razorpay.success.view') }}" + "?payment_id=" +
+                                    data.transaction_id;
+                            } else {
+                                window.location.href = "{{ route('razorpay.fail.view') }}";
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error in payment success fetch:',
+                                error); // 👈 Catch parse/connection errors
+                            // window.location.href = "{{ route('razorpay.fail.view') }}";
+                        });
                 },
                 "modal": {
                     "ondismiss": function () {
-                        alert("Payment was cancelled or failed.");
+                        // alert("Payment was cancelled or failed.");
                         // Optionally redirect or show a message
+                        window.location.href = "{{ route('razorpay.fail.view') }}"; // load fail blade
+
                     }
                 },
                 "theme": {
@@ -253,6 +288,10 @@
             };
             var rzp = new Razorpay(options);
             rzp.open();
+            // document.getElementById("checkoutBtn").onclick = function(e) {
+            //     e.preventDefault();
+            //     rzp.open();
+            // };
         </script>
     @endif
 </body>

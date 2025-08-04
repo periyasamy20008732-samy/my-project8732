@@ -19,6 +19,8 @@
     <title>{{ $settings->site_title ?? 'Green Biller' }} | Account</title>
     <link href="{{ asset('account-assets/css/styles.css')}}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-primary">
@@ -29,6 +31,8 @@
                     window.location.href = "{{ route('account.dashboard') }}";
                 </script>
             @endif
+
+
             <main>
                 <div class="container">
                     <div class="row justify-content-center">
