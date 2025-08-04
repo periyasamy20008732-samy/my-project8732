@@ -5,79 +5,39 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\User;
-use App\Models\Store;
-
-
 use App\Models\Item;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request)
+    // View all categories
+    public function index()
     {
-        $storeIdInput = $request->input('store_id');
-        $user = auth()->user();
-
-        // Determine effective store IDs
-        $effectiveStoreIds = [];
-
-        if (!empty($storeIdInput) && $storeIdInput !== '0') {
-            $effectiveStoreIds[] = $storeIdInput;
-        } else {
-            // Try stores owned by user
-            $ownedStoreIds = Store::where('user_id', $user->id)
-                ->pluck('id')
-                ->map(fn($id) => (string)$id) // categories.store_id is varchar
-                ->filter(fn($id) => !empty($id))
-                ->toArray();
-
-            if (!empty($ownedStoreIds)) {
-                $effectiveStoreIds = $ownedStoreIds;
-            } elseif (!empty($user->store_id) && $user->store_id !== '0') {
-                $effectiveStoreIds[] = (string)$user->store_id;
-            }
-        }
-
-        if (empty($effectiveStoreIds)) {
-            return response()->json([
-                'message' => 'No store context found for user',
-                'categories' => [],
-                'total' => 0,
-                'status' => 0,
-            ], 200);
-        }
-
-        // Fetch categories belonging to those stores with item counts
-        // Assumes Category model has: public function items() { return $this->hasMany(Item::class, 'category_id', 'id'); }
-        $categories = Category::whereIn('store_id', $effectiveStoreIds)
-            ->withCount('items')
-            ->get();
+        $categories = Category::withCount('items')->get();
+        $totalCategory = $categories->count();
 
         if ($categories->isEmpty()) {
             return response()->json([
-                'message' => 'Category Not Found',
-                'categories' => [],
-                'total' => 0,
-                'status' => 0,
+                'message' => 'Category Detail Not Found',
+                'data' => [],
+                'status' => 0
             ], 200);
         }
 
-        // Format each category: include item_count (from items_count) and optionally other fields
-        $formatted = $categories->map(function (Category $cat) {
+        // Format data to include item count
+        $data = $categories->map(function ($category) {
             return [
-                'id' => $cat->id,
-                'name' => $cat->category_name,
-                'item_count' => $cat->items_count ?? 0,
-                'data' => [], // if you want to include item details, you can eager load and populate here
+                'id' => $category->id,
+                'name' => $category->name,
+                'item_count' => $category->items_count,
             ];
-        })->toArray();
+        });
 
         return response()->json([
             'message' => 'Category List',
-            'categories' => $formatted,
-            'total' => count($formatted),
-            'status' => 1,
+            'data' => $data,
+            'total' => $totalCategory,
+            'status' => 1
         ], 200);
     }
 
