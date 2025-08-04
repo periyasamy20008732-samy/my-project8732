@@ -59,6 +59,43 @@
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 
 
+<!-- JavaScript: Feather icons, tooltip, refresh, and collapse -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize feather icons
+    feather.replace();
+
+    // Bootstrap tooltip initialization
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Refresh button
+    document.getElementById("refresh-btn").addEventListener("click", function () {
+        location.reload();
+    });
+
+    // Collapse header toggle
+    const collapseBtn = document.getElementById("collapse-header");
+    const headerSection = document.getElementById("header-section");
+    const icon = document.getElementById("collapse-icon");
+
+    collapseBtn.addEventListener("click", function () {
+        if (headerSection.style.display === "none") {
+            headerSection.style.display = "flex"; // Restore flex layout
+            icon.setAttribute("data-feather", "chevron-up");
+            icon.title = "Collapse";
+        } else {
+            headerSection.style.display = "none";
+            icon.setAttribute("data-feather", "chevron-down");
+            icon.title = "Expand";
+        }
+        feather.replace(); // Re-render feather icons
+    });
+});
+</script>
+
 
 
 

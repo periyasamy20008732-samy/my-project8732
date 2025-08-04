@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
- use App\Models\Customer; 
- use App\Models\Packages; 
+use App\Models\Customer;
+use App\Models\Packages;
 
 
 class DashboardController extends Controller
 {
-   /*public function index()
+    /*public function index()
     {
         $user = Auth::user();
 
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         abort(403, 'Unauthorized role.');
     } */
 
-   /*     public function dashboard()
+    /*     public function dashboard()
     {
        
         $customers = Customer::latest()->get();
@@ -34,24 +34,34 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact('customers', 'totalCustomers'));
 
     } */
-  
-        public function index()
-{
-    $user = Auth::user();
 
-    if (in_array($user->user_level, [1, 2,3])) {
-        return view('admin.dashboard', ['user' => $user]);
+    public function index()
+    {
+        $user = Auth::user();
+
+        if (in_array($user->user_level, [1, 2, 3])) {
+            return view('admin.dashboard', ['user' => $user]);
+        }
+
+        abort(403, 'Unauthorized role.');
     }
 
-    abort(403, 'Unauthorized role.');
-}
+    public function store_index()
+    {
+        $store_user = Auth::user();
+
+        if (in_array($store_user->user_level, [4, 5, 6])) {
+            return view('store.dashboard', ['user' => $store_user]);
+        }
+
+        abort(403, 'Unauthorized role.');
+    }
 
     public function dashboard()
     {
         // Fetch data for dashboard
         $customers = Customer::latest()->get();
         $totalCustomers = $customers->count();
-
         $packages = Packages::latest()->get();
         $totalPackage = $packages->count();
 
@@ -62,5 +72,5 @@ class DashboardController extends Controller
             'packages',
             'totalPackage'
         ));
-    } 
+    }
 }

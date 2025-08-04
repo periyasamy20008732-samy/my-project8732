@@ -48,7 +48,7 @@ class StoreLoginController extends Controller
 
         // Check user existence and allowed user_level
         $user = User::where('email', $credentials['email'])
-            ->whereIn('user_level', [1, 2, 3])
+            ->whereIn('user_level', [4, 5, 6])
             ->first();
 
         if (!$user) {

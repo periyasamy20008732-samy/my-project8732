@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
+use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Payment\RazorpayPaymentController;
 
 use Illuminate\Foundation\PackageManifest;
@@ -57,23 +58,23 @@ Route::post('admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
-    Route::resource('package', PackageController::class);
-    Route::resource('customer', CustomerController::class);
-
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-/*
+
+
+    Route::resource('package', PackageController::class);
+    Route::resource('customer', CustomerController::class);
+    Route::resource('tax', TaxController::class);
+    Route::resource('unit', UnitController::class);
+    Route::resource('country', UnitController::class);
+    // Route::get('/', [PackageController::class, 'index'])->name('country');
+
+    /*
     Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
     Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
     Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');*/
 
-    Route::get('/tax', [TaxController::class, 'index'])->name('tax');
-
-    Route::get('/unit', [PackageController::class, 'index'])->name('unit');
-
-    Route::get('/country', [PackageController::class, 'index'])->name('country');
 
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
@@ -115,7 +116,7 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
     // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // In routes/web.php
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');
 
     //::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 

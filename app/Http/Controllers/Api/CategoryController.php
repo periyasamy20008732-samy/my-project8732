@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Item;
 use Illuminate\Support\Facades\Storage;
+
 class CategoryController extends Controller
 {
     // View all categories
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('items')->get();
+        $totalCategory = $categories->count();
 
         if ($categories->isEmpty()) {
             return response()->json([
@@ -21,12 +24,43 @@ class CategoryController extends Controller
             ], 200);
         }
 
+        // Format data to include item count
+        $data = $categories->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'item_count' => $category->items_count,
+            ];
+        });
+
         return response()->json([
             'message' => 'Category List',
-            'data' => $categories,
+            'data' => $data,
+            'total' => $totalCategory,
             'status' => 1
         ], 200);
     }
+
+    // public function index()
+    // {
+    //     $categories = Category::all();
+    //     $totalCategory = $categories->count();
+
+    //     if ($categories->isEmpty()) {
+    //         return response()->json([
+    //             'message' => 'Category Detail Not Found',
+    //             'data' => [],
+    //             'status' => 0
+    //         ], 200);
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Category List',
+    //         'data' => $categories,
+    //         'total' => $totalCategory,
+    //         'status' => 1
+    //     ], 200);
+    // }
 
     // View categories by store_id or all if no store_id
     public function store_show(Request $request)
@@ -53,6 +87,7 @@ class CategoryController extends Controller
 
         // No store_id passed
         $categories = Category::all();
+
 
         if ($categories->isEmpty()) {
             return response()->json([
@@ -142,6 +177,7 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
+
         return response()->json([
             'message' => 'Category Details',
             'data' => $category,
@@ -169,11 +205,13 @@ class CategoryController extends Controller
         $category = Category::where('store_id', $storeid)
             //->where('user_id', $userid)
             ->get();
+        $totalCategory = $category->count();
 
         if ($category->isNotEmpty()) {
             return response()->json([
                 'message' => 'Category Detail',
                 'data' => $category,
+                'total' => $totalCategory,
                 'status' => 1
             ], 200);
         }
@@ -181,6 +219,7 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Category Detail Not Found',
             'data' => [],
+            'total' => $totalCategory,
             'status' => 0
         ], 404);
     }
