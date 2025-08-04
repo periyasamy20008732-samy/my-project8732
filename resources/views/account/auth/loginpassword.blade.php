@@ -19,6 +19,8 @@
     <title>{{ $settings->site_title ?? 'Green Biller' }} | Account</title>
     <link href="{{ asset('account-assets/css/styles.css')}}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-primary">
@@ -39,9 +41,20 @@
                                             style="width: 50%;"></center>
 
                                     <h3 class="text-center font-weight-light my-4">Login</h3>
+
+                                    @if ($errors->any())
+                                        <script>
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Login Failed',
+                                                text: '{{ $errors->first() }}',
+                                                confirmButtonColor: '#d33',
+                                            });
+                                        </script>
+                                    @endif
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" action="{{ route('getotp') }}">
+                                    <form method="POST" action="{{ route('accountlogin') }}">
                                         @csrf
                                         <div class="form-floating mb-3">
 
@@ -66,8 +79,8 @@
 
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputPassword" type="password"
-                                                placeholder="Password" />
+                                            <input name="password" class="form-control" id="inputPassword"
+                                                type="password" placeholder="Password" />
                                             <label for="inputPassword">Password</label>
                                         </div>
                                         <!-- <div class="form-check mb-3">

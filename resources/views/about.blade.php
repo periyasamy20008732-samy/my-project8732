@@ -26,16 +26,18 @@
                     <div class="col">
                         <div class="ul-inner-about-txt-left">
                             <span class="ul-section-sub-title">About us</span>
-                            <h2 class="ul-section-title">Expertise That Drives Digital Success</h2>
+                            <h2 class="ul-section-title">Empowering Businesses Through Smart Billing Solutions</h2>
 
                             <div class="ul-inner-about-stats">
                                 <div class="ul-inner-about-stat">
                                     <h3 class="stat-number">+98%</h3>
-                                    <p class="stat-text">By optimizing your website for search engines.</p>
+                                    <p class="stat-text">Improved visibility through smart SEO integration and digital
+                                        optimization.</p>
                                 </div>
                                 <div class="ul-inner-about-stat">
                                     <h3 class="stat-number">+67%</h3>
-                                    <p class="stat-text">Rise in revenue as more visitors convert into paying.</p>
+                                    <p class="stat-text">Boost in revenue from better customer engagement and streamlined
+                                        billing experiences.</p>
                                 </div>
                             </div>
                         </div>
@@ -43,21 +45,25 @@
                     <div class="col">
                         <div class="ul-inner-about-points">
                             <div class="ul-inner-about-point">
-                                <img src="assets/img/about-point-icon-1.png" alt="Icon" class="ul-inner-about-point-icon">
+                                <img src="home-assets/img/about-point-icon-1.png" alt="Icon"
+                                    class="ul-inner-about-point-icon">
                                 <div>
-                                    <h4 class="ul-inner-about-point-title">Community & Industry Involvement</h4>
-                                    <p class="ul-inner-about-point-descr">Our e-commerce solutions are designed to create
-                                        seamless online shopping experiences. From user-friendly website design to secure
-                                        payment processing and inventory management.</p>
+                                    <h4 class="ul-inner-about-point-title">Driving Progress in E-Commerce</h4>
+                                    <p class="ul-inner-about-point-descr">We work closely with industry leaders and
+                                        communities to ensure our software evolves with the latest trends. From seamless
+                                        integrations to responsive support, we aim to make your digital business experience
+                                        smooth and reliable.</p>
                                 </div>
                             </div>
                             <div class="ul-inner-about-point">
-                                <img src="assets/img/about-point-icon-2.png" alt="Icon" class="ul-inner-about-point-icon">
+                                <img src="home-assets/img/about-point-icon-2.png" alt="Icon"
+                                    class="ul-inner-about-point-icon">
                                 <div>
-                                    <h4 class="ul-inner-about-point-title">Awards & Recognition</h4>
-                                    <p class="ul-inner-about-point-descr">Our e-commerce solutions are designed to create
-                                        seamless online shopping experiences. From user-friendly website design to secure
-                                        payment processing and inventory management.</p>
+                                    <h4 class="ul-inner-about-point-title">Award-Winning Software Solutions</h4>
+                                    <p class="ul-inner-about-point-descr">Our commitment to excellence has earned us
+                                        recognition across the digital business world. With a customer-first approach, we
+                                        continue to innovate and adapt, helping businesses stay ahead in a fast-moving
+                                        digital economy.</p>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +72,7 @@
                 </div>
 
                 <div class="ul-inner-about-img">
-                    <img src="assets/img/about-img.jpg" alt="Image">
+                    <img src="home-assets/img/about-img.jpg" alt="Image">
                 </div>
             </div>
         </section>
@@ -88,14 +94,15 @@
                     <div class="col">
                         <div class="ul-work-process-single">
                             <div class="ul-work-process-single-img">
-                                <img src="assets/img/process-1.jpg" alt="Image">
+                                <img src="home-assets/img/process-1.jpg" alt="Image">
                                 <div class="ul-work-process-single-index"><span>1</span></div>
                             </div>
 
                             <div class="ul-work-process-single-txt">
                                 <h3 class="ul-work-process-single-title">Define Requirements</h3>
-                                <p class="ul-work-process-single-descr">In a free hour, when our power of choice is
-                                    untrammelled and when nothing prevents dolor sit amet, consectetur</p>
+                                <p class="ul-work-process-single-descr">We begin by gathering insights through meetings and
+                                    discovery sessions to understand your business needs, user expectations, and project
+                                    goals.</p>
                             </div>
                         </div>
                     </div>
@@ -104,14 +111,14 @@
                     <div class="col">
                         <div class="ul-work-process-single">
                             <div class="ul-work-process-single-img">
-                                <img src="assets/img/process-2.jpg" alt="Image">
+                                <img src="home-assets/img/process-2.jpg" alt="Image">
                                 <div class="ul-work-process-single-index"><span>2</span></div>
                             </div>
 
                             <div class="ul-work-process-single-txt">
                                 <h3 class="ul-work-process-single-title">Design & Prototyping</h3>
-                                <p class="ul-work-process-single-descr">In a free hour, when our power of choice is
-                                    untrammelled and when nothing prevents dolor sit amet, consectetur</p>
+                                <p class="ul-work-process-single-descr">Our designers craft intuitive wireframes and
+                                    prototypes that map out the user experience.</p>
                             </div>
                         </div>
                     </div>
@@ -120,14 +127,14 @@
                     <div class="col">
                         <div class="ul-work-process-single">
                             <div class="ul-work-process-single-img">
-                                <img src="assets/img/process-3.jpg" alt="Image">
+                                <img src="home-assets/img/process-3.jpg" alt="Image">
                                 <div class="ul-work-process-single-index"><span>3</span></div>
                             </div>
 
                             <div class="ul-work-process-single-txt">
                                 <h3 class="ul-work-process-single-title">Final Solution</h3>
-                                <p class="ul-work-process-single-descr">In a free hour, when our power of choice is
-                                    untrammelled and when nothing prevents dolor sit amet, consectetur</p>
+                                <p class="ul-work-process-single-descr">We bring your vision to life with clean, scalable
+                                    code and a fully tested product.</p>
                             </div>
                         </div>
                     </div>
@@ -190,24 +197,25 @@
                             <div class="ul-history-milestones">
                                 <!-- single milestone -->
                                 <div class="ul-history-milestone">
-                                    <h3 class="ul-history-milestone-title">Community & Industry Involvement</h3>
-                                    <p class="ul-history-milestone-descr">Our e-commerce solutions are designed to create
-                                        seamless online shopping experiences. From user-friendly website design to secure
-                                        payment processing and inventory</p>
+                                    <h3 class="ul-history-milestone-title">Laying the Foundation</h3>
+                                    <p class="ul-history-milestone-descr">Green Biller was born out of a simple idea: make
+                                        billing easier for every business. We began by developing basic invoicing tools
+                                        tailored to small retailers and local service providers.</p>
                                 </div>
                                 <!-- single milestone -->
                                 <div class="ul-history-milestone">
-                                    <h3 class="ul-history-milestone-title">Community & Industry Involvement</h3>
-                                    <p class="ul-history-milestone-descr">Our e-commerce solutions are designed to create
-                                        seamless online shopping experiences. From user-friendly website design to secure
-                                        payment processing and inventory</p>
+                                    <h3 class="ul-history-milestone-title">Scaling With Innovation</h3>
+                                    <p class="ul-history-milestone-descr">As our customer base grew, we expanded our
+                                        software to include advanced features like GST compliance, inventory management, and
+                                        multi-user access. We focused on intuitive UX and customer support.</p>
                                 </div>
                                 <!-- single milestone -->
                                 <div class="ul-history-milestone">
-                                    <h3 class="ul-history-milestone-title">Community & Industry Involvement</h3>
-                                    <p class="ul-history-milestone-descr">Our e-commerce solutions are designed to create
-                                        seamless online shopping experiences. From user-friendly website design to secure
-                                        payment processing and inventory</p>
+                                    <h3 class="ul-history-milestone-title">Leading the Digital Billing Revolution</h3>
+                                    <p class="ul-history-milestone-descr">Now serving hundreds of businesses nationwide,
+                                        Green Biller stands as a trusted name in smart billing solutions. We continue to
+                                        innovate with cloud support, mobile integrations, and AI-assisted reporting to help
+                                        businesses grow faster and smarter.</p>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +224,7 @@
                     <!-- img -->
                     <div class="col">
                         <div class="ul-history-img">
-                            <img src="assets/img/history-img.jpg" alt="Image">
+                            <img src="home-assets/img/history-img.jpg" alt="Image">
                         </div>
                     </div>
                 </div>
@@ -229,7 +237,7 @@
         <section class="ul-review-contact ul-section-spacing wow animate__fadeInUp">
             <!-- bg left image -->
             <div class="bg-img">
-                <img src="assets/img/contact-review-bg-img.jpg" alt="Image">
+                <img src="home-assets/img/contact-review-bg-img.jpg" alt="Image">
             </div>
 
             <div class="ul-container">
@@ -299,9 +307,8 @@
                             <div>
                                 <span class="ul-section-sub-title">Clients Review</span>
                                 <h2 class="ul-section-title">What They Say About Our</h2>
-                                <p class="ul-reviews-heading-descr">It is a long established fact that a reader will be
-                                    distracted the readable content of a page when looking at layout the point of using
-                                    lorem the is Ipsum less normal distribution of letters.</p>
+                                <p class="ul-reviews-heading-descr">Green Biller has transformed how we manage billing and
+                                    inventory. It’s simple, reliable, and saves us a lot of time every day.</p>
                             </div>
 
                             <div class="swiper ul-reviews-slider">
@@ -311,7 +318,7 @@
                                         <div class="ul-review">
                                             <div class="top">
                                                 <div class="ul-review-reviewer-img">
-                                                    <img src="assets/img/user.jpg" alt="Reviewer Image">
+                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
                                                 </div>
 
                                                 <div class="ul-review-reviewer-info">
@@ -327,7 +334,7 @@
                                                 </div>
 
                                                 <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="assets/img/quotation-icon.svg" alt="quotaion-icon">
+                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                 </div>
                                             </div>
                                             <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
@@ -341,7 +348,7 @@
                                         <div class="ul-review">
                                             <div class="top">
                                                 <div class="ul-review-reviewer-img">
-                                                    <img src="assets/img/user.jpg" alt="Reviewer Image">
+                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
                                                 </div>
 
                                                 <div class="ul-review-reviewer-info">
@@ -357,7 +364,7 @@
                                                 </div>
 
                                                 <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="assets/img/quotation-icon.svg" alt="quotaion-icon">
+                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                 </div>
                                             </div>
                                             <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
@@ -371,7 +378,7 @@
                                         <div class="ul-review">
                                             <div class="top">
                                                 <div class="ul-review-reviewer-img">
-                                                    <img src="assets/img/user.jpg" alt="Reviewer Image">
+                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
                                                 </div>
 
                                                 <div class="ul-review-reviewer-info">
@@ -387,7 +394,7 @@
                                                 </div>
 
                                                 <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="assets/img/quotation-icon.svg" alt="quotaion-icon">
+                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                 </div>
                                             </div>
                                             <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
@@ -413,22 +420,23 @@
         <div class="ul-container ul-section-spacing wow animate__fadeInUp">
             <div class="ul-clients">
                 <div class="ul-clients-slider swiper">
+
                     <div class="swiper-wrapper">
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-1.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-2.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-2.png" alt="Client Image"></div>
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-3.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-3.png" alt="Client Image"></div>
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-4.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-4.png" alt="Client Image"></div>
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-5.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-5.png" alt="Client Image"></div>
                         <!-- single client -->
-                        <div class="swiper-slide"><img src="assets/img/client-1.png" alt="Client Image"></div>
+                        <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
                     </div>
                 </div>
-                <img src="assets/img/brands-vector.png" alt="vector" class="ul-clients-vector">
+                <img src="home-assets/img/brands-vector.png" alt="vector" class="ul-clients-vector">
             </div>
         </div>
         <!-- CLIENTS SECTION END -->

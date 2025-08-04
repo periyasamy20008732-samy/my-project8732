@@ -9,8 +9,9 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Payment\RazorpayPaymentController;
+use App\Http\Controllers\Payment\PhonePePaymentController;
 use App\Http\Controllers\Account\PaymentController;
-
+use App\Http\Controllers\Account\AccountDashboardController;
 
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
@@ -39,8 +40,10 @@ Route::get('/contact-us', function () {
 //Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
 
 Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow'])->name('paynow');
-Route::post('/paynow/order', [RazorpayPaymentController::class, 'createOrder'])->name('razorpay.order');
-Route::post('/paynow/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
+
+//razorpay paymentgateway
+Route::post('/paynow/razorpay/order', [RazorpayPaymentController::class, 'createOrder'])->name('razorpay.order');
+Route::post('/paynow/razorpay/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 Route::get('/paynow/success', function () {
     return view('success'); // ✅ No "razorpay." prefix
@@ -49,6 +52,17 @@ Route::get('/paynow/success', function () {
 Route::get('/paynow/failed', function () {
     return view('fail'); // ✅ No "razorpay." prefix
 })->name('razorpay.fail.view');
+
+//razorpay paymentgateway end
+
+
+//phonepe paymentgatwway
+Route::post('/paynow/phonepe', [PhonePePaymentController::class, 'initiatePayment'])->name('phonepe.payment');
+Route::post('/paynow/phonepe/callback', [PhonePePaymentController::class, 'handleCallback'])->name('phonepe.callback');
+Route::get('/paynow/phonepe/status/{transactionId}', [PhonePePaymentController::class, 'verifyPaymentStatus'])->name('phonepe.status');
+
+
+//phonepe paymentgateway end
 // ---------- Home Website End ----------
 
 // ---------- Account start ----------
@@ -59,11 +73,13 @@ Route::get('/account/signup', [WebLoginController::class, 'showsignupForm'])->na
 Route::post('/account/login', [WebLoginController::class, 'login'])->name('accountlogin');
 Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('getotp');
 Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
+Route::post('/account/login-password', [WebLoginController::class, 'accountlogin'])->name('accountlogin');
 
 
 Route::prefix('account')->middleware(['auth'])->name('account.')->group(function () {
 
     Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AccountDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
 
 });

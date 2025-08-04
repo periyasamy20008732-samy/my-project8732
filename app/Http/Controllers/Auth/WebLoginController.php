@@ -99,11 +99,15 @@ class WebLoginController extends Controller
         cache()->forget('otp_' . $request->mobile);
 
         // OTP is valid — now check if mobile exists in DB
-        $user = User::where('mobile', $request->mobile)->first();
+        $user = User::where('mobile', $request->mobile)
+            ->whereIn('user_level', [10, 11])
+            ->first();
 
         if ($user) {
             Auth::login($user); // log in the user
             $request->session()->regenerate(); // regenerate session to prevent fixation
+
+
             return redirect()->route('account.dashboard');
 
         } else {
@@ -129,7 +133,7 @@ class WebLoginController extends Controller
 
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => 'Access denied. Only admin-level users can login.',
+                'mobile' => 'Access denied.',
             ]);
         }
 
