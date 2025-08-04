@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\SubscriptionPurchase;
 use App\Models\Packages;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class AccountDashboardController extends Controller
 {

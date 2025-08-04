@@ -6,25 +6,56 @@
                 <!-- Dashboard -->
                 <li class="submenu-open">
                 <li>
-                    <a href="{{ route('store.dashboard') }}" class="subdrop active">
+                    <a href="{{ route('store.dashboard') }}" class="">
                         <i data-feather="grid"></i><span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('store.dashboard') }}" class="">
+                        <i data-feather="shopping-cart"></i> <span>Sales</span>
                     </a>
                 </li>
                 </li>
                 <!-- Peoples -->
+                {{-- <li class="submenu">
+                    <a href="javascript:void(0);">
+                        <i data-feather="globe"></i>
+                        <span>Website Settings</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <ul>
+                        <li><a href="{{ route('admin.settings') }}">Settings</a></li>
+                    </ul>
+                </li>
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Peoples</h6>
+                <li class="submenu">
+                    <a href="javascript:void(0);">
+                        <i data-feather="user"></i>
+                        <span>Contacts</span>&nbsp;<span class="menu-arrow"></span>
+                    </a>
+                    <ul>
+                        <li><a href="{{ route('admin.tax.index') }}">Customer</a></li>
+                        <li><a href="{{ route('admin.unit.index') }}">Supplier</a></li>
+                    </ul>
+                </li>
+                </li> --}}
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
                     <ul>
-                        <li>
-                            <a href="{{ route('admin.customer.index') }}">
-                                <i data-feather="user"></i> <span>Customers</span>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <i data-feather="user"></i>
+                                <span>Contacts</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
+                            <ul>
+                                <li><a href="{{ route('admin.tax.index') }}">Customer</a></li>
+                                <li><a href="{{ route('admin.unit.index') }}">Supplier</a></li>
+                                <li><a href="{{ route('admin.unit.index') }}">Users</a></li>
+
+                            </ul>
                         </li>
-                        <li>
-                            <a href="{{ route('admin.customer.index') }}">
-                                <i data-feather="user"></i> <span>Supplier</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <li class="submenu-open">
@@ -32,54 +63,56 @@
                     <ul>
                         <li>
                             <a href="{{ route('admin.package.index') }}">
-                                <i data-feather="user"></i> <span>Packages</span>
+                                <i data-feather="bar-chart"></i> <span>Advance</span>
                             </a>
                         </li>
+
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="shopping-bag"></i> <span>purchase</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="dollar-sign"></i> <span>Expenses</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Store</h6>
+                    <ul>
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="sliders"></i></i> <span>Items</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="settings"></i><span>Store</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="file-text"></i></i> <span>Reports</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 
                 <!-- Settings -->
-                <li class="submenu-open">
+                <li class=" submenu-open">
                     <h6 class="submenu-hdr">Settings</h6>
                     <ul>
                         <!-- Core Settings -->
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i data-feather="settings"></i>
-                                <span>Core Settings</span>&nbsp;<span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ route('admin.tax.index') }}">Tax Settings</a></li>
-                                <li><a href="{{ route('admin.unit.index') }}">Unit Settings</a></li>
-                                <li><a href="{{ route('admin.country.index') }}">Country Settings</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Website Settings -->
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <i data-feather="globe"></i>
-                                <span>Website Settings</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ route('admin.settings') }}">Settings</a></li>
-
-                            </ul>
-                        </li>
-
-                        <!-- Logout -->
                         <li>
-
-
-                            <a href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i data-feather="log-out"></i> <span>Logout</span>
-
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="dollar-sign"></i> <span>Core Settings</span>
                             </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
                         </li>
                     </ul>
                 </li>

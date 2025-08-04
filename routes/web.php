@@ -82,7 +82,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
     Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard', [AccountDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
-
 });
 
 // ---------- Account End ----------
@@ -93,12 +92,14 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
-Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
+//Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
+
 
 
     Route::resource('package', PackageController::class);
@@ -151,7 +152,10 @@ Route::get('/store/register', [StoreLoginController::class, 'showRegisterForm'])
 
 Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () {
 
+    Route::post('/store/logout', [StoreLoginController::class, 'logout'])->name('logout');
+
     Route::resource('package', PackageController::class);
+
 
     // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // In routes/web.php
