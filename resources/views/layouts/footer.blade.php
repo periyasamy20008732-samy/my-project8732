@@ -47,7 +47,7 @@
             <div class="ul-footer-middle-wrapper wow animate__fadeInUp">
                 <div class="ul-footer-about">
                     <h3 class="ul-footer-widget-title">About Us</h3>
-                    <p class="ul-footer-about-txt">Manage your business professionally with Vyapar, India’s leading
+                    <p class="ul-footer-about-txt">Manage your business professionally with Greenbiller, India’s leading
                         software for billing, inventory, and accounting. </p>
                     <a href="contact.html" class="ul-footer-about-btn">Contact us <i class="flaticon-top-right"></i></a>
                 </div>
