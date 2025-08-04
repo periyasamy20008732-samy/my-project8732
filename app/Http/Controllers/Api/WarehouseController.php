@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Store;
 use App\Models\Item;
-use Illuminate\Support\Facades\Route;
+
+
 
 class WarehouseController extends Controller
 {

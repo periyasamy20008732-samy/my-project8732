@@ -5,31 +5,91 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
 {
-    // View all brand
-    public function index()
+
+    public function index(Request $request)
     {
-        $brand = Brand::all();
+        try {
 
+            $user = auth()->user();
+            $storeId = $request->query('store_id');
 
-        if ($brand->isEmpty()) {
+            // Resolve effective store IDs
+            $storeIds = [];
 
-            return response()->json([
-                'message' => 'Brand Detail Not Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
+            if ($storeId) {
+                $storeIds = [trim($storeId)];
+            } elseif (!empty($user->store_id) && $user->store_id !== '0') {
+                $storeIds = [trim($user->store_id)];
+            } else {
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->filter(fn($v) => !is_null($v) && $v !== '')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
+            }
 
-        } else {
+            if (empty($storeIds)) {
+                return response()->json([
+                    'message' => 'No stores found for this user',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+
+            // Fetch brands for resolved store IDs
+            $brands = DB::table('brands as b')
+                ->select([
+                    'b.id',
+                    'b.brand_code',
+                    'b.brand_name',
+                    'b.brand_image',
+                    'b.description',
+                    'b.slug',
+                    'b.count_id',
+                    'b.status',
+                    'b.store_id',
+                    'b.created_at',
+                    'b.updated_at',
+                ])
+                ->whereIn('b.store_id', $storeIds)
+                ->get();
+
+            if ($brands->isEmpty()) {
+                return response()->json([
+                    'message' => 'Brand Detail Not Found',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
 
             return response()->json([
                 'message' => 'Brand List',
-                'data' => $brand,
-                'status' => 1
+                'data' => $brands,
+                'total' => $brands->count(),
+                'status' => 1,
             ], 200);
-
+        } catch (\Throwable $e) {
+            Log::error('Brand index failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => optional(auth()->user())->id,
+                'store_id' => $request->query('store_id'),
+            ]);
+            return response()->json([
+                'message' => 'Internal server error',
+                'data' => [],
+                'total' => 0,
+                'status' => 500,
+            ], 500);
         }
     }
 
@@ -74,33 +134,67 @@ class BrandController extends Controller
         ], 200);
     }
 
-    // Store a new Brand
     public function store(Request $request)
     {
-        $request->validate([
+        // Validate required fields
+        $validator = Validator::make($request->all(), [
             'brand_name' => 'required|string',
             'brand_code' => 'required|string',
-            'brand_image' => 'required'
-
+            'store_id' => 'required', // optional: enforce if needed
+            // other fields can be validated as needed
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
-        $file = $request->brand_image;
-        $directory = 'storage/public/brand/';
-        $imageName = time() . '.' . $file->getClientOriginalname();
-        $file->move(public_path($directory), $imageName);
-        //  $data -> image = $directory.$imageName;
-        $data = $request->all();
-        $data['brand_image'] = $directory . $imageName;
+        try {
+            // Prepare data to insert
+            $data = $request->only([
+                'store_id',
+                'slug',
+                'count_id',
+                'brand_code',
+                'brand_name',
+                'description',
+                'status',
+                'inapp_view',
+            ]);
 
-        //  $brand = Brand::create($request->all());
+            // Handle brand image only if a valid file is uploaded
+            if ($request->hasFile('brand_image') && $request->file('brand_image')->isValid()) {
+                $file = $request->file('brand_image');
+                $directory = 'storage/public/brand/';
+                $imageName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path($directory), $imageName);
+                $data['brand_image'] = $directory . $imageName;
+            }
 
-        $brand = Brand::create($data);
-        return response()->json([
-            'status' => 1,
-            'message' => 'Brand created successfully',
-            'data' => $brand
-        ], 201);
+            // Create brand
+            $brand = Brand::create($data);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Brand created successfully',
+                'data' => $brand,
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error('Brand creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'payload' => $request->all(),
+            ]);
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to create brand',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
+            ], 500);
+        }
     }
 
     // Update an existing Brand
@@ -153,7 +247,4 @@ class BrandController extends Controller
             'status' => 0
         ], 404);
     }
-
-
-
 }
