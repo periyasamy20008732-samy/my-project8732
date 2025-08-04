@@ -16,7 +16,71 @@
         </section>
         <!-- BREADCRUMBS SECTION END -->
 
+        <section class="ul-review-contact ul-section-spacing wow animate__fadeInUp">
 
+            <div class="bg-img">
+                <img src="home-assets/img/contact-review-bg-img.jpg" alt="Image">
+            </div>
+
+            <div class="ul-container">
+                <div class="row ul-review-contact-row row-cols-md-2 row-cols-1 align-items-center">
+
+                    <div class="col">
+                        <div class="ul-contact-form-wrapper">
+                            <div>
+                                <span class="ul-section-sub-title">Welcome</span>
+                                <h2 class="ul-section-title">Become a Partner!</h2>
+
+                                <form action="#" class="ul-contact-form">
+                                    <div class="row ul-bs-row row-cols-2 row-cols-xxs-1">
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="ul-contact-name">Your Name*</label>
+                                                <input type="text" name="name" id="ul-contact-name" placeholder="Robot fox">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="ul-contact-phone">Your Phone*</label>
+                                                <input type="tel" name="phone" id="ul-contact-phone"
+                                                    placeholder="+1253 457 7840">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <button type="submit">Register Now</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col">
+                        <div class="ul-reviews">
+                            <div>
+                                <span class="ul-section-sub-title">Partner Programe</span>
+                                <h2 class="ul-section-title">Become Greenbiller Partner & Earn Upto INR 5 Lakh</h2>
+                                <p class="ul-reviews-heading-descr">Join 27000+ successful Partners across India earning
+
+                                    ₹200000+ monthly by promoting India’s most loved business accounting software..</p>
+                            </div>
+
+                            <div class="ul-reviews-slider-nav ul-slider-nav">
+                                <button class="prev"><i class="flaticon-left"></i></button>
+                                <button class="next"><i class="flaticon-next-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- SERVICES SECTION START -->
         <section class="ul-inner-services ul-section-spacing overflow-hidden">
             <div class="ul-inner-services-container">
@@ -29,18 +93,17 @@
                                     <i class="flaticon-settings-1"></i>
                                 </div>
                                 <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Digital Marketing</a>
+                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Recurring Income</a>
                                     </h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
+                                    <p class="ul-inner-service-descr">Earn commission on initial sales and renewals,
+                                        creating a stable income stream that grows over time.</p>
+
                                 </div>
                             </div>
 
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-1.jpg" alt="Image" class="">
-                            </div>
+                            <!-- <div class="ul-inner-service-img">
+                                                                                                <img src="home-assets/img/recurring_income.png" alt="Image" class="">
+                                                                                            </div> -->
                         </div>
                     </div>
 
@@ -52,17 +115,17 @@
                                     <i class="flaticon-seo"></i>
                                 </div>
                                 <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">SEO Analytics</a></h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
+                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Extensive Support</a>
+                                    </h3>
+                                    <p class="ul-inner-service-descr">Get marketing materials, training, & dedicated support
+                                        team to help you succeed.</p>
+
                                 </div>
                             </div>
 
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-2.jpg" alt="Image" class="">
-                            </div>
+                            <!-- <div class="ul-inner-service-img">
+                                                                                                    <img src="home-assets/img/extensive_support.png" alt="Image" class="">
+                                                                                                </div> -->
                         </div>
                     </div>
 
@@ -74,88 +137,22 @@
                                     <i class="flaticon-content-marketing"></i>
                                 </div>
                                 <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Social Marketing</a>
+                                    <h3 class="ul-inner-service-title"><a href="service-details.html">No Investment
+                                            Required</a>
                                     </h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
+                                    <p class="ul-inner-service-descr">Start your business with zero investment. No need to
+                                        purchase inventory or pay registration fees.</p>
+
                                 </div>
                             </div>
 
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-3.jpg" alt="Image" class="">
-                            </div>
+                            <!-- <div class="ul-inner-service-img">
+                                                                                                    <img src="home-assets/img/no_investment.png" alt="Image" class="">
+                                                                                                </div> -->
                         </div>
                     </div>
 
-                    <!-- single slide -->
-                    <div class="col wow animate__fadeInUp">
-                        <div class="ul-inner-service">
-                            <div class="ul-inner-service-txt">
-                                <div class="ul-inner-service-icon">
-                                    <i class="flaticon-email-1"></i>
-                                </div>
-                                <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Email Marketing</a>
-                                    </h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
-                                </div>
-                            </div>
 
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-4.jpg" alt="Image" class="">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- single slide -->
-                    <div class="col wow animate__fadeInUp">
-                        <div class="ul-inner-service">
-                            <div class="ul-inner-service-txt">
-                                <div class="ul-inner-service-icon">
-                                    <i class="flaticon-coding"></i>
-                                </div>
-                                <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">Web Development</a>
-                                    </h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-5.jpg" alt="Image" class="">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- single slide -->
-                    <div class="col wow animate__fadeInUp">
-                        <div class="ul-inner-service">
-                            <div class="ul-inner-service-txt">
-                                <div class="ul-inner-service-icon">
-                                    <i class="flaticon-web-design"></i>
-                                </div>
-                                <div class="ul-inner-service-content">
-                                    <h3 class="ul-inner-service-title"><a href="service-details.html">UI/UX Design</a></h3>
-                                    <p class="ul-inner-service-descr">Lorem dolor amet consectetur read adipiscing any more
-                                        elit.</p>
-                                    <a href="service-details.html" class="ul-inner-service-link">Read More <i
-                                            class="flaticon-next-1"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="ul-inner-service-img">
-                                <img src="assets/img/inner-service-6.jpg" alt="Image" class="">
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -169,7 +166,7 @@
                     <!-- img -->
                     <div class="col-md-5">
                         <div class="ul-faq-img d-flex justify-content-end">
-                            <img src="assets/img/faq-img.png" alt="Image">
+                            <img src="{{  asset('home-assets/img/faq-img.png') }}" alt="Image">
                         </div>
                     </div>
 
@@ -185,50 +182,84 @@
                                 <div class="ul-single-accordion-item open">
                                     <div class="ul-single-accordion-item__header">
                                         <div class="left">
-                                            <h3 class="ul-single-accordion-item__title">Where should I incorporate my
-                                                business?</h3>
+                                            <h3 class="ul-single-accordion-item__title">What is the Green Biller Partner
+                                                Program?</h3>
                                         </div>
                                         <span class="icon"><i class="flaticon-right"></i></span>
                                     </div>
 
                                     <div class="ul-single-accordion-item__body">
-                                        <p>Aonsectetur adipiscing elit Aenean scelerisque augue vitae consequat Juisque eget
-                                            congue velit in cursus leo sodales the turpis euismod quis sapien euismod quis
-                                            sapien the. E-learning is suitable for students, professionals, and anyone
-                                            interested.</p>
+                                        <p>The Green Biller Partner Program lets you earn by promoting and selling Green
+                                            Biller software to small and medium businesses. You earn a commission for every
+                                            successful referral, making it a great opportunity to build a consistent income
+                                            while helping businesses go digital with smart billing solutions.</p>
                                     </div>
                                 </div>
 
                                 <div class="ul-single-accordion-item">
                                     <div class="ul-single-accordion-item__header">
                                         <div class="left">
-                                            <h3 class="ul-single-accordion-item__title">How long should a business plan be?
+                                            <h3 class="ul-single-accordion-item__title"> How much can I earn as a Green
+                                                Biller partner?
                                             </h3>
                                         </div>
                                         <span class="icon"><i class="flaticon-right"></i></span>
                                     </div>
 
                                     <div class="ul-single-accordion-item__body">
-                                        <p>Aonsectetur adipiscing elit Aenean scelerisque augue vitae consequat Juisque eget
-                                            congue velit in cursus leo sodales the turpis euismod quis sapien euismod quis
-                                            sapien the. E-learning is suitable for students, professionals, and anyone
-                                            interested.</p>
+                                        <p>Your earnings depend on your reach and dedication. On average, Green Biller
+                                            partners earn between ₹20,000 to ₹50,000 per month, while our top performers
+                                            earn over ₹1 lakh monthly by actively promoting and onboarding new customers.
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div class="ul-single-accordion-item">
                                     <div class="ul-single-accordion-item__header">
                                         <div class="left">
-                                            <h3 class="ul-single-accordion-item__title">Be Part of a Community</h3>
+                                            <h3 class="ul-single-accordion-item__title">Do I need technical knowledge to
+                                                become a Green Biller partner?</h3>
                                         </div>
                                         <span class="icon"><i class="flaticon-right"></i></span>
                                     </div>
 
                                     <div class="ul-single-accordion-item__body">
-                                        <p>Aonsectetur adipiscing elit Aenean scelerisque augue vitae consequat Juisque eget
-                                            congue velit in cursus leo sodales the turpis euismod quis sapien euismod quis
-                                            sapien the. E-learning is suitable for students, professionals, and anyone
-                                            interested.</p>
+                                        <p>No technical background is needed. We provide full training, guidance, and
+                                            marketing materials to help you confidently promote Green Biller and explain its
+                                            benefits to customers with ease.
+
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="ul-single-accordion-item">
+                                    <div class="ul-single-accordion-item__header">
+                                        <div class="left">
+                                            <h3 class="ul-single-accordion-item__title"> How do I receive payments?
+                                            </h3>
+                                        </div>
+                                        <span class="icon"><i class="flaticon-right"></i></span>
+                                    </div>
+
+                                    <div class="ul-single-accordion-item__body">
+                                        <p>All commissions are transferred directly to your bank account every month. Green
+                                            Biller also gives you access to a dedicated partner dashboard where you can
+                                            track your referrals, sales, and earnings in real-time.</p>
+                                    </div>
+                                </div>
+                                <div class="ul-single-accordion-item">
+                                    <div class="ul-single-accordion-item__header">
+                                        <div class="left">
+                                            <h3 class="ul-single-accordion-item__title"> Is there any investment required to
+                                                join?
+                                            </h3>
+                                        </div>
+                                        <span class="icon"><i class="flaticon-right"></i></span>
+                                    </div>
+
+                                    <div class="ul-single-accordion-item__body">
+                                        <p>No, there’s absolutely no investment needed. The Green Biller Partner Program is
+                                            completely free to join — you can start promoting and earning without spending
+                                            any money.</p>
                                     </div>
                                 </div>
                             </div>
@@ -244,154 +275,6 @@
         <!-- FAQ SECTION END -->
 
 
-        <!-- TESTIMONIAL SECTION START -->
-        <section class="ul-inner-testimonial ul-section-spacing wow animate__fadeInUp">
-            <div class="ul-container">
-                <div class="ul-section-heading justify-content-center text-center">
-                    <div class="left">
-                        <span class="ul-section-sub-title">Our TESTIMONIALs</span>
-                        <h2 class="ul-section-title">Satisfied Clients Worldwide</h2>
-                    </div>
-                </div>
-
-                <div class="ul-inner-testimonial-slider swiper">
-                    <div class="swiper-wrapper">
-                        <!-- single testimony -->
-                        <div class="swiper-slide">
-                            <div class="ul-inner-testimony">
-                                <div class="ul-inner-testimony-reviewer-img">
-                                    <img src="assets/img/user.jpg" alt="Reviewer Image">
-                                </div>
-
-                                <div class="ul-inner-testimony-txt">
-                                    <div class="ul-inner-testimony-heading">
-                                        <div class="ul-inner-testimony-icon">
-                                            <i class="flaticon-bubble-chat"></i>
-                                        </div>
-
-                                        <div class="ul-inner-testimony-star">
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="ul-inner-testimony-descr">What do I really want? What does success look like
-                                        to me? Why do I want a particular thing? How will this achievement change.</p>
-
-                                    <div class="ul-inner-testimony-reviewer-info">
-                                        <span class="ul-inner-testimony-reviewer-name">John Doe</span>
-                                        <span>/</span>
-                                        <span class="ul-inner-testimony-reviewer-designation">CEO & Founder</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- single testimony -->
-                        <div class="swiper-slide">
-                            <div class="ul-inner-testimony">
-                                <div class="ul-inner-testimony-reviewer-img">
-                                    <img src="assets/img/user-5.jpg" alt="Reviewer Image">
-                                </div>
-
-                                <div class="ul-inner-testimony-txt">
-                                    <div class="ul-inner-testimony-heading">
-                                        <div class="ul-inner-testimony-icon">
-                                            <i class="flaticon-bubble-chat"></i>
-                                        </div>
-
-                                        <div class="ul-inner-testimony-star">
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="ul-inner-testimony-descr">What do I really want? What does success look like
-                                        to me? Why do I want a particular thing? How will this achievement change.</p>
-
-                                    <div class="ul-inner-testimony-reviewer-info">
-                                        <span class="ul-inner-testimony-reviewer-name">John Doe</span>
-                                        <span>/</span>
-                                        <span class="ul-inner-testimony-reviewer-designation">CEO & Founder</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- single testimony -->
-                        <div class="swiper-slide">
-                            <div class="ul-inner-testimony">
-                                <div class="ul-inner-testimony-reviewer-img">
-                                    <img src="assets/img/user.jpg" alt="Reviewer Image">
-                                </div>
-
-                                <div class="ul-inner-testimony-txt">
-                                    <div class="ul-inner-testimony-heading">
-                                        <div class="ul-inner-testimony-icon">
-                                            <i class="flaticon-bubble-chat"></i>
-                                        </div>
-
-                                        <div class="ul-inner-testimony-star">
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="ul-inner-testimony-descr">What do I really want? What does success look like
-                                        to me? Why do I want a particular thing? How will this achievement change.</p>
-
-                                    <div class="ul-inner-testimony-reviewer-info">
-                                        <span class="ul-inner-testimony-reviewer-name">John Doe</span>
-                                        <span>/</span>
-                                        <span class="ul-inner-testimony-reviewer-designation">CEO & Founder</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- single testimony -->
-                        <div class="swiper-slide">
-                            <div class="ul-inner-testimony">
-                                <div class="ul-inner-testimony-reviewer-img">
-                                    <img src="assets/img/user-5.jpg" alt="Reviewer Image">
-                                </div>
-
-                                <div class="ul-inner-testimony-txt">
-                                    <div class="ul-inner-testimony-heading">
-                                        <div class="ul-inner-testimony-icon">
-                                            <i class="flaticon-bubble-chat"></i>
-                                        </div>
-
-                                        <div class="ul-inner-testimony-star">
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                            <i class="flaticon-star"></i>
-                                        </div>
-                                    </div>
-                                    <p class="ul-inner-testimony-descr">What do I really want? What does success look like
-                                        to me? Why do I want a particular thing? How will this achievement change.</p>
-
-                                    <div class="ul-inner-testimony-reviewer-info">
-                                        <span class="ul-inner-testimony-reviewer-name">John Doe</span>
-                                        <span>/</span>
-                                        <span class="ul-inner-testimony-reviewer-designation">CEO & Founder</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- TESTIMONIAL SECTION END -->
     </main>
 
 @endsection
