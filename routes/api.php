@@ -182,8 +182,8 @@ Route::middleware('auth:api')->group(function () {
 
 
   //Category CRUD
-  Route::get('/category-view', [CategoryController::class, 'index']);
-  Route::get('/category-view/{id}', [CategoryController::class, 'show']);
+  
+  Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
   Route::post('/category-view', [CategoryController::class, 'store_show']);
   Route::post('/category-create', [CategoryController::class, 'store']);
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);

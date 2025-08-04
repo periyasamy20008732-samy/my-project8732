@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -15,8 +16,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         try {
-           
-
+        
             $user = auth()->user();
             $storeId = $request->query('store_id');
 
