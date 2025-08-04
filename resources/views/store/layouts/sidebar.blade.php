@@ -111,7 +111,7 @@
                         <!-- Core Settings -->
                         <li>
                             <a href="{{ route('admin.package.index') }}">
-                                <i data-feather="dollar-sign"></i> <span>Core Settings</span>
+                                <i data-feather="settings"></i> <span>Core Settings</span>
                             </a>
                         </li>
                     </ul>
