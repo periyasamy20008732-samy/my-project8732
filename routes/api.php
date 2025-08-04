@@ -75,6 +75,7 @@ Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 
 
 Route::middleware('auth:api')->group(function () {
+
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
 
