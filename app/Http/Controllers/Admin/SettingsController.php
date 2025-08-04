@@ -60,7 +60,7 @@ class SettingsController extends Controller
         $setting->firebase_API        = $request->input('firebase_API');
         $setting->firebase_config        = $request->input('firebase_config');
         $setting->if_onesignal        = $request->input('if_onesignal');
-    
+
         $setting->if_smtp        = $request->input('if_smtp');
         $setting->smtp_host        = $request->input('smtp_host');
         $setting->smtp_port        = $request->input('smtp_port');
@@ -92,20 +92,19 @@ class SettingsController extends Controller
         $setting->phonepe_mode        = $request->input('phonepe_mode');
         $setting->phonepe_merchantId        = $request->input('phonepe_merchantId');
         $setting->phonepe_saltkey        = $request->input('phonepe_saltkey');
-    
-    
+
+
         $setting->if_agora        = $request->input('if_agora');
         $setting->agora_appid        = $request->input('agora_appid');
         $setting->if_zigocloud        = $request->input('if_zigocloud');
 
         $setting->zigocloud_app_id        = $request->input('zigocloud_app_id');
         $setting->zigocloud_app_signin        = $request->input('zigocloud_app_signin');
-          // $setting->if_onesignal     = $request->input('if_onesignal');
+        // $setting->if_onesignal     = $request->input('if_onesignal');
         $setting->onesignal_id     = $request->input('onesignal_id');
         $setting->onesignal_key    = $request->input('onesignal_key');
         $setting->save();
 
         return redirect()->back()->with('success', 'Settings updated successfully.');
-
     }
 }

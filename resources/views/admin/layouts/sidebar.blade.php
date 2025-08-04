@@ -4,16 +4,13 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <!-- Dashboard -->
-                 <li class="submenu-open">
-                    <li>
-                        <a href="{{ route('admin.dashboard') }}" class="subdrop active">
-                                <i data-feather="grid"></i><span>Dashboard</span>
-                            </a>
-                        </li>
-                    </li>
-
-                                
-
+                <li class="submenu-open">
+                <li>
+                    <a href="{{ route('admin.dashboard') }}" class="subdrop active">
+                        <i data-feather="grid"></i><span>Dashboard</span>
+                    </a>
+                </li>
+                </li>
                 <!-- Peoples -->
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
@@ -21,6 +18,16 @@
                         <li>
                             <a href="{{ route('admin.customer.index') }}">
                                 <i data-feather="user"></i> <span>Customers</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Premium</h6>
+                    <ul>
+                        <li>
+                            <a href="{{ route('admin.package.index') }}">
+                                <i data-feather="user"></i> <span>Packages</span>
                             </a>
                         </li>
                     </ul>
@@ -37,9 +44,9 @@
                                 <span>Core Settings</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ route('admin.tax') }}" >Tax Settings</a></li>
-                                <li><a href="{{ route('admin.unit') }}" >Unit Settings</a></li>
-                                <li><a href="{{ route('admin.country') }}">Country Settings</a></li>
+                                <li><a href="{{ route('admin.tax.index') }}">Tax Settings</a></li>
+                                <li><a href="{{ route('admin.unit.index') }}">Unit Settings</a></li>
+                                <li><a href="{{ route('admin.country.index') }}">Country Settings</a></li>
                             </ul>
                         </li>
 
@@ -51,21 +58,22 @@
                                 <span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ route('admin.settings') }}" >Settings</a></li>
+                                <li><a href="{{ route('admin.settings') }}">Settings</a></li>
 
                             </ul>
                         </li>
 
                         <!-- Logout -->
                         <li>
-                           
 
-                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                                    <i data-feather="log-out"></i> <span>Logout</span>
 
-							</a>
-							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-								@csrf
+                            <a href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i data-feather="log-out"></i> <span>Logout</span>
+
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
                             </form>
                         </li>
                     </ul>

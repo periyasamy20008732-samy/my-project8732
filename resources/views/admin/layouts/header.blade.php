@@ -18,7 +18,7 @@
 
     
 
-
+ 
     <!-- Title (Dynamic from Settings) -->
     <title>{{ $settings->site_title ?? 'Dreams Pos Admin Template' }}</title>
 

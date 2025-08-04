@@ -1,5 +1,5 @@
-@include('admin.layouts.header');
-@include('admin.layouts.header-nav');
-@include('admin.layouts.sidebar');
+@include('store.layouts.header');
+@include('store.layouts.header-nav');
+@include('store.layouts.sidebar');
 @yield('content');
-@include('admin.layouts.footer');
+@include('store.layouts.footer');

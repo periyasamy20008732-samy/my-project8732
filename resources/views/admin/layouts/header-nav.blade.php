@@ -69,7 +69,7 @@
 					<div class="dropdown-menu menu-drop-user">
 						<div class="profilename">
 							<div class="profileset">
-								<span class="user-img"><img src="admin-assets/img/profiles/avator1.jpg" alt="">
+								<span class="user-img"><img src="{{ asset('admin-assets/img/profiles/profile.png') }}"alt="" class="img-fluid">
 									<span class="status online"></span></span>
 								<div class="profilesets">
 									<h6>{{ Auth::user()->name }}</h6>
@@ -82,7 +82,7 @@
 							<a class="dropdown-item" href="general-settings.html"><i class="me-2" data-feather="settings"></i>Settings</a>
 							<hr class="m-0">
 							{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}" ><img src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a> --}}
-							<a class="dropdown-item logout pb-0" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img src={{ "admin-assets/img/icons/log-out.svg" }} class="me-2" alt="img">Logout
+							<a class="dropdown-item logout pb-0" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i data-feather="log-out"></i>Logout
 							</a>
 							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 								@csrf
