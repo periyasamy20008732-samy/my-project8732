@@ -5,30 +5,71 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Store;
+use App\Models\Item;
+
+
+
 class WarehouseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $warehouse = Warehouse::all();
+        
 
+        $user = auth()->user();
+        $storeId = $request->input('store_id');
 
-        if ($warehouse->isEmpty()) {
+        $query = Warehouse::query();
 
+        if ($storeId) {
+            // Case 1: store_id is provided
+            $query->where('store_id', $storeId);
+        } else {
+            // Case 2: store_id not provided
+            if (!empty($user->store_id)) {
+                $query->where('store_id', $user->store_id);
+            } else {
+                // Fetch all stores for this user
+                $storeIds = Store::where('user_id', $user->id)->pluck('id')->toArray();
+                if (!empty($storeIds)) {
+                    $query->whereIn('store_id', $storeIds);
+                } else {
+                    // No stores found for user
+                    return response()->json([
+                        'message' => 'No stores found for this user',
+                        'data' => [],
+                        'status' => 0
+                    ], 200);
+                }
+            }
+        }
+
+        $warehouses = $query->get();
+
+        if ($warehouses->isEmpty()) {
             return response()->json([
-                'message' => 'Warehouse  Detail Not Found',
+                'message' => 'Warehouse Detail Not Found',
                 'data' => [],
                 'status' => 0
             ], 200);
-
-        } else {
-
-            return response()->json([
-                'message' => 'Warehouse List',
-                'data' => $warehouse,
-                'status' => 1
-            ], 200);
-
         }
+
+        // Add items_count to each warehouse
+        $warehouses = $warehouses->map(function ($warehouse) {
+            $itemCount = Item::where(function ($q) use ($warehouse) {
+                $q->where('store_id', $warehouse->store_id)
+                    ->orWhere('Warehouse', $warehouse->id);
+            })->count();
+
+            $warehouse->items_count = $itemCount;
+            return $warehouse;
+        });
+
+        return response()->json([
+            'message' => 'Warehouse List',
+            'data' => $warehouses,
+            'status' => 1
+        ], 200);
     }
 
     // Store a new Warehouse
@@ -75,10 +116,7 @@ class WarehouseController extends Controller
         return response()->json(['message' => 'Warehouse deleted']);
     }
 
-    public function warehouseitemupdate()
-    {
-
-    }
+    public function warehouseitemupdate() {}
 
     public function single_show(Request $request)
     {
@@ -103,5 +141,4 @@ class WarehouseController extends Controller
             'status' => 0
         ], 404);
     }
-
 }

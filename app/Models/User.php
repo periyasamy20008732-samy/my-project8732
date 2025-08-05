@@ -85,14 +85,9 @@ class User extends Authenticatable
     {
         return Carbon::now()->greaterThan($this->expires_at);
     }
-    
+
     public function userLevel()
-{
-    return $this->belongsTo(User_level::class, 'user_level');
-}
-
-
-
-
-
+    {
+        return $this->belongsTo(User_level::class, 'user_level');
+    }
 }
