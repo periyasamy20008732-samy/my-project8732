@@ -1,15 +1,3 @@
-<!-- @extends('layouts.app')
-
-@section('title', 'Error 429')
-
-@section('content')
-    <div class="text-center mt-5">
-        <h1 class="display-1">429</h1>
-        <p class="lead">Something went wrong (Error 429).</p>
-        <a href="{{ url('/') }}" class="btn btn-primary">Go Home</a>
-    </div>
-@endsection -->
-
 <!DOCTYPE html>
 <html lang="en">
 

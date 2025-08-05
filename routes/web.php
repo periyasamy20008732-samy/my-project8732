@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\BusinessTypeController;
 use App\Http\Controllers\Admin\BusinessCategoryController;
+use App\Http\Controllers\Admin\PagesController;
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\UnitController;
@@ -105,6 +107,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::resource('country', UnitController::class);
     Route::resource('business-types', BusinessTypeController::class);
     Route::resource('business-category', BusinessCategoryController::class);
+    Route::resource('pages', PagesController::class);
+    Route::get('add-page', [PagesController::class, 'addpage'])->name('addpage');
+
+    Route::get('edit-page/{id}', [PagesController::class, 'editpage'])->name('editpage');
+    Route::put('update-page/{id}', [PagesController::class, 'update'])->name('updatepage');
+
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/{id}', [SettingsController::class, 'update'])->name('settings.update');

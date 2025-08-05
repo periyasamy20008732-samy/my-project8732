@@ -51,7 +51,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('admin.pages.index') }}">
                                 <i data-feather="file-text"></i> <span>Pages</span>
                             </a>
                         </li>
