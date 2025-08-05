@@ -182,7 +182,7 @@ Route::middleware('auth:api')->group(function () {
 
 
   //Category CRUD
-  
+
   Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
   Route::post('/category-view', [CategoryController::class, 'store_show']);
   Route::post('/category-create', [CategoryController::class, 'store']);
@@ -404,8 +404,15 @@ Route::middleware('auth:api')->group(function () {
 
   //NotificationController
   Route::post('/notification-create', [NotificationController::class, 'store']);
-// Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
-// Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+  // Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
+  // Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+
+  //Unit CRUD 
+  Route::get('/unit-view', [UnitsController::class, 'index']);
+  // Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
+  Route::post('/unit-create', [UnitsController::class, 'store']);
+  Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
+  Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
 });
 
 //Packages CRUD
@@ -413,13 +420,6 @@ Route::get('/packages-view', [PackageController::class, 'index']);
 Route::get('/packages-view/{id}', [PackageController::class, 'show']);
 Route::post('/packages-create', [PackageController::class, 'store']);
 Route::put('/packages-update/{id}', [PackageController::class, 'update']);
-
-//Unit CRUD 
-Route::get('/unit-view', [UnitsController::class, 'index']);
-Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
-Route::post('/unit-create', [UnitsController::class, 'store']);
-Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
-Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
 
 
 //OnesignalIdController CRUD 

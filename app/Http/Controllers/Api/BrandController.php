@@ -17,6 +17,7 @@ class BrandController extends Controller
         try {
 
             $user = auth()->user();
+           
             $storeId = $request->query('store_id');
 
             // Resolve effective store IDs
