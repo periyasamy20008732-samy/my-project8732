@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\WebLoginController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\BusinessTypeController;
+use App\Http\Controllers\Admin\BusinessCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\UnitController;
@@ -38,7 +40,6 @@ Route::get('/contact-us', function () {
     return view('contact');
 });
 
-//Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
 
 Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow'])->name('paynow');
 
@@ -47,11 +48,11 @@ Route::post('/paynow/razorpay/order', [RazorpayPaymentController::class, 'create
 Route::post('/paynow/razorpay/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 Route::get('/paynow/success', function () {
-    return view('success'); // ✅ No "razorpay." prefix
+    return view('success');
 })->name('razorpay.success.view');
 
 Route::get('/paynow/failed', function () {
-    return view('fail'); // ✅ No "razorpay." prefix
+    return view('fail');
 })->name('razorpay.fail.view');
 
 //razorpay paymentgateway end
@@ -76,9 +77,7 @@ Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('get
 Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
 Route::post('/account/login-password', [WebLoginController::class, 'accountlogin'])->name('accountlogin');
 
-
 Route::prefix('account')->middleware(['auth'])->name('account.')->group(function () {
-
     Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard', [AccountDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
@@ -92,7 +91,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
-//Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
@@ -100,43 +98,16 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
-
-
     Route::resource('package', PackageController::class);
     Route::resource('customer', CustomerController::class);
     Route::resource('tax', TaxController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('country', UnitController::class);
-    // Route::get('/', [PackageController::class, 'index'])->name('country');
-
-    /*
-    Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
-    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
-    Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
-    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');*/
-
-
+    Route::resource('business-types', BusinessTypeController::class);
+    Route::resource('business-category', BusinessCategoryController::class);
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/{id}', [SettingsController::class, 'update'])->name('settings.update');
-
-    //  Route::post('/customer', [CustomerController::class, 'store'])->name('customers.store');
-    //Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('customers.update');
-    // Order matters! Put /edit route above /{id}
-    //  Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
-
-
-    // Route::get('/dashboard', [PackageController::class, 'dashboard'])->name('dashboard');
-
-    /*
-        Route::get('/packages', [PackageController::class, 'index'])->name('package');
-        Route::post('/packages', [PackageController::class, 'store'])->name('package.store');
-        Route::put('/packages/{id}', [PackageController::class, 'update'])->name('package.update');
-        Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('package.destroy');*/
-
-
-    //Route::get('/tax', [PackageController::class, 'index'])->name('tax');
-    // Add more routes here
 
 });
 
@@ -153,17 +124,9 @@ Route::get('/store/register', [StoreLoginController::class, 'showRegisterForm'])
 Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () {
 
     Route::post('/store/logout', [StoreLoginController::class, 'logout'])->name('logout');
-
     Route::resource('package', PackageController::class);
-
-
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // In routes/web.php
     Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');
-
-    //::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-
 
 });
 
@@ -171,10 +134,9 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 // ---------- Store Side End ----------//
 
 
+
 /*
-Route::prefix('admin')
-->middleware('auth')
-->name('admin.')
-->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});*/
+   Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
+   Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+   Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
+   Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');*/

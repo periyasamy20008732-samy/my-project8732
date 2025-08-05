@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,32 +14,32 @@ return new class extends Migration
             $table->id();
             $table->string('user_level')->nullable();
             $table->string('store_id')->nullable();
-         $table->string('name');
-         $table->string('email')->nullable()->unique();
-         $table->string('country_code');
-         $table->string('mobile')->unique(); 
-        $table->string('password');
-         $table->string('whatsapp_no')->nullable();       
-        $table->string('user_card')->nullable();  
-        $table->string('profile_image')->nullable();  
-        $table->string('dob')->nullable();  
-        $table->string('count_id')->nullable();  
-       $table->string('employee_code')->nullable(); 
-       $table->string('warehouse_id')->nullable(); 
-       $table->string('current_latitude')->nullable(); 
-       $table->string('current_longitude')->nullable(); 
-       $table->string('zone')->nullable(); 
-       $table->string('otp')->nullable(); 
-       $table->string('expires_at')->nullable(); 
-       $table->string('mobile_verify')->nullable(); 
-       $table->string('email_verify')->nullable(); 
-       $table->string('status')->nullable(); 
-       $table->string('ban')->nullable(); 
-       $table->string('created_by')->nullable(); 
-       $table->string('subcription_id')->nullable(); 
-       $table->string('subcription_start')->nullable(); 
-       $table->string('subcription_end')->nullable(); 
-        $table->string('license_key')->nullable(); 
+            $table->string('name');
+            $table->string('email')->nullable()->unique();
+            $table->string('country_code');
+            $table->string('mobile')->unique();
+            $table->string('password');
+            $table->string('whatsapp_no')->nullable();
+            $table->string('user_card')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->string('dob')->nullable();
+            $table->string('count_id')->nullable();
+            $table->string('employee_code')->nullable();
+            $table->string('warehouse_id')->nullable();
+            $table->string('current_latitude')->nullable();
+            $table->string('current_longitude')->nullable();
+            $table->string('zone')->nullable();
+            $table->string('otp')->nullable();
+            $table->string('expires_at')->nullable();
+            $table->string('mobile_verify')->nullable();
+            $table->string('email_verify')->nullable();
+            $table->string('status')->nullable();
+            $table->string('ban')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('subcription_id')->nullable();
+            $table->string('subcription_start')->nullable();
+            $table->string('subcription_end')->nullable();
+            $table->string('license_key')->nullable();
 
             $table->rememberToken();
             $table->timestamps();
