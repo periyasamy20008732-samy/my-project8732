@@ -38,9 +38,7 @@
                                 <th>Sale Code</th>
                                 <th>Reference</th>
                                 <th>Customer Name</th>
-                                <th>Total</th>
-                                <th>Paid Payment</th>
-                                <th>Payment Status</th>
+
                                 <th>Created by</th>
                                 <th>Action</th>
                             </tr>
@@ -939,9 +937,7 @@
                 { data: 'id', name: 'id' },
                 { data: 'reference_no', name: 'reference_no' },
                 { data: 'customer.customer_name', name: 'customer.customer_name' },
-                { data: 'grand_total', name: 'grand_total' },
-                { data: 'paid_amount', name: 'paid_amount' },
-                { data: 'pos', name: 'pos' },
+            
                 { data: 'user_level_name', name: 'user_level_name' },
                 //{ data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
