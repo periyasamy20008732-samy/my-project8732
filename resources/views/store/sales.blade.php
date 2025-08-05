@@ -22,7 +22,7 @@
                             data-feather="chevron-up"></i></a></li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-package"><i
+                <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-sales-new"><i
                         data-feather="plus-circle" class="me-2"></i>Add New Sales</a>
             </div>
         </div>
@@ -38,7 +38,9 @@
                                 <th>Sale Code</th>
                                 <th>Reference</th>
                                 <th>Customer Name</th>
-
+                                <th>Total</th>
+                                <th>Paid Payment</th>
+                                <th>Payment Status</th>
                                 <th>Created by</th>
                                 <th>Action</th>
                             </tr>
@@ -73,7 +75,7 @@
                                             <label>Customer Name</label>
                                             <div class="row">
                                                 <div class="col-lg-10 col-sm-10 col-10">
-                                                    <select class="select">
+                                                    <select class="select form-select">
                                                         <option>Choose</option>
                                                         <option>Customer Name</option>
                                                     </select>
@@ -99,7 +101,7 @@
                                     <div class="col-lg-4 col-sm-6 col-12">
                                         <div class="input-blocks">
                                             <label>Supplier</label>
-                                            <select class="select">
+                                            <select class="select form-select">
                                                 <option>Choose</option>
                                                 <option>Supplier Name</option>
                                             </select>
@@ -108,14 +110,17 @@
                                     <div class="col-lg-12 col-sm-6 col-12">
                                         <div class="input-blocks">
                                             <label>Product Name</label>
-                                            <div class="input-groupicon select-code">
-                                                <input type="text" placeholder="Please type product code and select">
-                                                <div class="addonset">
-                                                    <img src="assets/img/icons/qrcode-scan.svg" alt="img">
-                                                </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Please type product code and select">
+                                                <span class="input-group-text bg-white border-start-0">
+                                                    <img src="{{ asset('admin-assets/img/icons/qrcode-scan.svg') }}"
+                                                        alt="img" style="width: 20px; height: 20px;">
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="table-responsive no-pagination">
                                     <table class="table  datanew">
@@ -200,7 +205,7 @@
                                     <div class="col-lg-3 col-sm-6 col-12">
                                         <div class="input-blocks mb-5">
                                             <label>Status</label>
-                                            <select class="select">
+                                            <select class="select form-select">
                                                 <option>Choose</option>
                                                 <option>Completed</option>
                                                 <option>Inprogress</option>
@@ -221,6 +226,7 @@
         </div>
     </div>
 </div>
+
 <!-- /add popup -->
 
 <!-- details popup -->
@@ -502,7 +508,8 @@
                                             <div class="input-groupicon select-code">
                                                 <input type="text" placeholder="Please type product code and select">
                                                 <div class="addonset">
-                                                    <img src="assets/img/icons/scanners.svg" alt="img">
+                                                    <img src="{{ asset('admin-assets/img/icons/qrcode-scan.svg') }}"
+                                                        alt="img" style="width: 20px; height: 20px;">
                                                 </div>
                                             </div>
                                         </div>
@@ -665,7 +672,7 @@
                                     <div class="col-lg-3 col-sm-6 col-12">
                                         <div class="input-blocks mb-5">
                                             <label>Status</label>
-                                            <select class="select">
+                                            <select class="select form-select">
                                                 <option>Choose</option>
                                                 <option>Completed</option>
                                                 <option>Inprogress</option>
@@ -937,7 +944,9 @@
                 { data: 'id', name: 'id' },
                 { data: 'reference_no', name: 'reference_no' },
                 { data: 'customer.customer_name', name: 'customer.customer_name' },
-            
+                { data: 'grand_total', name: 'grand_total' },
+                { data: 'paid_amount', name: 'paid_amount' },
+                { data: 'pos', name: 'pos' },
                 { data: 'user_level_name', name: 'user_level_name' },
                 //{ data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }

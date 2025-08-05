@@ -30,7 +30,7 @@ class SalesController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     return '
-        
+        <td class="text-center">
             <a class="action-set" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="true">
                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
             </a>
@@ -69,7 +69,7 @@ class SalesController extends Controller
                     </form>
                 </li>
             </ul>
-      
+        </td>
     ';
                 })
 

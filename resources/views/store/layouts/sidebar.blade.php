@@ -25,10 +25,10 @@
                                 <span>Contacts</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                {{-- <li><a href="{{ route('store.tax.index') }}">Customer</a>
+                                <li><a href="{{ route('store.sales.index') }}">Customer</a>
                                 </li>
-                                <li><a href="{{ route('store.unit.index') }}">Supplier</a></li>
-                                <li><a href="{{ route('store.unit.index') }}">Users</a></li> --}}
+                                <li><a href="{{ route('store.sales.index') }}">Supplier</a></li>
+                                <li><a href="{{ route('store.sales.index') }}">Users</a></li>
 
                             </ul>
                         </li>
@@ -39,18 +39,18 @@
                     <h6 class="submenu-hdr">Premium</h6>
                     <ul>
                         <li>
-                            <a href="{{ route('store.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="bar-chart"></i> <span>Advance</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('store.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="shopping-bag"></i> <span>purchase</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('store.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="dollar-sign"></i> <span>Expenses</span>
                             </a>
                         </li>
@@ -62,13 +62,13 @@
                     <h6 class="submenu-hdr">Store</h6>
                     <ul>
                         <li>
-                            <a href="{{ route('store.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="sliders"></i></i> <span>Items</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="{{ route('admin.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="settings"></i><span>Store</span>
                             </a>
                         </li>
@@ -87,7 +87,7 @@
                     <ul>
                         <!-- Core Settings -->
                         <li>
-                            <a href="{{ route('admin.package.index') }}">
+                            <a href="{{ route('store.sales.index') }}">
                                 <i data-feather="settings"></i> <span>Core Settings</span>
                             </a>
                         </li>
