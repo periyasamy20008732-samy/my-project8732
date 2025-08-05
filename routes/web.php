@@ -127,7 +127,8 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
     Route::resource('package', PackageController::class);
     Route::resource('sales', SalesController::class);
-    
+    Route::resource('customer', SalesController::class);
+
 
     Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');
 
