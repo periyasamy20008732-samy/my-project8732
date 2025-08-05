@@ -75,7 +75,6 @@ class WebLoginController extends Controller
         return view('account.auth.verify', [
             'mobile' => $cached['mobile'] ?? ''
         ]);
-
     }
     public function verifyotp(Request $request)
     {
@@ -109,13 +108,11 @@ class WebLoginController extends Controller
 
 
             return redirect()->route('account.dashboard');
-
         } else {
-            return redirect()->route('login')->withErrors([
+            return redirect()->route('accountlogin.form')->withErrors([
                 'mobile' => 'Mobile number not registered.'
             ]);
         }
-
     }
     public function accountlogin(Request $request)
     {
@@ -159,5 +156,4 @@ class WebLoginController extends Controller
         //return redirect()->route('login.form');
         return view('index');
     }
-
 }

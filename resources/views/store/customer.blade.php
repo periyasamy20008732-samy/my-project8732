@@ -1,745 +1,537 @@
-
 @extends('admin.layouts.app')
+
 @section('content')
-  
-
-			<div class="page-wrapper">
-				<div class="content">
-					<div class="page-header">
-						<div class="add-item d-flex">
-							<div class="page-title">
-								<h4>Customer List</h4>
-								<h6>Manage your warehouse</h6>
-							</div>
-						</div>
-						<ul class="table-top-head">
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img src="assets/img/icons/pdf.svg" alt="img"></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img src="assets/img/icons/excel.svg" alt="img"></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Print"><i data-feather="printer" class="feather-rotate-ccw"></i></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i data-feather="rotate-ccw" class="feather-rotate-ccw"></i></a>
-							</li>
-							<li>
-								<a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i data-feather="chevron-up" class="feather-chevron-up"></i></a>
-							</li>
-						</ul>
-						<div class="page-btn">
-							<a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units"><i data-feather="plus-circle" class="me-2"></i>Add New Customer</a>
-						</div>
-					</div>
-					<!-- /product list -->
-					<div class="card table-list-card">
-						<div class="card-body">
-							<div class="table-top">
-								<div class="search-set">
-									<div class="search-input">
-										<a href="" class="btn btn-searchset"><i data-feather="search" class="feather-search"></i></a>
-									</div>
-								</div>
-								<div class="search-path">
-									<div class="d-flex align-items-center">
-										<a class="btn btn-filter" id="filter_search">
-											<i data-feather="filter" class="filter-icon"></i>
-											<span><img src="assets/img/icons/closes.svg" alt="img"></span>
-										</a>
-										
-									</div>
-								</div>
-								<div class="form-sort">
-									<i data-feather="sliders" class="info-img"></i>
-									<select class="select">
-										<option>Sort by Date</option>
-										<option>Newest</option>
-										<option>Oldest</option>
-									</select>
-								</div>
-							</div>
-							<!-- /Filter -->
-							<div class="card" id="filter_inputs">
-								<div class="card-body pb-0">
-									<div class="row">
-										<div class="col-lg-3 col-sm-6 col-12">
-											<div class="input-blocks">
-												<i data-feather="user" class="info-img"></i>
-												<select class="select">
-													<option>Choose Customer Name</option>
-													<option>Benjamin</option>
-													<option>Ellen</option>
-													<option>Freda</option>
-													<option>Kaitlin</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-3 col-sm-6 col-12">
-											<div class="input-blocks">
-												<i data-feather="globe" class="info-img"></i>
-												<select class="select">
-													<option>Choose Country</option>
-													<option>India</option>
-													<option>USA</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-3 col-sm-6 col-12 ms-auto">
-											<div class="input-blocks">
-												<a class="btn btn-filters ms-auto"> <i data-feather="search" class="feather-search"></i> Search </a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /Filter -->
-							<div class="table-responsive">
-								<table class="table  datanew">
-									<thead>
-										<tr>
-											<th class="no-sort">
-												<label class="checkboxs">
-													<input type="checkbox" id="select-all">
-													<span class="checkmarks"></span>
-												</label>
-											</th>
-											<th>Customer  Name</th>
-											<th>Code</th>
-											
-											<th>Email</th>
-											<th>Phone</th>
-											<th>Country</th>
-											<th class="no-sort">Action</th>
-										</tr>
-									</thead>
-									<tbody>
-									  @foreach($customer as $customers) 
-										<tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-23.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">{{  $customers->customer_name }}</a>
-												</div>
-											</td>
-											<td>
-												201
-											</td>
-											<td>{{ $customers->email }}</td>
-											<td>{{ $customers->id }}</td>
-											<td>{{ $customers->country->name??'' }}</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2"  href="{{ route('customers.update', $customers->id) }}" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-										 @endforeach
-                                       {{--  <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-15.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Rose</a>
-												</div>
-											</td>
-											<td>
-												201
-											</td>
-											<td>Rose</td>
-											<td>
-												rose@exmple.com
-											</td>
-											<td>+11367529510  </td>
-											<td>USA</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-16.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Benjamin</a>
-												</div>
-											</td>
-											<td>
-												203
-											</td>
-											<td>Benjamin</td>
-											<td>
-												benjamin@exmple.com
-											</td>
-											<td>+15362789414 </td>
-											<td>Japan</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-17.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Kaitlin</a>
-												</div>
-											</td>
-											<td>
-												204
-											</td>
-											<td>Kaitlin</td>
-											<td>
-												kaitlin@exmple.com
-											</td>
-											<td>+18513094627 </td>
-											<td>Austria</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-18.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Lilly</a>
-												</div>
-											</td>
-											<td>
-												205
-											</td>
-											<td>Lilly</td>
-											<td>
-												lilly@exmple.com
-											</td>
-											<td>+14678219025 </td>
-											<td>India</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-19.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Freda</a>
-												</div>
-											</td>
-											<td>
-												206
-											</td>
-											<td>Freda</td>
-											<td>
-												freda@exmple.com
-											</td>
-											<td>+10913278319 </td>
-											<td>France</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/customer/people-customer-07.jpg" class="people-customer-walk" alt="product">
-													</a>
-													<a href="javascript:void(0);">Walk-in-Customer</a>
-												</div>
-											</td>
-											<td>
-												01
-											</td>
-											<td>Walk-in-Customer</td>
-											<td>
-												customer01@exmple.com
-											</td>
-											<td>+19125852947 </td>
-											<td>Belgium</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-06.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Maybelle</a>
-												</div>
-											</td>
-											<td>
-												207
-											</td>
-											<td>Maybelle</td>
-											<td>
-												maybelle@exmple.com
-											</td>
-											<td>+19125852947 </td>
-											<td>Italy</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/users/user-10.jpg" alt="product">
-													</a>
-													<a href="javascript:void(0);">Ellen</a>
-												</div>
-											</td>
-											<td>
-												208
-											</td>
-											<td>Ellen</td>
-											<td>
-												ellen@exmple.com
-											</td>
-											<td>+19756194733 </td>
-											<td>Canada</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	
-
-                                        <tr>
-											<td>
-												<label class="checkboxs">
-													<input type="checkbox">
-													<span class="checkmarks"></span>
-												</label>
-											</td>											
-											<td>
-												<div class="userimgname cust-imgname">
-													<a href="javascript:void(0);" class="product-img">
-														<img src="assets/img/customer/people-customer-07.jpg" class="people-customer-walk" alt="product">
-													</a>
-													<a href="javascript:void(0);">Walk-in-Customer</a>
-												</div>
-											</td>
-											<td>
-												02
-											</td>
-											<td>Walk-in-Customer</td>
-											<td>
-                                                customer02@exmple.com
-											</td>
-											<td>+19167850925 </td>
-											<td>Greece</td>
-											<td class="action-table-data">
-												<div class="edit-delete-action">
-													<a class="me-2 p-2" href="#">
-														<i data-feather="eye" class="feather-eye"></i>
-													</a>
-													<a class="me-2 p-2" href="#" data-bs-toggle="modal" data-bs-target="#edit-units">
-														<i data-feather="edit" class="feather-edit"></i>
-													</a>
-													<a class="confirm-text p-2" href="javascript:void(0);">
-														<i data-feather="trash-2" class="feather-trash-2"></i>
-													</a>
-												</div>
-												
-											</td>
-										</tr>	 --}}
-										
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<!-- /product list -->
-				</div>
-			</div>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="page-header">
+            <div class="add-item d-flex">
+                <div class="page-title">
+                    <h4>Customers</h4>
+                    <h6>Manage your Customers</h6>
+                </div>
+            </div>
+            <ul class="table-top-head">
+                <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('admin-assets/img/icons/pdf.svg') }}"
+                            alt="pdf"></a></li>
+                <li><a data-bs-toggle="tooltip" title="Excel"><img src="{{ asset('admin-assets/img/icons/excel.svg') }}"
+                            alt="excel"></a></li>
+                <li><a data-bs-toggle="tooltip" title="Print"><i data-feather="printer"></i></a></li>
+                <li><a href="javascript:void(0);" data-bs-toggle="tooltip" title="Refresh"
+                        onclick="location.reload();"><i data-feather="rotate-ccw"></i></a></li>
+                <li><a data-bs-toggle="tooltip" title="Collapse" id="collapse-header"><i
+                            data-feather="chevron-up"></i></a></li>
+            </ul>
+            <div class="page-btn">
+                <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-customer"><i
+                        data-feather="plus-circle" class="me-2"></i>Add New Customer</a>
+            </div>
         </div>
-		<!-- /Main Wrapper -->
 
-		<!-- Add Customer -->
-		<div class="modal fade" id="add-units">
-			<div class="modal-dialog modal-dialog-centered custom-modal-two">
-				<div class="modal-content">
-					<div class="page-wrapper-new p-0">
-						<div class="content">
-							<div class="modal-header border-0 custom-modal-header">
-								<div class="page-title">
-									<h4>Add Customer</h4>
-								</div>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body custom-modal-body">
-								{{-- <form action="customers.html"> --}}
-									<form action="{{ route('customers.store') }}" method="POST">
-    @csrf
-									<div class="modal-title-head people-cust-avatar">
-										<h6>Avatar</h6>
-									</div>
-									<div class="new-employee-field">
-										<div class="profile-pic-upload">
-											<div class="profile-pic">
-												<span><i data-feather="plus-circle" class="plus-down-add"></i> Add Image</span>
-											</div>
-											<div class="mb-3">
-												<div class="image-upload mb-0">
-													<input type="file">
-													<div class="image-uploads">
-														<h4>Change Image</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-lg-4 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Customer Name</label>
-												<input type="text"  name="name" value="{{ old('name') }}"class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-4 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Email</label>
-												<input type="email" name="email" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-4 pe-0">
-											<div class="input-blocks">
-												<label class="mb-2">Phone</label>
-												<input class="form-control form-control-lg group_formcontrol" id="phone" name="phone" type="text">
-											</div>
-										</div>
-										<div class="col-lg-12 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Address</label>
-												<input type="text" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-6 pe-0">
-											<div class="mb-3">
-												<label class="form-label">City</label>
-												<input type="text" class="form-control">
-											</div>
-										</div>
-										<div class="col-lg-6 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Country</label>
-												<select class="select">
-													<option>Choose</option>
-													<option>United Kingdom</option>
-													<option>United State</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-3 input-blocks">
-												<label class="form-label">Descriptions</label>
-												<textarea class="form-control mb-1"></textarea>
-												<p>Maximum 60 Characters</p>
-											</div>											
-										</div>									
-									</div>								
-									
-									<div class="modal-footer-btn">
-										<button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Add Customer -->
+        <div class="card table-list-card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="customerTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Customer Code</th>
+                                <th>Customer Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th class="no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <!-- Edit Customer -->
-		<div class="modal fade" id="edit-units">
-			<div class="modal-dialog modal-dialog-centered custom-modal-two">
-				<div class="modal-content">
-					<div class="page-wrapper-new p-0">
-						<div class="content">
-							<div class="modal-header border-0 custom-modal-header">
-								<div class="page-title">
-									<h4>Edit Customer</h4>
-								</div>
-								<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body custom-modal-body">
-								
-							
-								@foreach($customer as $customers)
-    <form action="{{ route('customers.update', $customers->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
 
-										 
-									<div class="modal-title-head people-cust-avatar">
-										<h6>Avatar</h6>
-									</div>
-									<div class="new-employee-field">
-										<div class="profile-pic-upload">
-											<div class="profile-pic people-profile-pic">                                                
-												<img src="assets/img/profiles/profile.png" alt="Img">
-												<a href="#"><i data-feather="x-square" class="x-square-add"></i></a>                                          
-											</div>
-											<div class="mb-3">
-												<div class="image-upload mb-0">
-													<input type="file">
-													<div class="image-uploads">
-														<h4>Change Image</h4>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-lg-4 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Customer Name</label>
-												<input type="text" class="form-control" name="name" value="{{ $customers->name }}">
-											</div>
-										</div>
-										<div class="col-lg-4 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Email</label>
-												<input type="email" class="form-control" value="{{ $customers->email }}">
-											</div>
-										</div>
-										<div class="col-lg-4 pe-0">
-											<div class="input-blocks">
-												<label class="mb-2">Phone</label>
-												<input class="form-control form-control-lg group_formcontrol" id="phone2" name="phone2" type="text">
-											</div>
-										</div>
-										<div class="col-lg-12 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Address</label>
-												<input type="text" class="form-control" value="Budapester Strasse 2027259 ">
-											</div>
-										</div>
-										<div class="col-lg-6 pe-0">
-											<div class="mb-3">
-												<label class="form-label">City</label>											
-												<select class="select">
-													<option>Varrel</option>
-													<option>Varrel</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-6 pe-0">
-											<div class="mb-3">
-												<label class="form-label">Country</label>
-												<select class="select">
-													<option>Germany</option>
-													<option>United State</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-lg-12">
-											<div class="mb-0 input-blocks">
-												<label class="form-label">Descriptions</label>
-												<textarea class="form-control mb-1"></textarea>
-												<p>Maximum 60 Characters</p>
-											</div>											
-										</div>									
-									</div>
-									
-									
-									<div class="modal-footer-btn">
-										<button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-submit">Save Changes</button>
-									</div>
-									@endforeach
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Edit Customer -->
-		<div class="customizer-links" id="setdata">
-			<ul class="sticky-sidebar">
-				<li class="sidebar-icons">
-					<a href="#" class="navigation-add" data-bs-toggle="tooltip" data-bs-placement="left"
-						data-bs-original-title="Theme">
-						<i data-feather="settings" class="feather-five"></i>
-					</a>
-				</li>
-			</ul>
-		</div>
+<!-- View Modal -->
+<div class="modal fade" id="view-customer">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Customer Details</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3"><strong>Customer Name:</strong> <span id="view_customer_name"></span>
+                                </div>
+                                <div class="mb-3"><strong>Email:</strong> <span id="view_customer_email"></span></div>
+                                <div class="mb-3"><strong>Phone:</strong> <span id="view_customer_mobile"></span></div>
+                                <div class="mb-3"><strong>Country:</strong> <span id="view_customer_country"></span>
+                                </div>
+                                <div class="mb-3"><strong>City:</strong> <span id="view_customer_city"></span></div>
+                                <div class="mb-3"><strong>State:</strong> <span id="view_customer_state"></span></div>
+                                <div class="mb-3"><strong>Pincode:</strong> <span id="view_customer_postcode"></span>
+                                </div>
+                                <div class="mb-3"><strong>Status:</strong> <span id="view_customer_status"></span></div>
+                                <div class="mb-3"><strong>Avatar:</strong><br>
+                                    <img id="view_customer_avatar" src="#" alt="Avatar"
+                                        style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer-btn">
+                            <button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- End View Modal -->
 
-</html>
+
+
+<!-- Add Customer Modal -->
+<div class="modal fade" id="add-customer">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Create Customer</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form action="{{ route('admin.customer.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+
+                            <!-- Avatar Upload -->
+                            <div class="modal-title-head people-cust-avatar">
+                                <h6>Avatar</h6>
+                            </div>
+                            <div class="new-employee-field">
+                                <div class="profile-pic-upload" style="text-align: center;">
+                                    <div class="profile-pic" onclick="document.getElementById('image-input1').click();"
+                                        style="width: 120px; height: 120px;  border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f0f0f0; cursor: pointer; position: relative;">
+                                        <img id="preview1" src="#" alt="Preview"
+                                            style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                        <span id="placeholder1"
+                                            style="font-size: 14px; color: #555; text-align: center;">
+                                            <i data-feather="plus-circle" class="plus-down-add"
+                                                style="display: block; font-size: 20px;"></i>
+                                            Add Image
+                                        </span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="image-upload mb-0">
+                                            <input type="file" id="image-input1" name="attachment_1" accept="image/*"
+                                                style="display: none;" onchange="previewImage1(this)">
+                                            <div class="image-uploads">
+                                                <h4 onclick="document.getElementById('image-input1').click();">Upload
+                                                    Image</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Customer Info -->
+                            <div class="row">
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Customer Name</label>
+                                        <input type="text" class="form-control" name="customer_name" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Country</label>
+                                        <select id="edit_country" name="country_id" class="form-control">
+                                            <option value="">Select Country</option>
+                                            @foreach($countries as $country)
+                                            <option value="{{ $country->name }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" class="form-control" name="mobile" maxlength="12"
+                                            minlength="12">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-control" name="city">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">State</label>
+                                        <input type="text" class="form-control" name="state">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" class="form-control" name="postcode">
+                                    </div>
+                                </div>
+                                {{-- <div class="col-lg-12">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="desc ription" class="form-control mb-1"
+                                            maxlength="60"></textarea>
+                                        <p>Maximum 60 Characters</p>
+                                    </div>
+                                </div> --}}
+                            </div>
+
+                            <div class="modal-footer-btn">
+                                <button type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Customer Modal -->
+
+<!-- Edit Customer -->
+<div class="modal fade" id="edit-customer">
+    <div class="modal-dialog modal-dialog-centered custom-modal-two">
+        <div class="modal-content">
+            <div class="page-wrapper-new p-0">
+                <div class="content">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4>Edit Customer</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-modal-body">
+                        <form method="POST" id="editCustomerForm" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <!-- Avatar Upload -->
+                            <div class="modal-title-head people-cust-avatar">
+                                <h6>Avatar</h6>
+                            </div>
+                            <div class="new-employee-field">
+                                <div class="profile-pic-upload" style="text-align: center;">
+                                    <div class="profile-pic" onclick="document.getElementById('image-input2').click();"
+                                        style="width: 120px; height: 120px;  border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f0f0f0; cursor: pointer; position: relative;">
+                                        <img id="edit_image" src="#" alt="Preview"
+                                            style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                        <span id="placeholder2"
+                                            style="font-size: 14px; color: #555; text-align: center;">
+                                            <i data-feather="plus-circle" class="plus-down-add"
+                                                style="display: block; font-size: 20px;"></i>
+                                            Add Image
+                                        </span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="image-upload mb-0">
+                                            <input type="file" id="image-input2" name="attachment_2" accept="image/*"
+                                                style="display: none;" onchange="previewImage(this)">
+                                            <div class="image-uploads">
+                                                <h4 onclick="document.getElementById('image-input2').click();">Change
+                                                    Image</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Customer Info -->
+                            <div class="row">
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Customer Name</label>
+                                        <input type="text" class="form-control" name="customer_name"
+                                            id="edit_customer_name" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" id="edit_email">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Country</label>
+                                        <select id="edit_country" name="country_id" class="form-control">
+                                            <option value="">Select Country</option>
+                                            @foreach($countries as $country)
+                                            <option value="{{ $country->name }}">{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" class="form-control" name="mobile" id="edit_mobile"
+                                            maxlength="12" minlength="12">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-control" name="city" id="edit_city">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">State</label>
+                                        <input type="text" class="form-control" name="state" id="edit_state">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 pe-0">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" class="form-control" name="postcode" id="edit_postcode">
+                                    </div>
+                                </div>
+                                {{-- <div class="col-lg-12">
+                                    <div class="mb-3 input-blocks">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="desc ription" class="form-control mb-1"
+                                            maxlength="60"></textarea>
+                                        <p>Maximum 60 Characters</p>
+                                    </div>
+                                </div> --}}
+                            </div>
+
+                            <div class="modal-footer-btn">
+                                <button type="button" class="btn btn-cancel me-2"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Customer Modal -->
+
+
+@endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+    const table = $('#customerTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('admin.customer.index') }}",
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+            { data: null, name: 'combined_id', render: function(data, type, row) {return `${row.customer_code}${row.id}`;}},
+            { data: 'customer_name', name: 'customer_name' },
+            { data: 'email', name: 'email' },
+            { data: 'mobile', name: 'mobile' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ]
+    });
+
+	 $(document).on('click', '.view-btn', function () {
+        let customerId = $(this).data('id');
+
+        $.ajax({
+            url: '/admin/customer/' + customerId,
+            type: 'GET',
+            success: function (data) {
+                $('#view_customer_code').text(data.customer_code ?? '');
+                $('#view_customer_name').text(data.customer_name ?? '');
+                $('#view_customer_email').text(data.email ?? '');
+                $('#view_customer_mobile').text(data.mobile ?? '');
+                $('#view_customer_country').text(data.country_id ?? '');
+                $('#view_customer_city').text(data.city ?? '');
+                $('#view_customer_state').text(data.state ?? '');
+                $('#view_customer_postcode').text(data.postcode ?? '');
+                $('#view_customer_status').text(data.status ?? 'Active');
+                if (data.attachment_1) {
+                    $('#view_customer_avatar').attr('src', '/' + data.attachment_1).show();
+                } else {
+                    $('#view_customer_avatar').hide();
+                }
+                $('#view-customer').modal('show');
+            }
+        });
+    });
+
+ /* $(document).on('click', '.edit-btn', function () {
+    const id = $(this).data('id');
+    $.get(`/admin/customer/${id}`, function (data) {
+        $('#edit_id').val(data.id);
+        $('#edit_customer_name').val(data.customer_name);
+        $('#edit_email').val(data.email);
+        $('#edit_phone').val(data.mobile);
+        $('#edit_address').val(data.address);
+        $('#edit_city').val(data.city);
+        $('#edit_country option').val(data.country);
+        $('#edit_description').val(data.description);
+
+        $('#edit_country option').each(function () {
+            if ($(this).val().trim().toLowerCase() === data.country.trim().toLowerCase()) {
+                $(this).prop('selected', true);
+            }
+        });
+
+        if (data.attachment_1) {
+            $('#edit_image').attr('src', '/' + data.attachment_1).show();
+    $('#placeholder2').hide();
+} else {
+    $('#edit_image').hide();
+    $('#placeholder2').show();
+}
+
+        // $('#edit_image').val(data.attachment_1);
+        $('#editCustomerForm').attr('action', `/admin/customer/${data.id}`);
+        $('#edit-customer').modal('show');*/
+        $(document).on('click', '.edit-btn', function () {
+    const id = $(this).data('id');
+    $.get(`/admin/customer/${id}`, function (data) {
+        $('#edit_id').val(data.id);
+        $('#edit_customer_name').val(data.customer_name);
+        $('#edit_email').val(data.email);
+        $('#edit_mobile').val(data.mobile);
+        $('#edit_city').val(data.city);
+        $('#edit_state').val(data.state);
+        $('#edit_postcode').val(data.postcode);
+       // $('#edit_description').val(data.description);
+
+        // ✅ Correct country selection
+        const dbCountry = data.country ? data.country.trim().toLowerCase() : '';
+        $('#edit_country option').each(function () {
+            const optionVal = $(this).val().trim().toLowerCase();
+            if (optionVal === dbCountry) {
+                $(this).prop('selected', true);
+                return false; // break loop
+            }
+        });
+
+        // ✅ Show image preview if exists
+        if (data.attachment_1) {
+            $('#edit_image').attr('src', '/' + data.attachment_1).show();
+            $('#placeholder2').hide();
+        } else {
+            $('#edit_image').hide();
+            $('#placeholder2').show();
+        }
+
+        $('#editCustomerForm').attr('action', `/admin/customer/${data.id}`);
+        $('#edit-customer').modal('show');
+    });
+});
+
+
+    $(document).on('click', '.delete-btn', function () {
+        const id = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This customer will be deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#delete-form-' + id).submit();
+            }
+        });
+    });
+});
+
+@if(session('success'))
+Swal.fire({
+    icon: 'success',
+    title: 'Success!',
+    text: '{{ session('success') }}',
+    timer: 2000,
+    showConfirmButton: false
+});
+@endif
+</script>
+
+<script>
+    // ADD IMAGE PREVIEW (Add Customer Modal)
+    function previewImage1(input) {
+        const file = input.files[0];
+        const preview = document.getElementById('preview1');
+        const placeholder = document.getElementById('placeholder1');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+        }
+    }
+
+    // EDIT IMAGE PREVIEW (Edit Customer Modal)
+    function previewImage(input) {
+        const file = input.files[0];
+        const preview = document.getElementById('edit_image');
+        const placeholder = document.getElementById('placeholder2');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+        }
+    }
+</script>
+
+
+<script>
+    $('#customerTable').on('draw.dt', function () {
+    feather.replace();
+});
+</script>
+
+
+@endpush

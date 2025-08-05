@@ -13,6 +13,7 @@ use App\Http\Controllers\Payment\RazorpayPaymentController;
 use App\Http\Controllers\Payment\PhonePePaymentController;
 use App\Http\Controllers\Account\PaymentController;
 use App\Http\Controllers\Account\AccountDashboardController;
+use App\Http\Controllers\Store\SalesController;
 
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
@@ -47,11 +48,11 @@ Route::post('/paynow/razorpay/order', [RazorpayPaymentController::class, 'create
 Route::post('/paynow/razorpay/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 Route::get('/paynow/success', function () {
-    return view('success'); // ✅ No "razorpay." prefix
+    return view('success'); //No "razorpay." prefix
 })->name('razorpay.success.view');
 
 Route::get('/paynow/failed', function () {
-    return view('fail'); // ✅ No "razorpay." prefix
+    return view('fail'); // No "razorpay." prefix
 })->name('razorpay.fail.view');
 
 //razorpay paymentgateway end
@@ -88,7 +89,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 
 // ---------- Admin side ----------
 
-
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
@@ -100,44 +100,15 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
-
-
     Route::resource('package', PackageController::class);
     Route::resource('customer', CustomerController::class);
     Route::resource('tax', TaxController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('country', UnitController::class);
-    // Route::get('/', [PackageController::class, 'index'])->name('country');
-
-    /*
-    Route::get('/customer', [CustomerController::class, 'index'])->name('customer');
-    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
-    Route::put('/customers/{id}/edit', [CustomerController::class, 'update'])->name('customers.update');
-    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');*/
-
 
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/{id}', [SettingsController::class, 'update'])->name('settings.update');
-
-    //  Route::post('/customer', [CustomerController::class, 'store'])->name('customers.store');
-    //Route::put('/customer/{id}', [CustomerController::class, 'update'])->name('customers.update');
-    // Order matters! Put /edit route above /{id}
-    //  Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
-
-
-    // Route::get('/dashboard', [PackageController::class, 'dashboard'])->name('dashboard');
-
-    /*
-        Route::get('/packages', [PackageController::class, 'index'])->name('package');
-        Route::post('/packages', [PackageController::class, 'store'])->name('package.store');
-        Route::put('/packages/{id}', [PackageController::class, 'update'])->name('package.update');
-        Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('package.destroy');*/
-
-
-    //Route::get('/tax', [PackageController::class, 'index'])->name('tax');
-    // Add more routes here
-
 });
 
 // ---------- Admin side END ----------//
@@ -155,10 +126,8 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
     Route::post('/store/logout', [StoreLoginController::class, 'logout'])->name('logout');
 
     Route::resource('package', PackageController::class);
+    Route::resource('sales', SalesController::class);
 
-
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    // In routes/web.php
     Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');
 
     //::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');

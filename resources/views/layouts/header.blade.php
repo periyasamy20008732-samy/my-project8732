@@ -66,5 +66,5 @@
     <!-- SEARCH MODAL SECTION END -->
 
     <!-- HEADER SECTION START -->
-    
+
     <!-- HEADER SECTION END -->

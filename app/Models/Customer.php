@@ -10,7 +10,7 @@ class Customer extends Model
 {
     protected $table = 'customers';
     protected $fillable = [
-        
+
         'store_id',
         'user_id',
         'count_id',
@@ -45,5 +45,12 @@ class Customer extends Model
     {
         return $this->belongsTo(CountrySettings::class);
     }
-
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+    public function level()
+    {
+        return $this->belongsTo(User_level::class, 'user_id');
+    }
 }
