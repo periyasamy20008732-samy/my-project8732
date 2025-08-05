@@ -51,16 +51,9 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\WarehouseItemContrtoller;
 use App\Http\Controllers\Api\BusinessProfileController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\BusinessTypeController;
 
 
-
-
-
-
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:api');
 Route::get('/settings-view/{id}', [SettingsController::class, 'settingshow']);
 Route::put('/settings-update/{id}', [SettingsController::class, 'settingsupdate']);
 Route::post('/register', [UserController::class, 'register']);
@@ -68,11 +61,6 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/sendotp', [UserController::class, 'sendOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
-
-
-
-
-
 
 Route::middleware('auth:api')->group(function () {
 
@@ -442,3 +430,6 @@ Route::get('/tax-view/{id}', [taxController::class, 'show']);
 Route::post('/tax-create', [taxController::class, 'store']);
 Route::put('/tax-update/{id}', [taxController::class, 'update']);
 Route::delete('/tax-delete/{id}', [taxController::class, 'destroy']);
+
+//Business Type
+Route::get('/business-types', [BusinessTypeController::class, 'index']);
