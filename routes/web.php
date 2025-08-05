@@ -76,9 +76,7 @@ Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('get
 Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
 Route::post('/account/login-password', [WebLoginController::class, 'accountlogin'])->name('accountlogin');
 
-
 Route::prefix('account')->middleware(['auth'])->name('account.')->group(function () {
-
     Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard', [AccountDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
