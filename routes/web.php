@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\BusinessTypeController;
+use App\Http\Controllers\Admin\BusinessCategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\UnitController;
@@ -47,11 +48,11 @@ Route::post('/paynow/razorpay/order', [RazorpayPaymentController::class, 'create
 Route::post('/paynow/razorpay/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 Route::get('/paynow/success', function () {
-    return view('success'); // ✅ No "razorpay." prefix
+    return view('success');
 })->name('razorpay.success.view');
 
 Route::get('/paynow/failed', function () {
-    return view('fail'); // ✅ No "razorpay." prefix
+    return view('fail');
 })->name('razorpay.fail.view');
 
 //razorpay paymentgateway end
@@ -90,7 +91,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
-//Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
@@ -103,14 +103,11 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::resource('tax', TaxController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('country', UnitController::class);
-
     Route::resource('business-types', BusinessTypeController::class);
-    Route::resource('business-category', BusinessTypeController::class);
+    Route::resource('business-category', BusinessCategoryController::class);
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/{id}', [SettingsController::class, 'update'])->name('settings.update');
-
-
 
 });
 

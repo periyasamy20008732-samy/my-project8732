@@ -47,7 +47,7 @@
                             </a>
                             <ul>
                                 <li><a href="{{ route('admin.business-types.index') }}">Business Type</a></li>
-                                <li><a href="{{ route('admin.unit.index') }}">Business Category</a></li>
+                                <li><a href="{{ route('admin.business-category.index') }}">Business Category</a></li>
                             </ul>
                         </li>
                         <li>

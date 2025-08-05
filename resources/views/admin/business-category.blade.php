@@ -7,7 +7,7 @@
                 <div class="add-item d-flex">
                     <div class="page-title">
                         <h4>Business Category</h4>
-                        <h6>Manage your Business Type</h6>
+                        <h6>Manage your Business Category</h6>
                     </div>
                 </div>
                 <ul class="table-top-head">
@@ -23,14 +23,14 @@
                 </ul>
                 <div class="page-btn">
                     <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-bussiness-type"><i
-                            data-feather="plus-circle" class="me-2"></i>Add New Bussiness Type</a>
+                            data-feather="plus-circle" class="me-2"></i>Add New Bussiness Category</a>
                 </div>
             </div>
 
             <div class="card table-list-card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="bussinessTypeTable">
+                        <table class="table" id="bussinessCategoryTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -73,7 +73,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('admin.business-types.store') }}" method="POST">
+                            <form action="{{ route('admin.business-category.store') }}" method="POST">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
@@ -162,10 +162,10 @@
         <script>
             $(document).ready(function () {
                 // Initialize DataTable
-                const table = $('#bussinessTypeTable').DataTable({
+                const table = $('#bussinessCategoryTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('admin.business-types.index') }}",
+                    ajax: "{{ route('admin.business-category.index') }}",
                     columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -191,7 +191,7 @@
                 });
 
                 // Redraw feather icons after DataTable refresh
-                $('#bussinessTypeTable').on('draw.dt', function () {
+                $('#bussinessCategoryTable').on('draw.dt', function () {
                     feather.replace();
                 });
 
@@ -200,11 +200,11 @@
                 $(document).on('click', '.edit-btn', function () {
                     const id = $(this).data('id');
 
-                    $.get(`/admin/business-types/${id}`, function (data) {
+                    $.get(`/admin/business-category/${id}`, function (data) {
                         $('#edit_id').val(data.id);
                         $('#edit_name').val(data.name);
                         $('#edit_status').prop('checked', data.status === 1 || data.status === '1');
-                        $('#editBusinessTypeForm').attr('action', `/admin/business-types/${data.id}`);
+                        $('#editBusinessTypeForm').attr('action', `/admin/business-category/${data.id}`);
                         $('#edit-business-types').modal('show');
                     });
                 });
@@ -239,7 +239,7 @@
                         showConfirmButton: false
                     });
                 @endif
-                                                                                                                                                });
+                                                                                                                                                                                                                                                });
         </script>
     @endpush
 
