@@ -179,7 +179,7 @@ Route::middleware('auth:api')->group(function () {
 
   //Item CRUD 
   Route::get('/items-view', [ItemController::class, 'index']);
-  Route::get('/items-view/{id}', [ItemController::class, 'show']);
+  Route::get('/items-view/{id}', [ItemController::class, 'index']);
   //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
   //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
   Route::post('/items-view', [ItemController::class, 'store_show']);
