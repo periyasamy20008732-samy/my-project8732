@@ -17,19 +17,58 @@
                     <ul>
                         <li>
                             <a href="{{ route('admin.customer.index') }}">
-                                <i data-feather="user"></i> <span>Customers</span>
+                                <i data-feather="users"></i> <span>Customers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i data-feather="users"></i> <span>Reseller</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i data-feather="user"></i> <span>Users</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="submenu-open">
-                    <h6 class="submenu-hdr">Premium</h6>
+                    <h6 class="submenu-hdr">App Data</h6>
                     <ul>
                         <li>
                             <a href="{{ route('admin.package.index') }}">
-                                <i data-feather="user"></i> <span>Packages</span>
+                                <i data-feather="list"></i> <span>Packages</span>
                             </a>
                         </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <i data-feather="grid"></i>
+                                <span>Business</span>&nbsp;<span class="menu-arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ route('admin.business-types.index') }}">Business Type</a></li>
+                                <li><a href="{{ route('admin.business-category.index') }}">Business Category</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.pages.index') }}">
+                                <i data-feather="file-text"></i> <span>Pages</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="submenu-open">
+                    <h6 class="submenu-hdr">Reports</h6>
+                    <ul>
+                        <li>
+                            <a href="#">
+                                <i data-feather="bar-chart-2"></i> <span>Payment Reports</span>
+                            </a>
+                        </li>
+
+
                     </ul>
                 </li>
 

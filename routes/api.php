@@ -51,16 +51,9 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\WarehouseItemContrtoller;
 use App\Http\Controllers\Api\BusinessProfileController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\BusinessTypeController;
 
 
-
-
-
-
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:api');
 Route::get('/settings-view/{id}', [SettingsController::class, 'settingshow']);
 Route::put('/settings-update/{id}', [SettingsController::class, 'settingsupdate']);
 Route::post('/register', [UserController::class, 'register']);
@@ -69,12 +62,8 @@ Route::post('/sendotp', [UserController::class, 'sendOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 
-
-
-
-
-
 Route::middleware('auth:api')->group(function () {
+
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
 
@@ -181,8 +170,8 @@ Route::middleware('auth:api')->group(function () {
 
 
   //Category CRUD
-  Route::get('/category-view', [CategoryController::class, 'index']);
-  Route::get('/category-view/{id}', [CategoryController::class, 'show']);
+
+  Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
   Route::post('/category-view', [CategoryController::class, 'store_show']);
   Route::post('/category-create', [CategoryController::class, 'store']);
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);
@@ -403,8 +392,15 @@ Route::middleware('auth:api')->group(function () {
 
   //NotificationController
   Route::post('/notification-create', [NotificationController::class, 'store']);
-// Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
-// Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+  // Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
+  // Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+
+  //Unit CRUD 
+  Route::get('/unit-view', [UnitsController::class, 'index']);
+  // Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
+  Route::post('/unit-create', [UnitsController::class, 'store']);
+  Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
+  Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
 });
 
 //Packages CRUD
@@ -412,13 +408,6 @@ Route::get('/packages-view', [PackageController::class, 'index']);
 Route::get('/packages-view/{id}', [PackageController::class, 'show']);
 Route::post('/packages-create', [PackageController::class, 'store']);
 Route::put('/packages-update/{id}', [PackageController::class, 'update']);
-
-//Unit CRUD 
-Route::get('/unit-view', [UnitsController::class, 'index']);
-Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
-Route::post('/unit-create', [UnitsController::class, 'store']);
-Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
-Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
 
 
 //OnesignalIdController CRUD 
@@ -441,3 +430,6 @@ Route::get('/tax-view/{id}', [taxController::class, 'show']);
 Route::post('/tax-create', [taxController::class, 'store']);
 Route::put('/tax-update/{id}', [taxController::class, 'update']);
 Route::delete('/tax-delete/{id}', [taxController::class, 'destroy']);
+
+//Business Type
+Route::get('/business-types', [BusinessTypeController::class, 'index']);

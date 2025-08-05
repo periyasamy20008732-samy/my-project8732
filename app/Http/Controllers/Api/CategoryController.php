@@ -5,62 +5,88 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\Item;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
     // View all categories
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::withCount('items')->get();
-        $totalCategory = $categories->count();
+        try {
+        
+            $user = auth()->user();
+            $storeId = $request->query('store_id');
 
-        if ($categories->isEmpty()) {
+            // Determine effective store IDs
+            $storeIds = [];
+
+            if ($storeId) {
+                $storeIds = [trim($storeId)];
+            } elseif (!empty($user->store_id) && $user->store_id !== '0') {
+                $storeIds = [trim($user->store_id)];
+            } else {
+                // fallback to stores owned by user
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
+            }
+
+            if (empty($storeIds)) {
+                return response()->json([
+                    'message' => 'No stores found for this user',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+
+            // Fetch categories with item counts
+            $categories = DB::table('categories as c')
+                ->leftJoin('items as i', 'i.category_id', '=', 'c.id')
+                ->select([
+                    'c.id',
+                    DB::raw('c.category_name as name'),
+                    DB::raw('COUNT(i.id) as item_count'),
+                ])
+                ->whereIn('c.store_id', $storeIds)
+                ->groupBy('c.id', 'c.category_name')
+                ->get();
+
+            if ($categories->isEmpty()) {
+                return response()->json([
+                    'message' => 'Category Detail Not Found',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+
             return response()->json([
-                'message' => 'Category Detail Not Found',
-                'data' => [],
-                'status' => 0
+                'message' => 'Category List',
+                'data' => $categories,
+                'total' => $categories->count(),
+                'status' => 1,
             ], 200);
+        } catch (\Throwable $e) {
+            Log::error('Category index failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => optional(auth()->user())->id,
+                'store_id' => $request->query('store_id'),
+            ]);
+            return response()->json([
+                'message' => 'Internal server error',
+                'data' => [],
+                'total' => 0,
+                'status' => 500,
+            ], 500);
         }
-
-        // Format data to include item count
-        $data = $categories->map(function ($category) {
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-                'item_count' => $category->items_count,
-            ];
-        });
-
-        return response()->json([
-            'message' => 'Category List',
-            'data' => $data,
-            'total' => $totalCategory,
-            'status' => 1
-        ], 200);
     }
-
-    // public function index()
-    // {
-    //     $categories = Category::all();
-    //     $totalCategory = $categories->count();
-
-    //     if ($categories->isEmpty()) {
-    //         return response()->json([
-    //             'message' => 'Category Detail Not Found',
-    //             'data' => [],
-    //             'status' => 0
-    //         ], 200);
-    //     }
-
-    //     return response()->json([
-    //         'message' => 'Category List',
-    //         'data' => $categories,
-    //         'total' => $totalCategory,
-    //         'status' => 1
-    //     ], 200);
-    // }
 
     // View categories by store_id or all if no store_id
     public function store_show(Request $request)

@@ -14,16 +14,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+
 class UserController extends Controller
 {
-   public function register(Request $request)
+    public function register(Request $request)
     {
 
 
         $validator = Validator::make(
-           
-   $request->all(),
-          [
+
+            $request->all(),
+            [
                 'name' => ['required'],
                 'email' => ['email', 'unique:users,email'],
                 'country_code' => ['required'],
@@ -62,7 +63,6 @@ class UserController extends Controller
                 $result = User::create($data);
                 DB::Commit();
                 $token = $result->createToken('access_token')->accessToken;
-
             } catch (\Exception $e) {
                 DB::rollBack();
                 // p($e->getMessage());
@@ -75,24 +75,20 @@ class UserController extends Controller
                 //ok
 
                 return response()->json([
-                     'status' => true,
-                     'message' => 'User Register Successfully',
-                     'access_token' => $token,
-                     'data' => $result,
-                     'is_existing_user' => true
+                    'status' => true,
+                    'message' => 'User Register Successfully',
+                    'access_token' => $token,
+                    'data' => $result,
+                    'is_existing_user' => true
                 ], 200);
-
             } else {
                 return response()->json([
 
                     'message' => 'Internal server error',
                     'status' => false,
                 ], 500);
-
             }
-
         }
-
     }
 
 
@@ -137,9 +133,9 @@ class UserController extends Controller
                     'data' => $user->toArray(),
                     'redirect_to' => '/user/home',
                     'is_existing_user' => true
-                    
-                    
-                    
+
+
+
                 ], 200);
             } else {
                 return response()->json([
@@ -147,9 +143,7 @@ class UserController extends Controller
                     'status' => 0
                 ], 401);
             }
-
         }
-
     }
 
 
@@ -173,77 +167,77 @@ class UserController extends Controller
         ]);
     }
 
- public function sendOtp(Request $request, SmsService $smsService)
-{
-    $request->validate(['mobile' => 'required']);
+    public function sendOtp(Request $request, SmsService $smsService)
+    {
+        $request->validate(['mobile' => 'required']);
 
-    $otp = rand(1000, 9999);
-    $expiresAt = now()->addMinutes(5);
+        $otp = rand(1000, 9999);
+        $expiresAt = now()->addMinutes(5);
 
-    // Store OTP temporarily (in cache, not DB)
-    cache()->put('otp_' . $request->mobile, [
-        'otp' => $otp,
-        'expires_at' => $expiresAt
-    ], $expiresAt);
+        // Store OTP temporarily (in cache, not DB)
+        cache()->put('otp_' . $request->mobile, [
+            'otp' => $otp,
+            'expires_at' => $expiresAt
+        ], $expiresAt);
 
-    $message = str_replace('{code}', $otp, DB::table('site_config')->value('sms_msg') ?? 'Your OTP code is {code}');
-    $smsResponse = $smsService->send($request->mobile, $message);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'OTP sent successfully.',
-        'otp' => app()->environment('local') ? $otp : null,
-        'sms_response' => $smsResponse
-    ]);
-}
-public function verifyOtp(Request $request)
-{
-    $request->validate([
-        'mobile' => 'required',
-        'otp' => 'required'
-    ]);
-
-    $cached = cache()->get('otp_' . $request->mobile);
-
-    if (!$cached || $cached['otp'] != $request->otp || now()->greaterThan($cached['expires_at'])) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Invalid or expired OTP.'
-        ], 401);
-    }
-
-    // OTP is valid — now check if mobile exists in DB
-    $user = User::where('mobile', $request->mobile)->first();
-
-    // Clear OTP after use
-    cache()->forget('otp_' . $request->mobile);
-
-    if ($user) {
-        // Generate login token
-        $token = $user->createToken('access_token')->accessToken;
+        $message = str_replace('{code}', $otp, DB::table('site_config')->value('sms_msg') ?? 'Your OTP code is {code}');
+        $smsResponse = $smsService->send($request->mobile, $message);
 
         return response()->json([
             'status' => true,
-            'message' => 'OTP verified. Login successful.',
-            'access_token' => $token,
-            'data' => $user,
-            'redirect_to' => '/user/home',
-            'is_existing_user' => true
-        ]);
-    } else {
-        // No user exists — redirect to registration
-        return response()->json([
-            'status' => true,
-            'message' => 'OTP verified. Redirect to registration.',
-            'redirect_to' => '/register',
-            'is_existing_user' => false
+            'message' => 'OTP sent successfully.',
+            'otp' => app()->environment('local') ? $otp : null,
+            'sms_response' => $smsResponse
         ]);
     }
-}
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required',
+            'otp' => 'required'
+        ]);
+
+        $cached = cache()->get('otp_' . $request->mobile);
+
+        if (!$cached || $cached['otp'] != $request->otp || now()->greaterThan($cached['expires_at'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid or expired OTP.'
+            ], 401);
+        }
+
+        // OTP is valid — now check if mobile exists in DB
+        $user = User::where('mobile', $request->mobile)->first();
+
+        // Clear OTP after use
+        cache()->forget('otp_' . $request->mobile);
+
+        if ($user) {
+            // Generate login token
+            $token = $user->createToken('access_token')->accessToken;
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP verified. Login successful.',
+                'access_token' => $token,
+                'data' => $user,
+                'redirect_to' => '/user/home',
+                'is_existing_user' => true
+            ]);
+        } else {
+            // No user exists — redirect to registration
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP verified. Redirect to registration.',
+                'redirect_to' => '/register',
+                'is_existing_user' => false
+            ]);
+        }
+    }
 
 
 
-  public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $user = User::find($id);
 
@@ -298,125 +292,123 @@ public function verifyOtp(Request $request)
     }
 
 
+    public function checkSession(Request $request)
+    {
+        try {
+            $user = auth()->user(); // token-authenticated user
 
-public function checkSession(Request $request)
-{
-    try {
-        $user = auth()->user(); // Auth from token (e.g., Laravel Passport)
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'is_logged_in' => false,
+                    'user_exists' => false,
+                    'message' => 'Session expired or invalid. Please login.',
+                    'status' => 401,
+                ], 401);
+            }
+
+            $userData = User::find($user->id);
+
+            if (!$userData) {
+                return response()->json([
+                    'success' => false,
+                    'is_logged_in' => false,
+                    'user_exists' => false,
+                    'message' => 'User does not exist.',
+                    'status' => 404,
+                ], 404);
+            }
+
+            if ($userData->is_blocked || $userData->status === 'inactive' || $userData->deleted_at) {
+                return response()->json([
+                    'success' => true,
+                    'is_logged_in' => false,
+                    'user_exists' => true,
+                    'user_blocked' => true,
+                    'message' => 'User is blocked or deactivated.',
+                    'status' => 403,
+                ], 403);
+            }
+
+            $settings = Settings::first();
+
+            if ($settings && ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1)) {
+                return response()->json([
+                    'success' => true,
+                    'is_logged_in' => false,
+                    'user_exists' => true,
+                    'maintenance' => true,
+                    'message' => 'App is under maintenance.',
+                    'status' => 503,
+                ], 503);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User is logged in.',
+                'is_logged_in' => true,
+                'user_exists' => true,
+                'user_blocked' => false,
+                'user' => [
+                    'id' => $userData->id,
+                    'name' => $userData->name,
+                    'email' => $userData->email,
+                    'mobile' => $userData->mobile,
+                    'profile_image' => $userData->profile_image ?? '',
+                    'status' => $userData->status,
+                ],
+                'settings' => [
+                    'settings' => $settings,
+                ],
+                'status' => 200,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('CheckSession Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal server error. Please try again later.',
+                'status' => 500,
+            ], 500);
+        }
+    }
+
+
+    public function logout(Request $request)
+    {
+        // Revoke current token
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Logged out successfully.'
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|min:8|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $user = Auth::user(); // Authenticated user via token
 
         if (!$user) {
             return response()->json([
-                'success' => false,
-                'is_logged_in' => false,
-                'user_exists' => false,
-                'message' => 'Session expired or invalid. Please login.',
-                'status' => 401
+                'status' => false,
+                'message' => 'Unauthorized',
             ], 401);
         }
 
-        $userData = User::find($user->id); // or $user if already loaded
-
-        if (!$userData) {
-            return response()->json([
-                'success' => false,
-                'is_logged_in' => false,
-                'user_exists' => false,
-                'message' => 'User does not exist.',
-                'status' => 404
-            ], 404);
-        }
-
-        if ($userData->is_blocked || $userData->status == 'inactive' || $userData->deleted_at) {
-            return response()->json([
-                'success' => true,
-                'is_logged_in' => false,
-                'user_exists' => true,
-                'user_blocked' => true,
-                'message' => 'User is blocked or deactivated.',
-                'status' => 403
-            ], 403);
-        }
-
-        $settings = Settings::first();
-
-        if ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1) {
-            return response()->json([
-                'success' => true,
-                'is_logged_in' => false,
-                'user_exists' => true,
-                'maintenance' => true,
-                'message' => 'App is under maintenance.',
-                'status' => 503
-            ], 503);
-        }
+        $user->password = md5($request->password);
+        $user->save();
 
         return response()->json([
-            'success' => true,
-            'message' => 'User is logged in.',
-            'is_logged_in' => true,
-            'user_exists' => true,
-            'user_blocked' => false,
-            'user' => [
-                'id' => $userData->id,
-                'name' => $userData->name,
-                'email' => $userData->email,
-                'mobile' => $userData->mobile,
-                'profile_image' => $userData->profile_image ?? '',
-                'status' => $userData->status,
-            ],
-            'settings' => [
-               // 'latest_version' => $settings->app_version,
-                //'announcement' => $settings->site_description ?? '',
-                'settings' => $settings,
-            ],
-            'status' => 200
+            'status' => true,
+            'message' => 'Password reset successfully.',
         ]);
-
-    } catch (\Exception $e) {
-        \Log::error('CheckSession Error: ' . $e->getMessage());
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Internal server error. Please try again later.',
-            'status' => 500
-        ], 500);
     }
-}
-
-
-public function logout(Request $request)
-{
-    // Revoke current token
-    $request->user()->token()->revoke();
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Logged out successfully.'
-    ]);
-}
-
-public function resetPassword(Request $request)
-{
-    $request->validate([
-        'password' => 'required|min:8|confirmed',
-        'password_confirmation' => 'required'
-    ]);
-
-    $user = Auth::user(); // Authenticated user via token
-
-    if (!$user) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Unauthorized',
-        ], 401);
-    }
-
-    $user->password = md5($request->password);
-    $user->save();
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Password reset successfully.',
-    ]);
-}
 }

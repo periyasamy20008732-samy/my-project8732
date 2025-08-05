@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-    <!-- Meta SEO Tags -->
-    <meta name="description" content="{{ $settings->meta_description ?? 'POS - Bootstrap Admin Template' }}">
-    <meta name="keywords" content="{{ $settings->meta_keywords ?? 'admin, pos, bootstrap, responsive, business' }}">
-    <meta name="author" content="{{ $settings->meta_author ?? 'Dreamguys - Bootstrap Admin Template' }}">
+    <!-- Meta SEO Tags (Dynamic from Settings) -->
+    <meta name="description" content="{{ $settings->meta_description ?? '' }}">
+    <meta name="keywords" content="{{ $settings->meta_keywords ?? '' }}">
+    <meta name="author" content="{{ $settings->meta_author ?? '' }}">
+
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -36,69 +37,75 @@
 
     <div class="main-wrapper">
         <div class="account-content">
-            <div class="login-wrapper login-new">
-                <div class="container">
-                    <div class="login-content user-login">
-                        <div class="login-logo">
-                            <img src="{{ asset('logo.png') }}" alt="img">
-                            <a href="/admin" class="login-logo logo-white">
-                                <img src="{{ asset('logo.png') }}" alt="">
+            <div class="login-wrapper">
+                <div class="login-content">
+                    <form method="POST" action="{{ route('storelogin') }}">
+                        @csrf
+                        <div class="login-userset">
+                            <div class="login-logo logo-normal">
+                                <img src="{{ asset('logo.png')}}" alt="">
+                                {{-- <img src="{{ asset('logo1.jpeg')}}" alt=""> --}}
+
+                            </div>
+                            <a href="index.html" class="login-logo logo-white">
+                                <img src="{{ asset('logo1.jpeg')}}" alt="">
                             </a>
-                        </div>
-
-                        <!-- SweetAlert error popup -->
-                        @if ($errors->any())
-                            <script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Login Failed',
-                                    text: '{{ $errors->first() }}',
-                                    confirmButtonColor: '#d33',
-                                });
-                            </script>
-                        @endif
-
-                        <!-- Login Form -->
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
-                            <div class="login-userset">
-                                <div class="login-userheading">
-                                    <h3>Sign In</h3>
-                                    <h4>Access the Greenbiller Admin panel using your email and passcode.</h4>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    {{ $errors->first() }}
                                 </div>
-
-                                <div class="form-login">
-                                    <label class="form-label">Email Address</label>
-                                    <div class="form-addons">
-                                        <input type="email" name="email" required>
-                                        <img src="{{ asset('admin-assets/img/icons/mail.svg') }}" alt="img">
-                                    </div>
+                            @endif
+                            <div class="login-userheading">
+                                <h3>Sign In</h3>
+                                <h4>Access the {{ $settings->site_title }} panel using your Mobile.</h4>
+                            </div>
+                            <div class="form-login">
+                                <label>Email Address</label>
+                                <div class="form-addons">
+                                    {{-- <input type="text" class="form-control"> --}}
+                                    <input type="email" class="form-control" name="email" required>
+                                    <img src={{ "admin-assets/img/icons/mail.svg" }} alt="img">
                                 </div>
-
-                                <div class="form-login">
-                                    <label>Password</label>
-                                    <div class="pass-group">
-                                        <input type="password" name="password" required>
-                                        <span class="fas toggle-password fa-eye-slash"></span>
-                                    </div>
+                            </div>
+                            <div class="form-login">
+                                <label>Password</label>
+                                <div class="pass-group">
+                                    {{-- <input type="password" class="pass-input"> --}}
+                                    <input type="password" name="password" class="pass-input" required>
+                                    <span class="fas toggle-password fa-eye-slash"></span>
                                 </div>
-
-                                <div class="form-login authentication-check">
-                                    <div class="row">
-                                        <div class="col-6">
+                            </div>
+                            <div class="form-login authentication-check">
+                                <div class="row">
+                                    <!-- <div class="col-6">
+                                        <div class="custom-control custom-checkbox">
                                             <label class="checkboxs ps-4 mb-0 pb-0 line-height-1">
                                                 <input type="checkbox" name="remember">
                                                 <span class="checkmarks"></span>Remember me
                                             </label>
                                         </div>
-                                        <div class="col-6 text-end">
-                                            <a class="forgot-link" href="forgot-password-3.html">Forgot Password?</a>
-                                        </div>
-                                    </div>
+                                    </div> -->
+                                    <!-- <div class="col-6 text-end">
+                                        <a class="forgot-link" href="forgot-password-2.html">Forgot Password?</a>
+                                    </div> -->
                                 </div>
+                            </div>
+                            <div class="form-login">
+                                <button type="submit" class="btn btn-login">Sign In</button>
+                            </div>
+                            <div class="signinform">
+                                <h4>New on our platform?<a href={{ route('storeregister.form') }} class="hover-a">
+                                        Create an account</a></h4>
+                            </div>
+                            <!-- <div class="form-setlogin or-text">
+                                <h4>OR</h4>
+                            </div> -->
+                            <div class="form-sociallink">
 
-                                <div class="form-login">
-                                    <button class="btn btn-login" type="submit" name="login">Sign In</button>
+                                <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
+                                    <p>Copyright &copy; {{date('Y')}} {{ $settings->site_title }}
+                                        v{{ $settings->app_version  }}. All rights reserved
+                                    </p>
                                 </div>
                             </div>
                         </form>
