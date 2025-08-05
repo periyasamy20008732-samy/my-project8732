@@ -41,9 +41,9 @@ return [
             'provider' => 'users',
         ],
         'admin' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
@@ -72,7 +72,7 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-        
+
 
         // 'users' => [
         //     'driver' => 'database',
