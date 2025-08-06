@@ -57,7 +57,7 @@ class CustomerController extends Controller
 
             // Add store_name without including the full store object
             $customers->transform(function ($customer) {
-                $customer->store_name = Store::find($customer->store_id)->name ?? 'No Store';
+                $customer->store_name = Store::find($customer->store_id)->store_name ?? 'No Store';
                 // Remove the store relationship if it was loaded
                 unset($customer->store);
                 return $customer;

@@ -55,20 +55,29 @@ class SupplierController extends Controller
                 ], 200);
             }
 
-            // Append store name to each supplier
-            $suppliers->transform(function ($supplier) {
-                $supplier->store_name = $supplier->store ? $supplier->store->name : null;
-                return $supplier;
+            $suppliers->transform(function ($item) {
+                $item->store_name = $item->store ? $item->store->store_name : null;
+                unset($item->store); // Remove the full store object
+                return $item;
             });
 
+            // Calculate additional insights
+            $activeSuppliers = $suppliers->where('status', 'active')->count();
+            $inactiveSuppliers = $totalSuppliers - $activeSuppliers;
+            $suppliersWithGST = $suppliers->whereNotNull('gstin')->count();
+
             return response()->json([
-                'message' => 'Supplier List',
+                'message' => 'Supplier List for Store',
                 'data' => $suppliers,
                 'total' => $totalSuppliers,
                 'status' => 1,
                 'insights' => [
                     'total_suppliers' => $totalSuppliers,
-                    'new_suppliers_last_30_days' => $newSuppliersLast30Days
+                    'new_suppliers_last_30_days' => $newSuppliersLast30Days,
+                    'active_suppliers' => $activeSuppliers,
+                    'inactive_suppliers' => $inactiveSuppliers,
+                    'suppliers_with_gst' => $suppliersWithGST,
+                    // Add more insights as needed
                 ]
             ], 200);
         } catch (\Exception $e) {
@@ -84,38 +93,71 @@ class SupplierController extends Controller
     {
         try {
             $storeId = $store_id ?? $request->query('store_id');
-            $supplier = Supplier::with(['store'])
-                ->where('store_id', $store_id) // Changed from findOrFail to where
+
+            if (empty($storeId)) {
+                return response()->json([
+                    'message' => 'Store ID is required',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 400);
+            }
+
+            // Fetch suppliers for the specific store
+            $suppliers = Supplier::with(['store'])
+                ->where('store_id', $storeId)
                 ->get();
 
-            if ($supplier->isEmpty()) {
+            $totalSuppliers = $suppliers->count();
+            $newSuppliersLast30Days = Supplier::where('store_id', $storeId)
+                ->where('created_at', '>=', now()->subDays(30))
+                ->count();
+
+            if ($suppliers->isEmpty()) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'No suppliers found for store ID: ' . $store_id,
-                    'data' => []
-                ], 404);
+                    'message' => 'No suppliers found for store ID: ' . $storeId,
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                    'insights' => [
+                        'total_suppliers' => 0,
+                        'new_suppliers_last_30_days' => 0,
+                        // Add other insights with 0 values
+                    ]
+                ], 200);
             }
 
             // Transform each supplier to add store_name
-            $supplier->transform(function ($item) {
+            $suppliers->transform(function ($item) {
                 $item->store_name = $item->store ? $item->store->store_name : null;
-                unset($item->store); // Remove the full store object
+                unset($item->store);
                 return $item;
             });
 
+            // Calculate additional insights
+            $activeSuppliers = $suppliers->where('status', 'active')->count();
+            $inactiveSuppliers = $totalSuppliers - $activeSuppliers;
+            $suppliersWithGST = $suppliers->whereNotNull('gstin')->count();
+
             return response()->json([
-                'success' => true,
-                'data' => $supplier
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Supplier not found with id: ' . $storeId
-            ], 404);
+                'message' => 'Supplier List for Store',
+                'data' => $suppliers,
+                'total' => $totalSuppliers,
+                'status' => 1,
+                'insights' => [
+                    'total_suppliers' => $totalSuppliers,
+                    'new_suppliers_last_30_days' => $newSuppliersLast30Days,
+                    'active_suppliers' => $activeSuppliers,
+                    'inactive_suppliers' => $inactiveSuppliers,
+                    'suppliers_with_gst' => $suppliersWithGST,
+                    // Add more insights as needed
+                ]
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch supplier: ' . $e->getMessage()
+                'message' => 'Failed to fetch suppliers: ' . $e->getMessage(),
+                'data' => [],
+                'status' => 0
             ], 500);
         }
     }
