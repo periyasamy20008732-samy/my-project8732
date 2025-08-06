@@ -12,7 +12,7 @@
                 </li>
                 <li>
                     <a href="{{ route('store.sales.index') }}" class="">
-                        <i data-feather="shopping-cart"></i> <span>Sales</span>
+                        <i data-feather="shopping-cart"></i><span>Sales</span>
                     </a>
                 </li>
                 </li>
@@ -61,14 +61,21 @@
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Store</h6>
                     <ul>
-                        <li>
-                            <a href="{{ route('store.sales.index') }}">
-                                <i data-feather="sliders"></i></i> <span>Items</span>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <i data-feather="sliders"></i><span>Items</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
+                            <ul>
+                                <li><a href="{{ route('store.items.index') }}">New Item</a>
+                                </li>
+                                <li><a href="{{ route('store.sales.index') }}">Category List</a></li>
+                                <li><a href="{{ route('store.brand.index') }}">Brand List</a></li>
+
+                            </ul>
                         </li>
 
                         <li>
-                            <a href="{{ route('store.sales.index') }}">
+                            <a href="{{ route('store.store.index') }}">
                                 <i data-feather="settings"></i><span>Store</span>
                             </a>
                         </li>

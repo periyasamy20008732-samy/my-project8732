@@ -440,7 +440,7 @@
             }
         });
 
-        // ✅ Show image preview if exists
+        // Show image preview if exists
         if (data.attachment_1) {
             $('#edit_image').attr('src', '/' + data.attachment_1).show();
             $('#placeholder2').hide();

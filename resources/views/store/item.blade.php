@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('store.layouts.app')
 
 @section('content')
 <div class="page-wrapper">
@@ -6,8 +6,8 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>Tax</h4>
-                    <h6>Manage your Tax</h6>
+                    <h4>Brand</h4>
+                    <h6>Manage your Brands</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -23,20 +23,20 @@
             </ul>
             <div class="page-btn">
                 <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-package"><i
-                        data-feather="plus-circle" class="me-2"></i>Add Taxes</a>
+                        data-feather="plus-circle" class="me-2"></i>Add New Brand</a>
             </div>
         </div>
 
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table" id="packageTable">
+                    <table class="table" id="brandTable">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Tax Name</th>
-                                <th>Validity Date</th>
-                                <th>Tax</th>
+                                <th>Brand Name</th>
+                                <th>Brand Code</th>
+                                <th>Logo</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -60,42 +60,6 @@
                         </div>
                         <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
                     </div>
-                    {{-- <div class="modal-body custom-modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <table>
-                                    <tr>
-                                        <th><strong>Package Name:</strong></th>
-                                        <th><span id="view_package_name"></span></th>
-                                    </tr>
-                                    <tr>
-                                        <th><strong>Package Name:</strong></th>
-                                        <th><span id="view_package_name"></span></th>
-                                    </tr>
-                                </table>
-                                <div class="mb-3">
-                                </div>
-                                <div class="mb-3"><strong>Validity Date:</strong> <span id="view_validity_date"></span>
-                                </div>
-                                <div class="mb-3"><strong>Price:</strong> <span id="view_price"></span></div>
-                                <div class="mb-3"><strong>Status:</strong> <span id="view_status"></span></div>
-
-                                <div class="mb-3"><strong>Web Panel:</strong> <span id="view_if_webpanel"></span></div>
-                                <div class="mb-3"><strong>Android:</strong> <span id="view_if_android"></span></div>
-                                <div class="mb-3"><strong>IOS:</strong> <span id="view_if_ios"></span></div>
-                                <div class="mb-3"><strong>Windows:</strong> <span id="view_if_windows"></span></div>
-                                <div class="mb-3"><strong>Customer App:</strong> <span id="view_if_customerapp"></span>
-                                </div>
-                                <div class="mb-3"><strong>Delivery App:</strong> <span id="view_if_deliveryapp"></span>
-                                </div>
-                                <div class="mb-3"><strong>Exicutive App:</strong> <span
-                                        id="view_if_exicutiveapp"></span></div>
-                            </div>
-                        </div>
-                        <div class="modal-footer-btn">
-                            <button type="button" class="btn btn-cancel me-2" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div> --}}
                     <div class="modal-body custom-modal-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -243,22 +207,22 @@
 <script>
     $(document).ready(function () {
         // Initialize DataTable
-        const table = $('#packageTable').DataTable({
+        const table = $('#brandTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('admin.tax.index') }}",
+            ajax: "{{ route('store.brand.index') }}",
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'tax_name', name: 'tax_name' },
-                { data: 'validity_date', name: 'validity_date' },
-                { data: 'tax', name: 'tax' },
+                { data: 'brand_name', name: 'brand_name' },
+                { data: 'brand_code', name: 'brand_code' },
+                { data: 'brand_image', name: 'brand_image' },
                 { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
         });
 
         // Redraw feather icons after DataTable refresh
-        $('#packageTable').on('draw.dt', function () {
+        $('#brandTable').on('draw.dt', function () {
             feather.replace();
         });
 

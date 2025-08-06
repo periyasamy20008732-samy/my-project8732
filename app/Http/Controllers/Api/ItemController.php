@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
+
 class ItemController extends Controller
 {
 
@@ -24,7 +25,6 @@ class ItemController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -32,7 +32,6 @@ class ItemController extends Controller
                 'data' => $item,
                 'status' => 1
             ], 200);
-
         }
     }
 

@@ -14,6 +14,10 @@ use App\Http\Controllers\Payment\PhonePePaymentController;
 use App\Http\Controllers\Account\PaymentController;
 use App\Http\Controllers\Account\AccountDashboardController;
 use App\Http\Controllers\Store\SalesController;
+use App\Http\Controllers\Store\ItemController;
+use App\Http\Controllers\Store\BrandController;
+use App\Http\Controllers\Store\StoreController;
+
 
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +132,11 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
     Route::resource('package', PackageController::class);
     Route::resource('sales', SalesController::class);
     Route::resource('customer', SalesController::class);
+    Route::resource('items', ItemController::class);
+    Route::resource('brand', BrandController::class);
+    Route::resource('store', StoreController::class);
+
+
 
 
     Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');

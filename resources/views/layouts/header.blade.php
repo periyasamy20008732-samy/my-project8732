@@ -6,15 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenBiller</title>
 
-    <!-- libraries CSS -->
-    <link rel="stylesheet" href="{{asset('home-assets/icon/flaticon_digicom.css')}}">
-    <link rel="stylesheet" href="{{asset('home-assets/vendor/bootstrap/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('home-assets/vendor/splide/splide.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('home-assets/vendor/swiper/swiper-bundle.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('home-assets/vendor/animate-wow/animate.min.css') }}">
 
-    <!-- custom CSS -->
-    <link rel="stylesheet" href="{{ asset('home-assets/css/style.css')}}">
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <!-- Meta SEO Tags (Dynamic from Settings) -->
+    <metaname="description" content="{{ $settings->meta_description ?? 'POS - Bootstrap Admin Template' }}">
+        <meta name="keywords" content="{{ $settings->meta_keywords ?? 'admin, pos, bootstrap, responsive, business' }}">
+        <meta name="author" content="{{ $settings->meta_author ?? 'Dreamguys - Bootstrap Admin Template' }}">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
+        <!-- Title (Dynamic from Settings) -->
+        <title>{{ $settings->site_title ?? 'Green Biller' }}</title>
+
+        <!-- Favicon (Optional, if set in settings) -->
+        @if(!empty($settings->fav_icon))
+        <link rel="icon" href="{{ asset('storage/core/' . $settings->fav_icon) }}" type="image/png">
+        @else
+        <link rel="icon" href="{{ asset('logo1.jpeg') }}" type="image/png">
+        @endif
+
+
+        <!-- libraries CSS -->
+        <link rel="stylesheet" href="{{asset('home-assets/icon/flaticon_digicom.css')}}">
+        <link rel="stylesheet" href="{{asset('home-assets/vendor/bootstrap/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{asset('home-assets/vendor/splide/splide.min.css')}}">
+        <link rel="stylesheet" href="{{ asset('home-assets/vendor/swiper/swiper-bundle.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('home-assets/vendor/animate-wow/animate.min.css') }}">
+
+        <!-- custom CSS -->
+        <link rel="stylesheet" href="{{ asset('home-assets/css/style.css')}}">
 </head>
 
 <body>
