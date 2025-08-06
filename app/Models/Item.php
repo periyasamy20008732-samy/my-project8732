@@ -35,4 +35,5 @@ class Item extends Model
     'batch_no',
     'expiry_date'
   ];
+  
 }
