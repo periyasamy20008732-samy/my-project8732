@@ -10,7 +10,7 @@ class Customer extends Model
 {
     protected $table = 'customers';
     protected $fillable = [
-        
+
         'store_id',
         'user_id',
         'count_id',
@@ -43,7 +43,11 @@ class Customer extends Model
 
     public function country()
     {
-        return $this->belongsTo(CountrySettings::class);
+        return $this->belongsTo(CountrySettings::class, 'country_id');
     }
 
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
 }

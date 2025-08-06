@@ -164,7 +164,7 @@ Route::middleware('auth:api')->group(function () {
 
   //Supplier CRUD
   Route::get('/supplier-view', [SupplierController::class, 'index']);
-  Route::get('/supplier-view/{id}', [SupplierController::class, 'show']);
+  Route::get('/supplier-view/{store_id}', [SupplierController::class, 'show']);
   Route::post('/supplier-create', [SupplierController::class, 'store']);
   Route::put('/supplier-update/{id}', [SupplierController::class, 'update']);
   Route::delete('/supplier-delete/{id}', [SupplierController::class, 'destroy']);
