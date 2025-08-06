@@ -21,6 +21,7 @@ class StoreController extends Controller
     public function index(Request $request)
     {
         try {
+          
             $storeCode = $request->input('store_code');
             $user = auth()->user();
 
@@ -47,12 +48,8 @@ class StoreController extends Controller
             $stores = $this->getStoresBySql("s.user_id = ?", [$user->id]);
             return $this->jsonResponse($stores, 'Store List', 'No Stores Found');
         } catch (\Throwable $e) {
-            Log::error('Store index failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'user_id' => optional(auth()->user())->id,
-                'store_code' => $request->input('store_code'),
-            ]);
+         
+           
             return response()->json([
                 'message' => 'Internal server error',
                 'data' => [],
@@ -150,20 +147,38 @@ class StoreController extends Controller
     /**
      * Helper to run SQL and fetch stores with category count
      */
-    private function getStoresBySql($whereClause, $params)
-    {
-        return DB::select("
+ private function getStoresBySql($whereClause, $params)
+{
+    return DB::select("
         SELECT 
-            s.*, 
+            s.id,
+            s.user_id,
+            s.store_code,
+            s.store_name,
+            s.address,
+            s.phone,
+            s.email,
+            s.created_at,
+            s.updated_at,
             COUNT(DISTINCT c.id) AS category_count,
             COUNT(DISTINCT w.id) AS warehouse_count
         FROM store s
         LEFT JOIN categories c ON c.store_id = s.id
         LEFT JOIN warehouse w ON w.store_id = s.id
         WHERE {$whereClause}
-        GROUP BY s.id
+        GROUP BY 
+            s.id,
+            s.user_id,
+            s.store_code,
+            s.store_name,
+            s.address,
+            s.phone,
+            s.email,
+            s.created_at,
+            s.updated_at
     ", $params);
-    }
+}
+
     /**
      * Helper to format JSON response
      */

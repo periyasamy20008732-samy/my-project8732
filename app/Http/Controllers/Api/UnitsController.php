@@ -75,35 +75,37 @@ class UnitsController extends Controller
 
     public function store(Request $request)
     {
-
         try {
-            $request->validate([
+            // Validate request
+            $validated = $request->validate([
                 'store_id' => 'required|string',
                 'unit_name' => 'required|string',
                 'unit_value' => 'required|string',
                 'description' => 'required|string'
             ]);
 
-            $unit = Units::create($request->all());
+            // Create unit
+            $unit = Units::create($validated);
 
+            // Return success response
             return response()->json([
                 'message' => 'Units Detail Created Successfully',
                 'data' => $unit,
                 'status' => 1
-
             ], 201);
         } catch (\Throwable $e) {
-            print_r($e);
-            Log::error('Brand index failed', [
+            // Log the error
+            Log::error('Unit creation failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => optional(auth()->user())->id,
-                'store_id' => $request->query('store_id'),
+                'store_id' => $request->input('store_id'),
             ]);
+
+            // Return error response
             return response()->json([
                 'message' => 'Internal server error',
-                'data' => [],
-                'total' => 0,
+                'data' => $e,
                 'status' => 500,
             ], 500);
         }

@@ -72,20 +72,49 @@ class WarehouseController extends Controller
         ], 200);
     }
 
-    // Store a new Warehouse
     public function store(Request $request)
-    {
+{
+    try {
         $request->validate([
             'warehouse_name' => 'required|string|unique:warehouse,warehouse_name',
         ]);
 
-        $warehouse = Warehouse::create($request->all());
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        $data = $request->all();
+        $data['user_id'] = $user->id;
+
+        $warehouse = Warehouse::create($data);
 
         return response()->json([
             'message' => 'Warehouse created successfully',
             'data' => $warehouse
         ], 201);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (\Exception $e) {
+        \Log::error('Warehouse store error', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'request' => $request->all(),
+        ]);
+
+        return response()->json([
+            'message' => 'Internal server error',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     // Update an existing Warehouse
     public function update(Request $request, $id)
