@@ -106,7 +106,6 @@
                             <a href="#"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i data-feather="log-out"></i> <span>Logout</span>
-
                             </a>
                             <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
                                 style="display: none;">

@@ -3,3 +3,4 @@
 @include('store.layouts.sidebar');
 @yield('content');
 @include('store.layouts.footer');
+@stack('scripts')

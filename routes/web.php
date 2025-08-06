@@ -17,6 +17,7 @@ use App\Http\Controllers\Payment\RazorpayPaymentController;
 use App\Http\Controllers\Payment\PhonePePaymentController;
 use App\Http\Controllers\Account\PaymentController;
 use App\Http\Controllers\Account\AccountDashboardController;
+use App\Http\Controllers\Store\SalesController;
 
 use Illuminate\Foundation\PackageManifest;
 use Illuminate\Support\Facades\Route;
@@ -89,7 +90,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 
 // ---------- Admin side ----------
 
-
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
@@ -116,7 +116,6 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/{id}', [SettingsController::class, 'update'])->name('settings.update');
-
 });
 
 // ---------- Admin side END ----------//
