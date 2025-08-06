@@ -69,6 +69,7 @@ Route::middleware('auth:api')->group(function () {
 
 
   Route::get('/user/{id}', [UserController::class, 'getUser']);
+  Route::get('/store-users', [UserController::class, 'getStoreUsers']);
   Route::put('/user-update/{id}', [UserController::class, 'update']);
 
   //Store CRUD
