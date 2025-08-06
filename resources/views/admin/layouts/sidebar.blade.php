@@ -4,13 +4,10 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <!-- Dashboard -->
-                <li class="submenu-open">
-                <li>
-                    <a href="{{ route('admin.dashboard') }}" class="subdrop active">
-                        <i data-feather="grid"></i><span>Dashboard</span>
-                    </a>
-                </li>
-                </li>
+
+                <li><a href="{{ route('admin.dashboard') }}"><i data-feather="grid"></i><span>Dashboard</span></a></li>
+
+
                 <!-- Peoples -->
                 <li class="submenu-open">
                     <h6 class="submenu-hdr">Peoples</h6>
