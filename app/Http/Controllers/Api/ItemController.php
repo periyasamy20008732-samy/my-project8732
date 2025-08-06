@@ -133,7 +133,7 @@ class ItemController extends Controller
                 'MRP' => 'required|string',
                 'Discount_type' => 'required|string',
                 'Discount' => 'required|string',
-                'Profit_margin' => 'required|string',
+                'Profit_margin' => 'required|numeric|min:0|max:99999.99',
                 'Opening_stock' => 'required|string',
                 'Alert_Quantity' => 'required|string',
             ]);
