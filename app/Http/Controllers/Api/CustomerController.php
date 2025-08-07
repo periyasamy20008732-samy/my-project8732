@@ -12,11 +12,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $store_id = null)
     {
+
         try {
             $user = auth()->user();
-            $storeId = $request->query('store_id');
+            $storeId = $store_id ?? $request->query('store_id');
 
             // Determine effective store IDs
             $storeIds = $this->getStoreIds($user, $storeId);
@@ -60,6 +61,7 @@ class CustomerController extends Controller
                 $customer->store_name = Store::find($customer->store_id)->store_name ?? 'No Store';
                 // Remove the store relationship if it was loaded
                 unset($customer->store);
+
                 return $customer;
             });
 
@@ -76,7 +78,7 @@ class CustomerController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Failed to fetch customers: ' . $e->getMessage(),
-                'data' => [],
+                'data' => $e,
                 'status' => 0
             ], 500);
         }
