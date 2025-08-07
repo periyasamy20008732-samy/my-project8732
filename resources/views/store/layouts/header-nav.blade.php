@@ -62,7 +62,7 @@
 					</span>
 					<span class="user-detail">
 						<span class="user-name">{{ Auth::user()->name }}</span>
-						<span class="user-role">{{ Auth::user()->user_level == 4 && 5 ? 'Store Admin' : 'Manager'
+						<span class="user-role">{{ Auth::user()->user_level == 4 && 5 ? 'Store Admin' : 'Store Manager'
 							}}</span>
 					</span>
 				</span>
@@ -75,8 +75,8 @@
 							<span class="status online"></span></span>
 						<div class="profilesets">
 							<h6>{{ Auth::user()->name }}</h6>
-							<h5>{{ Auth::user()->user_level == 4 ? 'Store Admin' : (Auth::user()->user_level == 2 ?
-								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}</h5>
+							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
+								'Manager' : (Auth::user()->user_level == 4 ? 'Store Admin' : 'Unknown Role')) }}</h5>
 
 						</div>
 					</div>
