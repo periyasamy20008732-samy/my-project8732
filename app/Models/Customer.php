@@ -49,7 +49,7 @@ class Customer extends Model
     public function store()
     {
         return $this->belongsTo(Store::class, 'store_id');
-
+    }
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -57,6 +57,5 @@ class Customer extends Model
     public function level()
     {
         return $this->belongsTo(User_level::class, 'user_id');
-
     }
 }
