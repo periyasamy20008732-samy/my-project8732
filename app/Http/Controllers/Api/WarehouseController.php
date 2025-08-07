@@ -12,12 +12,11 @@ use App\Models\Item;
 
 class WarehouseController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $store_id = null)
     {
-        
 
         $user = auth()->user();
-        $storeId = $request->input('store_id');
+        $storeId = $store_id ?? $request->query('store_id');
 
         $query = Warehouse::query();
 
@@ -73,47 +72,45 @@ class WarehouseController extends Controller
     }
 
     public function store(Request $request)
-{
-    try {
-        $request->validate([
-            'warehouse_name' => 'required|string|unique:warehouse,warehouse_name',
-        ]);
+    {
+        try {
+            $request->validate([
+                'warehouse_name' => 'required|string|unique:warehouse,warehouse_name',
+            ]);
 
-        $user = auth()->user();
+            $user = auth()->user();
 
-        if (!$user) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthenticated'], 401);
+            }
+
+            $data = $request->all();
+            $data['user_id'] = $user->id;
+
+            $warehouse = Warehouse::create($data);
+
+            return response()->json([
+                'message' => 'Warehouse created successfully',
+                'data' => $warehouse
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Warehouse store error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all(),
+            ]);
+
+            return response()->json([
+                'message' => 'Internal server error',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $data = $request->all();
-        $data['user_id'] = $user->id;
-
-        $warehouse = Warehouse::create($data);
-
-        return response()->json([
-            'message' => 'Warehouse created successfully',
-            'data' => $warehouse
-        ], 201);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'message' => 'Validation failed',
-            'errors' => $e->errors()
-        ], 422);
-
-    } catch (\Exception $e) {
-        \Log::error('Warehouse store error', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-            'request' => $request->all(),
-        ]);
-
-        return response()->json([
-            'message' => 'Internal server error',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
 
 
     // Update an existing Warehouse

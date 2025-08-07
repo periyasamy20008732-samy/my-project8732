@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Log;
 class ItemController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request, $storeId = null)
     {
         $user = auth()->user();
-        $storeId = $request->query('store_id');
+        $storeId = $storeId ?? $request->query('store_id');
 
         // Determine effective store IDs
         $storeIds = [];
-
+    
         if ($storeId) {
             $storeIds = [trim($storeId)];
         } elseif (!empty($user->store_id) && $user->store_id !== '0') {

@@ -157,7 +157,7 @@ Route::middleware('auth:api')->group(function () {
 
   //Warhouse CRUD
   Route::get('/warehouse-view', [WarehouseController::class, 'index']);
-  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'show ']);
+  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'index']);
   Route::post('/warehouse-create', [WarehouseController::class, 'store']);
   Route::put('/warehouse-update/{id}', [WarehouseController::class, 'update']);
   Route::delete('/warehouse-delete/{id}', [WarehouseController::class, 'destroy']);
