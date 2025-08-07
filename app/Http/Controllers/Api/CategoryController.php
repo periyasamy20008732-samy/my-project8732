@@ -16,7 +16,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         try {
-        
+
             $user = auth()->user();
             $storeId = $request->query('store_id');
 
@@ -130,31 +130,52 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    // Store a new category
     public function store(Request $request)
     {
-        $request->validate([
-            'category_name' => 'required|string|max:255',
-            'category_code' => 'required|string|max:255',
-            'image' => 'sometimes|file|image|max:2048',
-            'store_id' => 'nullable|integer' // Optional, add if needed
-        ]);
+        try {
+            $request->validate([
+                'category_name' => 'required|string|max:255',
+                'category_code' => 'required|string|max:255',
+                'image' => 'sometimes|file|image|max:2048',
+                'store_id' => 'nullable|integer'
+            ]);
 
-        $file = $request->file('image');
-        $directory = 'storage/public/category/';
-        $imageName = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($directory), $imageName);
+            $data = $request->all();
 
-        $data = $request->all();
-        $data['image'] = $directory . $imageName;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $directory = 'storage/public/category/';
+                $imageName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path($directory), $imageName);
+                $data['image'] = $directory . $imageName;
+            }
 
-        $category = Category::create($data);
+            $category = Category::create($data);
 
-        return response()->json([
-            'message' => 'Category created successfully',
-            'data' => $category,
-            'status' => 1
-        ], 201);
+            return response()->json([
+                'message' => 'Category created successfully',
+                'data' => $category,
+                'status' => 1
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+                'status' => 0
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Category store error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all(),
+            ]);
+
+            return response()->json([
+                'message' => 'Internal server error',
+                'error' => $e->getMessage(),
+                'status' => 0
+            ], 500);
+        }
     }
 
     // Update existing category

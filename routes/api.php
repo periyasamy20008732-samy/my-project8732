@@ -157,14 +157,14 @@ Route::middleware('auth:api')->group(function () {
 
   //Warhouse CRUD
   Route::get('/warehouse-view', [WarehouseController::class, 'index']);
-  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'show ']);
+  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'index']);
   Route::post('/warehouse-create', [WarehouseController::class, 'store']);
   Route::put('/warehouse-update/{id}', [WarehouseController::class, 'update']);
   Route::delete('/warehouse-delete/{id}', [WarehouseController::class, 'destroy']);
 
   //Supplier CRUD
   Route::get('/supplier-view', [SupplierController::class, 'index']);
-  Route::get('/supplier-view/{id}', [SupplierController::class, 'show']);
+  Route::get('/supplier-view/{store_id}', [SupplierController::class, 'show']);
   Route::post('/supplier-create', [SupplierController::class, 'store']);
   Route::put('/supplier-update/{id}', [SupplierController::class, 'update']);
   Route::delete('/supplier-delete/{id}', [SupplierController::class, 'destroy']);

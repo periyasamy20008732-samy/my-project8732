@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Log;
 class ItemController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request, $storeId = null)
     {
         $user = auth()->user();
-        $storeId = $request->query('store_id');
+        $storeId = $storeId ?? $request->query('store_id');
 
         // Determine effective store IDs
         $storeIds = [];
-
+    
         if ($storeId) {
             $storeIds = [trim($storeId)];
         } elseif (!empty($user->store_id) && $user->store_id !== '0') {
@@ -133,7 +133,7 @@ class ItemController extends Controller
                 'MRP' => 'required|string',
                 'Discount_type' => 'required|string',
                 'Discount' => 'required|string',
-                'Profit_margin' => 'required|string',
+                'Profit_margin' => 'required|numeric|min:0|max:99999.99',
                 'Opening_stock' => 'required|string',
                 'Alert_Quantity' => 'required|string',
             ]);
