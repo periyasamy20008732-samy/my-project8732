@@ -6,8 +6,8 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>Brand</h4>
-                    <h6>Manage your Brands</h6>
+                    <h4>Item</h4>
+                    <h6>Manage your Items</h6>
                 </div>
             </div>
             <ul class="table-top-head">
@@ -22,8 +22,8 @@
                             data-feather="chevron-up"></i></a></li>
             </ul>
             <div class="page-btn">
-                <a href="#" class="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-package"><i
-                        data-feather="plus-circle" class="me-2"></i>Add New Brand</a>
+                <a href="{{ route('store.items.create') }}" class="btn btn-added"><i data-feather="plus-circle"
+                        class="me-2"></i>Add New Item</a>
             </div>
         </div>
 
@@ -34,10 +34,14 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Brand Name</th>
-                                <th>Brand Code</th>
-                                <th>Logo</th>
-                                <th>Status</th>
+                                <th>Item Image</th>
+                                <th>SKU</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Unit</th>
+                                <th>QTY</th>
+                                <th>Created by</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -210,13 +214,18 @@
         const table = $('#brandTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('store.brand.index') }}",
+            ajax: "{{ route('store.items.index') }}",
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                { data: 'brand_name', name: 'brand_name' },
-                { data: 'brand_code', name: 'brand_code' },
-                { data: 'brand_image', name: 'brand_image' },
-                { data: 'status', name: 'status', orderable: false, searchable: false },
+                { data: 'item_image', name: 'item_image' },
+                { data: 'SKU', name: 'SKU' },
+                { data: 'category_id', name: 'category_id' },
+                { data: 'brand_id', name: 'brand_id' },
+                { data: 'Purchase_price', name: 'Purchase_price' },
+                { data: 'Unit', name: 'Unit' },
+                { data: 'quantity', name: 'quantity' },
+                { data: 'user_id', name: 'user_id' },
+             //   { data: 'status', name: 'status', orderable: false, searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ]
         });
@@ -231,7 +240,7 @@
             const packageId = $(this).data('id');
 
             $.ajax({
-                url: `/admin/tax/${packageId}`,
+                url: `/store/items/${packageId}`,
                 type: 'GET',
                 success: function (data) {
                     $('#view_tax_name').text(data.tax_name ?? '');
@@ -258,7 +267,7 @@
         $(document).on('click', '.edit-btn', function () {
             const id = $(this).data('id');
 
-            $.get(`/admin/tax/${id}`, function (data) {
+            $.get(`/store/items/${id}`, function (data) {
                 $('#edit_id').val(data.id);
                 $('#edit_tax_name').val(data.tax_name);
                 $('#edit_validity_date').val(data.validity_date);
@@ -272,7 +281,7 @@
             //     $('#edit_if_deliveryapp').prop('checked', data.if_deliveryapp === 1 || data.if_deliveryapp === '1'); 
             //     $('#edit_if_exicutiveapp').prop('checked', data.if_exicutiveapp === 1 || data.if_exicutiveapp === '1'); 
             //    // $('#edit_if_multistore').prop('checked', data.if_multistore === 1 || data.if_multistore === '1'); 
-                $('#editPackageForm').attr('action', `/admin/tax/${data.id}`);
+                $('#editPackageForm').attr('action', `/store/items/${data.id}`);
                 $('#edit-package').modal('show');
             });
         });
@@ -283,7 +292,7 @@
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "This package will be deleted!",
+                text: "This Item will be deleted!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

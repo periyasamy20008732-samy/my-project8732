@@ -25,7 +25,7 @@
                                 <span>Contacts</span>&nbsp;<span class="menu-arrow"></span>
                             </a>
                             <ul>
-                                <li><a href="{{ route('store.sales.index') }}">Customer</a>
+                                <li><a href="{{ route('store.customer.index') }}">Customer</a>
                                 </li>
                                 <li><a href="{{ route('store.sales.index') }}">Supplier</a></li>
                                 <li><a href="{{ route('store.sales.index') }}">Users</a></li>
@@ -68,7 +68,7 @@
                             <ul>
                                 <li><a href="{{ route('store.items.index') }}">New Item</a>
                                 </li>
-                                <li><a href="{{ route('store.sales.index') }}">Category List</a></li>
+                                <li><a href="{{ route('store.category.index') }}">Category List</a></li>
                                 <li><a href="{{ route('store.brand.index') }}">Brand List</a></li>
 
                             </ul>

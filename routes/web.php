@@ -17,6 +17,12 @@ use App\Http\Controllers\Store\SalesController;
 use App\Http\Controllers\Store\ItemController;
 use App\Http\Controllers\Store\BrandController;
 use App\Http\Controllers\Store\StoreController;
+use App\Http\Controllers\Store\CategoryController;
+use App\Http\Controllers\Store\StoreCustomerController;
+use App\Http\Controllers\Store\WarehouseController;
+
+
+
 
 
 use Illuminate\Foundation\PackageManifest;
@@ -131,10 +137,19 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
     Route::resource('package', PackageController::class);
     Route::resource('sales', SalesController::class);
-    Route::resource('customer', SalesController::class);
-    Route::resource('items', ItemController::class);
+    Route::resource('customer', StoreCustomerController::class);
     Route::resource('brand', BrandController::class);
     Route::resource('store', StoreController::class);
+    Route::resource('category', CategoryController::class);
+    Route::post('items/add_cate', [ItemController::class, 'add_category'])->name('item.add_cate');
+    Route::post('items/add_brand', [ItemController::class, 'add_brand'])->name('item.add_brand');
+    Route::post('items/add_unit', [ItemController::class, 'add_unit'])->name('item.add_unit');
+    Route::resource('items', ItemController::class);
+    Route::resource('warehouse', WarehouseController::class);
+
+
+
+
 
 
 
@@ -149,12 +164,3 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
 
 // ---------- Store Side End ----------//
-
-
-/*
-Route::prefix('admin')
-->middleware('auth')
-->name('admin.')
-->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});*/

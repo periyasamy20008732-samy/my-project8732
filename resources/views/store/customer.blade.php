@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('store.layouts.app')
 
 @section('content')
 <div class="page-wrapper">
@@ -108,7 +108,7 @@
                         <button type="button" class="close" data-bs-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body custom-modal-body">
-                        <form action="{{ route('admin.customer.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('store.customer.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <!-- Avatar Upload -->
@@ -351,7 +351,7 @@
     const table = $('#customerTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.customer.index') }}",
+        ajax: "{{ route('store.customer.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex' },
             { data: null, name: 'combined_id', render: function(data, type, row) {return `${row.customer_code}${row.id}`;}},
@@ -367,7 +367,7 @@
         let customerId = $(this).data('id');
 
         $.ajax({
-            url: '/admin/customer/' + customerId,
+            url: '/store/customer/' + customerId,
             type: 'GET',
             success: function (data) {
                 $('#view_customer_code').text(data.customer_code ?? '');
@@ -389,38 +389,10 @@
         });
     });
 
- /* $(document).on('click', '.edit-btn', function () {
-    const id = $(this).data('id');
-    $.get(`/admin/customer/${id}`, function (data) {
-        $('#edit_id').val(data.id);
-        $('#edit_customer_name').val(data.customer_name);
-        $('#edit_email').val(data.email);
-        $('#edit_phone').val(data.mobile);
-        $('#edit_address').val(data.address);
-        $('#edit_city').val(data.city);
-        $('#edit_country option').val(data.country);
-        $('#edit_description').val(data.description);
-
-        $('#edit_country option').each(function () {
-            if ($(this).val().trim().toLowerCase() === data.country.trim().toLowerCase()) {
-                $(this).prop('selected', true);
-            }
-        });
-
-        if (data.attachment_1) {
-            $('#edit_image').attr('src', '/' + data.attachment_1).show();
-    $('#placeholder2').hide();
-} else {
-    $('#edit_image').hide();
-    $('#placeholder2').show();
-}
-
-        // $('#edit_image').val(data.attachment_1);
-        $('#editCustomerForm').attr('action', `/admin/customer/${data.id}`);
-        $('#edit-customer').modal('show');*/
+ 
         $(document).on('click', '.edit-btn', function () {
     const id = $(this).data('id');
-    $.get(`/admin/customer/${id}`, function (data) {
+    $.get(`/store/customer/${id}`, function (data) {
         $('#edit_id').val(data.id);
         $('#edit_customer_name').val(data.customer_name);
         $('#edit_email').val(data.email);
@@ -449,7 +421,7 @@
             $('#placeholder2').show();
         }
 
-        $('#editCustomerForm').attr('action', `/admin/customer/${data.id}`);
+        $('#editCustomerForm').attr('action', `/store/customer/${data.id}`);
         $('#edit-customer').modal('show');
     });
 });
