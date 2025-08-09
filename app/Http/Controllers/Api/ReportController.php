@@ -112,59 +112,6 @@ class ReportController extends Controller
     }
 
 
-    /*   public function purchase_report(Request $request)
-      {
-          $request->validate([
-              'from_date' => 'required|date',
-              'to_date' => 'required|date',
-              'store_id' => 'required|integer',
-              'supplier_id' => 'required|integer',
-          ]);
-
-          $query = Purchase::with(['store', 'supplier'])
-              ->whereRaw("STR_TO_DATE(purchase_date, '%d/%m/%Y') BETWEEN ? AND ?", [
-                  $request->from_date,
-                  $request->to_date
-              ]);
-
-          if ($request->store_id) {
-              $query->where('store_id', $request->store_id);
-          }
-
-          if ($request->supplier_id) {
-              $query->where('supplier_id', $request->supplier_id);
-          }
-
-          $results = $query->get();
-
-          if ($results->isEmpty()) {
-              return response()->json([
-                  'message' => 'No matching purchase records found.',
-                  'data' => [],
-                  'status' => 0
-              ], 200);
-          } */
-    /*  $transformed = $query->map(function ($item) {
-          return [
-              'id' => $item->id,
-              'store_id' => $item->store_id,
-              'store_name' => optional($item->store)->store_name,
-              'supplier_id' => $item->supplier_id,
-              'supplier_name' => optional($item->supplier)->supplier_name,
-              'purchase_code' => $item->purchase_code,
-              'reference_no' => $item->reference_no,
-              'grand_total' => $item->grand_total,
-              'paid_amount' => $item->paid_amount,
-              'balance' => $item->grand_total - $item->paid_amount,
-              'purchase_date' => $item->purchase_date,
-              // add other fields as needed...
-          ];
-      });
-    return response()->json([
-        'message' => 'Purchase report data',
-        'data' => $results,
-    ]);
-}*/
 
 
     public function purchase_report(Request $request)
@@ -481,5 +428,4 @@ class ReportController extends Controller
             'status' => 1
         ]);
     }
-
 }

@@ -52,6 +52,7 @@ use App\Http\Controllers\Api\WarehouseItemContrtoller;
 use App\Http\Controllers\Api\BusinessProfileController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\BusinessTypeController;
+use App\Http\Controllers\Api\storeReportController;
 
 
 Route::get('/settings-view/{id}', [SettingsController::class, 'settingshow']);
@@ -402,6 +403,13 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/unit-create', [UnitsController::class, 'store']);
   Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
   Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
+
+  // Mobile App Sales purchase report controller latest - created by savio
+
+  Route::post('/reports/purchase-report', [storeReportController::class, 'purchase_report']);
+  Route::post('/reports/sales-report', [storeReportController::class, 'sales_report']);
+  Route::post('/reports/purchase-item-report', [storeReportController::class, 'purchase_item_report']);
+  Route::post('/reports/sales-item-report', [storeReportController::class, 'sales_item_report']);
 });
 
 //Packages CRUD
