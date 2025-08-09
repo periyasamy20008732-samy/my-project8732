@@ -32,7 +32,12 @@ class Item extends Model
     'Warehouse',
     'Opening_Stock',
     'Alert_Quantity',
+    'quantity',
     'batch_no',
     'expiry_date'
+  ];
+
+  protected $casts = [
+    'item_image' => 'array',
   ];
 }

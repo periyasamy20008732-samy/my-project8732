@@ -12,6 +12,8 @@ use App\Models\Brand;
 use App\Models\SubCategory;
 use App\Models\Tax;
 use App\Models\Units;
+use Illuminate\Support\Facades\Log;
+
 
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -76,41 +78,170 @@ class ItemController extends Controller
     /**
      * Store a new customer.
      */
-    public function store(Request $request)
+    /*  public function store(Request $request)
     {
         $validator = Validator::make(
 
             $request->all(),
             [
-                'customer_name' => 'required|string|max:255',
-                'email' => 'required|string|max:255',
-                'country_id' => 'required|string|max:255',
-                'mobile' => 'required|string|max:255',
-                'city' => 'required|string|max:255',
-                'state' => 'required|string|max:255',
-                //  'address' => 'required|string|max:255',
-                'postcode' => 'required|string|max:255',
-                'attachment_1' => 'sometimes|file|image|nullable',
+                'item_name' => 'required|string|max:255',
+                'store_id' => 'required|string|max:255',
+                'category_id' => 'required|string|max:255',
+                'brand_id' => 'required|string|max:255',
+                'SKU' => 'required|string|max:255',
+                'HSN_code' => 'required|string|max:255',
+                'Item_code' => 'required|string|max:255',
+                'Barcode' => 'required|string|max:255',
+                'Unit' => 'required|string|max:255',
+                'Purchase_price' => 'required|string|max:255',
+                'Tax_type' => 'required|string|max:255',
+                'Tax_rate' => 'required|string|max:255',
+                'Sales_Price' => 'required|string|max:255',
+                'Discount_type' => 'required|string|max:255',
+                'Discount' => 'required|string|max:255',
+                'MRP' => 'required|string|max:255',
+                'Profit_margin' => 'required|string|max:255',
+                'Warehouse' => 'required|string|max:255',
+                'Opening_Stock' => 'required|string|max:255',
+                'quantity' => 'required|string|max:255',
+                'Alert_Quantity' => 'required|string|max:255',
+                'Description' => 'required|string|max:255',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif'
             ]
         );
-        /*    if ($validator->fails()) {
-            return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-        } */
-        $file = $request->file('attachment_1');
-        $directory = 'storage/public/item/';
-        $imageName = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($directory), $imageName);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        $data = $request->all();
-        $data['attachment_1'] = $directory . $imageName;
+        $data = $request->only([
+            'item_name',
+            'store_id',
+            'category_id',
+            'brand_id',
+            'SKU',
+            'HSN_code',
+            'Item_code',
+            'Barcode',
+            'Unit',
+            'Purchase_price',
+            'Tax_type',
+            'Tax_rate',
+            'Sales_Price',
+            'Discount_type',
+            'Discount',
+            'MRP',
+            'Profit_margin',
+            'Warehouse',
+            'Opening_Stock',
+            'quantity',
+            'Description',
+            'Alert_Quantity',
+        ]);
 
 
+
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            $imagePaths = [];
+
+            foreach ($images as $image) {
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('uploads', $filename, 'public');
+                $imagePaths[] = 'storage/' . $path;
+            }
+
+            // Save as JSON
+            $data['item_image'] = json_encode($imagePaths);
+        }
+
+        dd([
+            'has_images' => $request->hasFile('images'),
+            'images' => $request->file('images'),
+            'all_input' => $request->all()
+        ]);
         $item = Item::create($data);
 
         return redirect()->route('store.items.index')->with('success', 'Item created successfully.');
+    } */
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'item_name' => 'required|string|max:255',
+            'store_id' => 'required|string|max:255',
+            'category_id' => 'required|string|max:255',
+            'brand_id' => 'required|string|max:255',
+            'SKU' => 'required|string|max:255',
+            'HSN_code' => 'required|string|max:255',
+            'Item_code' => 'required|string|max:255',
+            'Barcode' => 'required|string|max:255',
+            'Unit' => 'required|string|max:255',
+            'Purchase_price' => 'required|string|max:255',
+            'Tax_type' => 'required|string|max:255',
+            'Tax_rate' => 'required|string|max:255',
+            'Sales_Price' => 'required|string|max:255',
+            'Discount_type' => 'required|string|max:255',
+            'Discount' => 'required|string|max:255',
+            'MRP' => 'required|string|max:255',
+            'Profit_margin' => 'required|string|max:255',
+            'Warehouse' => 'required|string|max:255',
+            'Opening_Stock' => 'required|string|max:255',
+            'quantity' => 'required|string|max:255',
+            'Alert_Quantity' => 'required|string|max:255',
+            'Description' => 'required|string|max:255',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif'
+            //'images.*' => 'sometimes|file|image|nullable',
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $data = $request->only([
+            'item_name',
+            'store_id',
+            'category_id',
+            'brand_id',
+            'SKU',
+            'HSN_code',
+            'Item_code',
+            'Barcode',
+            'Unit',
+            'Purchase_price',
+            'Tax_type',
+            'Tax_rate',
+            'Sales_Price',
+            'Discount_type',
+            'Discount',
+            'MRP',
+            'Profit_margin',
+            'Warehouse',
+            'Opening_Stock',
+            'quantity',
+            'Description',
+            'Alert_Quantity',
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            $imagePaths = [];
+
+            foreach ($images as $image) {
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $path = $image->storeAs('uploads', $filename, 'public');
+                $imagePaths[] = 'storage/' . $path;
+            }
+
+            $data['item_image'] = json_encode($imagePaths);
+        }
+
+        Item::create($data);
+
+        return redirect()->route('store.items.index')->with('success', 'Item created successfully.');
     }
+
 
     /**
      * Get item info for edit modal via AJAX.
@@ -213,5 +344,21 @@ class ItemController extends Controller
         $data = $request->all();
         $brand = Brand::create($data);
         return redirect()->route('store.items.create')->with('success', 'Unit created successfully.');
+    }
+
+
+
+
+    public function getwarehouse(Request $request)
+    {
+        $store_id = $request->store_id;
+
+        if ($store_id) {
+            $warehouses = Warehouse::where('store_id', $store_id)->get(['id', 'warehouse_name']);
+        } else {
+            $warehouses = Warehouse::all(['id', 'warehouse_name']);
+        }
+
+        return response()->json($warehouses);
     }
 }

@@ -126,12 +126,16 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 // ---------- Store side Start ----------//
 
 //Store Login Routes 
+Route::post('/upload-images', [StoreController::class, 'storeImages'])->name('storeImages');
+Route::get('/images', [StoreController::class, 'showImage'])->name('showImage');
+
 
 Route::get('/store', [StoreLoginController::class, 'showLoginForm'])->name('storelogin.form');
 Route::post('/store/login', [StoreLoginController::class, 'login'])->name('storelogin');
 Route::get('/store/register', [StoreLoginController::class, 'showRegisterForm'])->name('storeregister.form');
 
 Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () {
+    Route::get('items/get_warehouse', [ItemController::class, 'getwarehouse'])->name('item.get_warehouse');
 
     Route::post('/store/logout', [StoreLoginController::class, 'logout'])->name('logout');
 
