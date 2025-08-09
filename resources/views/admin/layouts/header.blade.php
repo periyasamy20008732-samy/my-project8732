@@ -17,8 +17,6 @@
         <meta http-equiv="Expires" content="0" />
 
 
-
-
         <!-- Title (Dynamic from Settings) -->
         <title>{{ $settings->site_title ?? 'Green Biller' }}</title>
 
@@ -47,6 +45,10 @@
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="{{ asset('admin-assets/css/style.css') }}">
+
+
+
+
 
 
         <!-- DataTables CSS -->

@@ -23,7 +23,8 @@
                     <div class="icon"><i class="flaticon-location"></i></div>
                     <div class="txt">
                         <h6 class="title">Our Address</h6>
-                        <p class="descr mb-0">2715 Ash Dr. San Jose, South Dakota 83475</p>
+                        <p class="descr mb-0">First Floor Saradam, Mukkunnoor,Venjarammoodu, Thiruvananthapuram</p>
+
                     </div>
                 </div>
 
@@ -33,8 +34,8 @@
                     <div class="txt">
                         <h6 class="title">Email Address</h6>
                         <p class="descr mb-0">
-                            <a href="mailto:info@ticstube.com">info@ticstube.com</a>
-                            <a href="mailto:contact@ticstube.com">contact@ticstube.com</a>
+                            <a href="mailto:info@greenbiller.in">info@greenbiller.in </a>
+                            <a href="mailto:contact@greenbiller.in">contact@greenbiller.in </a>
                         </p>
                     </div>
                 </div>

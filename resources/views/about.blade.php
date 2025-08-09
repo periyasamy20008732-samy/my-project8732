@@ -234,211 +234,211 @@
 
 
         <!-- REVIEW-CONTACT SECTION START -->
-        <section class="ul-review-contact ul-section-spacing wow animate__fadeInUp">
-            <!-- bg left image -->
-            <div class="bg-img">
-                <img src="home-assets/img/contact-review-bg-img.jpg" alt="Image">
-            </div>
+        <!--
+            <section class="ul-review-contact ul-section-spacing wow animate__fadeInUp">
 
-            <div class="ul-container">
-                <div class="row ul-review-contact-row row-cols-md-2 row-cols-1 align-items-center">
-                    <!-- contact -->
-                    <div class="col">
-                        <div class="ul-contact-form-wrapper">
-                            <div>
-                                <span class="ul-section-sub-title">TALK TO US</span>
-                                <h2 class="ul-section-title">How May We Help You!</h2>
+                <div class="bg-img">
+                    <img src="home-assets/img/contact-review-bg-img.jpg" alt="Image">
+                </div>
 
-                                <form action="#" class="ul-contact-form">
-                                    <div class="row ul-bs-row row-cols-2 row-cols-xxs-1">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label for="ul-contact-name">Your Name*</label>
-                                                <input type="text" name="name" id="ul-contact-name" placeholder="Robot fox">
+                <div class="ul-container">
+                    <div class="row ul-review-contact-row row-cols-md-2 row-cols-1 align-items-center">
+
+                        <div class="col">
+                            <div class="ul-contact-form-wrapper">
+                                <div>
+                                    <span class="ul-section-sub-title">TALK TO US</span>
+                                    <h2 class="ul-section-title">How May We Help You!</h2>
+
+                                    <form action="#" class="ul-contact-form">
+                                        <div class="row ul-bs-row row-cols-2 row-cols-xxs-1">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ul-contact-name">Your Name*</label>
+                                                    <input type="text" name="name" id="ul-contact-name" placeholder="Robot fox">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ul-contact-email">Your Email*</label>
+                                                    <input type="email" name="email" id="ul-contact-email"
+                                                        placeholder="info@example.com">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ul-contact-subject">Subject*</label>
+                                                    <input type="text" name="subject" id="ul-contact-subject"
+                                                        placeholder="Subject">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ul-contact-phone">Your Phone*</label>
+                                                    <input type="tel" name="phone" id="ul-contact-phone"
+                                                        placeholder="+1253 457 7840">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="ul-contact-message">Message*</label>
+                                                    <textarea name="message" id="ul-contact-message"
+                                                        placeholder="Write Message"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <button type="submit">Send Message</button>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label for="ul-contact-email">Your Email*</label>
-                                                <input type="email" name="email" id="ul-contact-email"
-                                                    placeholder="info@example.com">
-                                            </div>
-                                        </div>
-
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label for="ul-contact-subject">Subject*</label>
-                                                <input type="text" name="subject" id="ul-contact-subject"
-                                                    placeholder="Subject">
-                                            </div>
-                                        </div>
-
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label for="ul-contact-phone">Your Phone*</label>
-                                                <input type="tel" name="phone" id="ul-contact-phone"
-                                                    placeholder="+1253 457 7840">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="ul-contact-message">Message*</label>
-                                                <textarea name="message" id="ul-contact-message"
-                                                    placeholder="Write Message"></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <button type="submit">Send Message</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- reviews -->
-                    <div class="col">
-                        <div class="ul-reviews">
-                            <div>
-                                <span class="ul-section-sub-title">Clients Review</span>
-                                <h2 class="ul-section-title">What They Say About Our</h2>
-                                <p class="ul-reviews-heading-descr">Green Biller has transformed how we manage billing and
-                                    inventory. It’s simple, reliable, and saves us a lot of time every day.</p>
-                            </div>
 
-                            <div class="swiper ul-reviews-slider">
-                                <div class="swiper-wrapper">
-                                    <!-- single slide -->
-                                    <div class="swiper-slide">
-                                        <div class="ul-review">
-                                            <div class="top">
-                                                <div class="ul-review-reviewer-img">
-                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
-                                                </div>
+                        <div class="col">
+                            <div class="ul-reviews">
+                                <div>
+                                    <span class="ul-section-sub-title">Clients Review</span>
+                                    <h2 class="ul-section-title">What They Say About Our</h2>
+                                    <p class="ul-reviews-heading-descr">Green Biller has transformed how we manage billing and inventory. It’s simple, reliable, and saves us a lot of time every day.</p>
+                                </div>
 
-                                                <div class="ul-review-reviewer-info">
-                                                    <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
-                                                    <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
-                                                    <div class="ul-review-rating">
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
+                                <div class="swiper ul-reviews-slider">
+                                    <div class="swiper-wrapper">
+
+                                        <div class="swiper-slide">
+                                            <div class="ul-review">
+                                                <div class="top">
+                                                    <div class="ul-review-reviewer-img">
+                                                        <img src="home-assets/img/user.jpg" alt="Reviewer Image">
+                                                    </div>
+
+                                                    <div class="ul-review-reviewer-info">
+                                                        <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
+                                                        <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
+                                                        <div class="ul-review-rating">
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ul-review-quotation-icon flex-shrink-0">
+                                                        <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                     </div>
                                                 </div>
-
-                                                <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
-                                                </div>
+                                                <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
+                                                    laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
+                                                    viverra Aenean pulvinar maximus leo ”</p>
                                             </div>
-                                            <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
-                                                laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
-                                                viverra Aenean pulvinar maximus leo ”</p>
                                         </div>
-                                    </div>
 
-                                    <!-- single slide -->
-                                    <div class="swiper-slide">
-                                        <div class="ul-review">
-                                            <div class="top">
-                                                <div class="ul-review-reviewer-img">
-                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
-                                                </div>
 
-                                                <div class="ul-review-reviewer-info">
-                                                    <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
-                                                    <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
-                                                    <div class="ul-review-rating">
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
+                                        <div class="swiper-slide">
+                                            <div class="ul-review">
+                                                <div class="top">
+                                                    <div class="ul-review-reviewer-img">
+                                                        <img src="home-assets/img/user.jpg" alt="Reviewer Image">
+                                                    </div>
+
+                                                    <div class="ul-review-reviewer-info">
+                                                        <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
+                                                        <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
+                                                        <div class="ul-review-rating">
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ul-review-quotation-icon flex-shrink-0">
+                                                        <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                     </div>
                                                 </div>
-
-                                                <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
-                                                </div>
+                                                <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
+                                                    laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
+                                                    viverra Aenean pulvinar maximus leo ”</p>
                                             </div>
-                                            <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
-                                                laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
-                                                viverra Aenean pulvinar maximus leo ”</p>
                                         </div>
-                                    </div>
 
-                                    <!-- single slide -->
-                                    <div class="swiper-slide">
-                                        <div class="ul-review">
-                                            <div class="top">
-                                                <div class="ul-review-reviewer-img">
-                                                    <img src="home-assets/img/user.jpg" alt="Reviewer Image">
-                                                </div>
 
-                                                <div class="ul-review-reviewer-info">
-                                                    <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
-                                                    <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
-                                                    <div class="ul-review-rating">
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
-                                                        <i class="flaticon-star"></i>
+                                        <div class="swiper-slide">
+                                            <div class="ul-review">
+                                                <div class="top">
+                                                    <div class="ul-review-reviewer-img">
+                                                        <img src="home-assets/img/user.jpg" alt="Reviewer Image">
+                                                    </div>
+
+                                                    <div class="ul-review-reviewer-info">
+                                                        <h3 class="ul-review-reviewer-name">Kathryn Murphy</h3>
+                                                        <h4 class="ul-review-reviewer-role">Medical Assistant</h4>
+                                                        <div class="ul-review-rating">
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                            <i class="flaticon-star"></i>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ul-review-quotation-icon flex-shrink-0">
+                                                        <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
                                                     </div>
                                                 </div>
-
-                                                <div class="ul-review-quotation-icon flex-shrink-0">
-                                                    <img src="home-assets/img/quotation-icon.svg" alt="quotaion-icon">
-                                                </div>
+                                                <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
+                                                    laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
+                                                    viverra Aenean pulvinar maximus leo ”</p>
                                             </div>
-                                            <p class="ul-review-txt">Consectetur adipiscing elit. Integer nunc viverra
-                                                laoreet est the is porta pretium metus aliquam eget maecenas porta is nunc
-                                                viverra Aenean pulvinar maximus leo ”</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ul-reviews-slider-nav ul-slider-nav">
-                                <button class="prev"><i class="flaticon-left"></i></button>
-                                <button class="next"><i class="flaticon-next-2"></i></button>
+                                <div class="ul-reviews-slider-nav ul-slider-nav">
+                                    <button class="prev"><i class="flaticon-left"></i></button>
+                                    <button class="next"><i class="flaticon-next-2"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>-->
         <!-- REVIEW-CONTACT SECTION END -->
 
 
         <!-- CLIENTS SECTION START -->
-        <div class="ul-container ul-section-spacing wow animate__fadeInUp">
-            <div class="ul-clients">
-                <div class="ul-clients-slider swiper">
-
-                    <div class="swiper-wrapper">
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-2.png" alt="Client Image"></div>
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-3.png" alt="Client Image"></div>
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-4.png" alt="Client Image"></div>
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-5.png" alt="Client Image"></div>
-                        <!-- single client -->
-                        <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
-                    </div>
-                </div>
-                <img src="home-assets/img/brands-vector.png" alt="vector" class="ul-clients-vector">
-            </div>
-        </div>
+        <?php /*
+       <div class="ul-container ul-section-spacing wow animate__fadeInUp">
+           <div class="ul-clients">
+               <div class="ul-clients-slider swiper">
+                   <div class="swiper-wrapper">
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-2.png" alt="Client Image"></div>
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-3.png" alt="Client Image"></div>
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-4.png" alt="Client Image"></div>
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-5.png" alt="Client Image"></div>
+                       <!-- single client -->
+                       <div class="swiper-slide"><img src="home-assets/img/client-1.png" alt="Client Image"></div>
+                   </div>
+               </div>
+               <img src="home-assets/img/brands-vector.png" alt="vector" class="ul-clients-vector">
+           </div>
+       </div> */?>
         <!-- CLIENTS SECTION END -->
     </main>
 

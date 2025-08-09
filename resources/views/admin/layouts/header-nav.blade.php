@@ -4,6 +4,7 @@
 	<!-- Logo -->
 	<div class="header-left active">
 		@if(!empty($settings->min_logo))
+
 		<a href="{{ route('admin.dashboard') }}" class="logo logo-normal">
 			<img src="{{ asset('storage/core/' . $settings->min_logo) }}" alt="App Logo">
 		</a>
@@ -12,13 +13,15 @@
 			<img src="{{ asset('admin-assets/img/logo.png') }}" alt="Default Logo">
 		</a>
 		@endif
-
+		<!-- 
 		<a href="index.html" class="logo logo-white">
 			<img src="admin-assets/img/logo-white.png" alt="">
 		</a>
 		<a href="index.html" class="logo-small">
 			<img src="admin-assets/img/logo-small.png" alt="">
-		</a>
+		</a> -->
+
+
 		<a id="toggle_btn" href="javascript:void(0);">
 			<i data-feather="chevrons-left" class="feather-16"></i>
 		</a>
@@ -62,9 +65,15 @@
 					</span>
 					<span class="user-detail">
 						<span class="user-name">{{ Auth::user()->name }}</span>
-						<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager'
-							}}</span>
+						<<<<<<< HEAD
+							<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager'
+							}}
 					</span>
+					=======
+					<span
+						class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager' }}</span>
+					>>>>>>> origin/master
+				</span>
 				</span>
 			</a>
 			<div class="dropdown-menu menu-drop-user">
@@ -75,26 +84,32 @@
 							<span class="status online"></span></span>
 						<div class="profilesets">
 							<h6>{{ Auth::user()->name }}</h6>
-							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
+							<<<<<<< HEAD
+								<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
 								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}</h5>
+								=======
+								<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ? 'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}
+								</h5>
+								>>>>>>> origin/master
 
 						</div>
 					</div>
 					<hr class="m-0">
 					<a class="dropdown-item" href="profile.html"> <i class="me-2" data-feather="user"></i> My
 						Profile</a>
-					<a class="dropdown-item" href="general-settings.html"><i class="me-2"
+					<<<<<<< HEAD
+						<a class="dropdown-item" href="general-settings.html"><i class="me-2"
 							data-feather="settings"></i>Settings</a>
-					<hr class="m-0">
-					{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}"><img
-							src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a> --}}
-					<a class="dropdown-item logout pb-0" href="#"
-						onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
-							data-feather="log-out"></i>Logout
-					</a>
-					<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-						@csrf
-					</form>
+						<hr class="m-0">
+						{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}"><img======={{-- <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}"><img>>>>>>> origin/master
+						src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a> --}}
+						<a class="dropdown-item logout pb-0" href="#"
+							onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
+								data-feather="log-out"></i>Logout
+						</a>
+						<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+							@csrf
+						</form>
 
 				</div>
 			</div>
@@ -108,8 +123,19 @@
 			aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 		<div class="dropdown-menu dropdown-menu-right">
 			<a class="dropdown-item" href="profile.html">My Profile</a>
-			<a class="dropdown-item" href="general-settings.html">Settings</a>
-			<a class="dropdown-item" href="signin.html">Logout</a>
+			<<<<<<< HEAD
+				<a class="dropdown-item" href="general-settings.html">Settings</a>
+				<a class="dropdown-item" href="signin.html">Logout</a>
+				=======
+
+				<a class="dropdown-item logout pb-0" href="#"
+					onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
+						data-feather="log-out"></i>Logout
+				</a>
+				<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+					@csrf
+				</form>
+				>>>>>>> origin/master
 		</div>
 	</div>
 	<!-- /Mobile Menu -->

@@ -43,7 +43,12 @@ class Customer extends Model
 
     public function country()
     {
-        return $this->belongsTo(CountrySettings::class);
+        return $this->belongsTo(CountrySettings::class, 'country_id');
+    }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
     }
     public function customer()
     {

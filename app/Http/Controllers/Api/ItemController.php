@@ -5,35 +5,73 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
-use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
 
-
-    // View all Item
-    public function index()
+    public function index(Request $request, $storeId = null)
     {
-        $item = Item::all();
-        // $item = Item::where('user_id', Auth::id())->get();
+        $user = auth()->user();
+        $storeId = $storeId ?? $request->query('store_id');
 
+        // Determine effective store IDs
+        $storeIds = [];
 
-        if ($item->isEmpty()) {
+        if ($storeId) {
+            $storeIds = [trim($storeId)];
+        } elseif (!empty($user->store_id) && $user->store_id !== '0') {
+            $storeIds = [trim($user->store_id)];
+        } else {
+            // fallback to stores owned by user
+            $storeIds = DB::table('store')
+                ->where('user_id', $user->id)
+                ->pluck('id')
+                ->map(fn($id) => (string) $id)
+                ->toArray();
+        }
 
+        if (empty($storeIds)) {
+            return response()->json([
+                'message' => 'No stores found for this user',
+                'data' => [],
+                'total' => 0,
+                'status' => 0,
+            ], 200);
+        }
+
+        // Join items with store, category, and brand to fetch names
+        $items = DB::table('items')
+            ->select(
+                'items.*',
+                'store.store_name',
+                'categories.category_name',
+                'brands.brand_name'
+            )
+            ->leftJoin('store', 'items.store_id', '=', 'store.id')
+            ->leftJoin('categories', 'items.category_id', '=', 'categories.id')
+            ->leftJoin('brands', 'items.brand_id', '=', 'brands.id')
+            ->whereIn('items.store_id', $storeIds)
+            ->get();
+
+        if ($items->isEmpty()) {
             return response()->json([
                 'message' => 'Item Detail Not Found',
                 'data' => [],
-                'status' => 0
+                'status' => 0,
             ], 200);
         } else {
 
             return response()->json([
                 'message' => 'Item List',
-                'data' => $item,
-                'status' => 1
+                'data' => $items,
+                'status' => 1,
             ], 200);
         }
     }
+
 
     public function store_show(Request $request)
     {
@@ -75,54 +113,65 @@ class ItemController extends Controller
         ], 200);
     }
 
-    // Store a new Item
     public function store(Request $request)
     {
-        $request->validate([
-            'store_id' => 'required|string',
-            'user_id' => 'required|string',
-            'category_id' => 'required|string',
-            'brand_id' => 'required|string',
-            'item_name' => 'required|string',
-            'item_image' => '',
-            'SKU' => 'required|string',
-            'HSN_code' => 'required|string',
-            'Item_code' => 'required|string',
-            'Barcode' => 'required|string',
-            'Unit' => 'required|string',
-            'Purchase_price' => 'required|string',
-            'Tax_type' => 'required|string',
-            'Tax_rate' => 'required|string',
-            'Sales_Price' => 'required|string',
-            'MRP' => 'required|string',
-            'Discount_type' => 'required|string',
-            'Discount' => 'required|string',
-            'Profit_margin' => 'required|string',
-            'Warhouse' => 'required|string',
-            'Opening_stock' => 'required|string',
-            'Alert_Quantity' => 'required|string',
+        try {
+            $request->validate([
+                'store_id' => 'required|string',
+                'user_id' => 'required|string',
+                'category_id' => 'required|string',
+                'brand_id' => 'required|string',
+                'item_name' => 'required|string',
+                'item_image' => 'nullable|file|image|max:5120',
+                'SKU' => 'required|string',
+                'HSN_code' => 'required|string',
+                'Item_code' => 'required|string',
+                'Barcode' => 'required|string',
+                'Unit' => 'required|string',
+                'Purchase_price' => 'required|string',
+                'Tax_type' => 'required|string',
+                'Tax_rate' => 'required|string',
+                'Sales_Price' => 'required|string',
+                'MRP' => 'required|string',
+                'Discount_type' => 'required|string',
+                'Discount' => 'required|string',
+                'Profit_margin' => 'required|numeric|min:0|max:99999.99',
+                'Opening_stock' => 'required|string',
+                'Alert_Quantity' => 'required|string',
+            ]);
 
-        ]);
+            $data = $request->all();
 
-        /* $file = $request->item_image;
-          $directory = 'storage/public/item/';
-          $imageName = time() . '.' . $file->getClientOriginalname();
-          $file->move(public_path($directory), $imageName);
-          //  $data -> image = $directory.$imageName;
-          $data = $request->all();
-          $data['item_image'] = $directory . $imageName;*/
-        $data = $request->all();
-        $item = Item::create($data);
+            // Handle file upload
+            if ($request->hasFile('item_image')) {
+                $file = $request->file('item_image');
+                $directory = 'storage/item_images/';
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path($directory), $filename);
 
+                // Save the path
+                $data['item_image'] = $directory . $filename;
+            }
 
-        //  $item = Item::create($request->all());
+            $item = Item::create($data);
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Item created successfully',
-            'data' => $item
-        ], 201);
+            return response()->json([
+                'status' => 1,
+                'message' => 'Item created successfully',
+                'data' => $item
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error('Item Store Error: ' . $e->getMessage());
+            Log::error('Stack Trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to create item',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
     // Update an existing Item
     public function update(Request $request, $id)
     {
