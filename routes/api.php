@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\StoreController;
@@ -68,6 +69,8 @@ Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 
 //['auth:api', 'api.auth'])-
 Route::middleware('auth:api')->group(function () {
+  Route::get('/dashboard', [DashboardController::class, 'getDashboard']);
+  Route::get('/search', [DashboardController::class, 'search']);
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
 
