@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller; // ✅ This line is required
@@ -7,10 +8,11 @@ use App\Models\Store;
 use App\Models\Warehouse;
 use App\Models\Customer;
 use App\Models\AcAccount;
+
 class StoreController extends Controller
 {
 
-    public function index(Request $request)
+    /*    public function index(Request $request)
     {
         $storeCode = $request->input('store_code'); // Get store_code from Postman
 
@@ -50,30 +52,84 @@ class StoreController extends Controller
             'totalstore'=> $totalstores,
             'status' => 1
         ], 200);
+    } */
+
+    /* public function index(Request $request)
+    {
+        try {
+            $user = $request->user(); // From token authentication
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+
+            $products = Store::where('user_id', $user->id)->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Store fetched successfully',
+                'data' => $products
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }*/
+    public function index()
+    {
+        try {
+            $user = auth()->user();
+
+            if (in_array($user->user_level, [1, 4])) {
+                // Store admin sees all stores
+                $stores = Store::all();
+            } else {
+                // Other users see only their own stores
+                $stores = Store::where('user_id', $user->id)->get();
+            }
+
+            return response()->json([
+                'message' => 'Store Detail Fetch Successfully',
+                'status' => 1,
+                'data' => $stores
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to retrieve stores: ' . $e->getMessage()
+            ], 500);
+        }
     }
+
 
 
     // Store a new store
     public function store(Request $request)
     {
-         $request->validate([
-        'store_code' => 'required|string',
-        'slug' => 'required|string',
-        'store_logo' => 'sometimes|file|image|max:2048'
-        
-      
-    ]);
-         $existingStore = Store::where('store_code', $request->store_code)
-                          ->orWhere('slug', $request->slug)
-                          ->first();
+        $request->validate([
+            'store_code' => 'required|string',
+            'slug' => 'required|string',
+            'store_logo' => 'sometimes|file|image|max:2048'
 
-    if ($existingStore) {
-        return response()->json([
-            'status' => 0,
-            'message' => 'Store already exists with given store code or slug.',
-            'data' => $existingStore
-        ], 409); // 409 Conflict
-    }
+
+        ]);
+        $existingStore = Store::where('store_code', $request->store_code)
+            ->orWhere('slug', $request->slug)
+            ->first();
+
+        if ($existingStore) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Store already exists with given store code or slug.',
+                'data' => $existingStore
+            ], 409); // 409 Conflict
+        }
         $file = $request->file('store_logo');
         $directory = 'storage/public/store/';
         $imageName = time() . '.' . $file->getClientOriginalExtension();
@@ -82,7 +138,7 @@ class StoreController extends Controller
         $data = $request->all();
         $data['store_logo'] = $directory . $imageName;
 
-      //  $store = Store::create($request->all());
+        //  $store = Store::create($request->all());
         $store = store::create($data);
 
         if ($store) {
@@ -147,5 +203,4 @@ class StoreController extends Controller
             'status' => 0
         ], 404);
     }
-
 }

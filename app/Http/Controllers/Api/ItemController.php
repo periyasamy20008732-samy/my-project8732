@@ -81,8 +81,8 @@ class ItemController extends Controller
         $request->validate([
             'store_id' => 'required|string',
             'user_id' => 'required|string',
-            'category_id' => 'required|string',
-            'brand_id' => 'required|string',
+            // 'category_id' => 'required|string',
+            //  'brand_id' => 'required|string',
             'item_name' => 'required|string',
             'item_image' => '',
             'SKU' => 'required|string',

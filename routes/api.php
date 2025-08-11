@@ -54,10 +54,6 @@ use App\Http\Controllers\Api\NotificationController;
 
 
 
-
-
-
-
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:api');
@@ -70,10 +66,7 @@ Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 
 
-
-
-
-
+//['auth:api', 'api.auth'])-
 Route::middleware('auth:api')->group(function () {
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
@@ -403,8 +396,8 @@ Route::middleware('auth:api')->group(function () {
 
   //NotificationController
   Route::post('/notification-create', [NotificationController::class, 'store']);
-// Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
-// Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+  // Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
+  // Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
 });
 
 //Packages CRUD

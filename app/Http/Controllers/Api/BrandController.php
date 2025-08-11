@@ -9,7 +9,7 @@ use App\Models\Brand;
 class BrandController extends Controller
 {
     // View all brand
-    public function index()
+    /* public function index()
     {
         $brand = Brand::all();
 
@@ -31,8 +31,34 @@ class BrandController extends Controller
             ], 200);
 
         }
-    }
+    } */
+    public function index(Request $request)
+    {
+        try {
+            $user = $request->user(); // From token authentication
 
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+
+            $products = Brand::where('user_id', $user->id)->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Products fetched successfully',
+                'data' => $products
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function store_show(Request $request)
     {
@@ -153,7 +179,4 @@ class BrandController extends Controller
             'status' => 0
         ], 404);
     }
-
-
-
 }

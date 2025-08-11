@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use Laravel\Passport\Passport;
 use Carbon\CarbonInterval;
 
@@ -26,16 +27,14 @@ class AppServiceProvider extends ServiceProvider
     {
         //Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
         Passport::loadKeysFrom(base_path('secrets/oauth'));
-        
-      Passport::tokensExpireIn(CarbonInterval::days(15));
-      Passport::refreshTokensExpireIn(CarbonInterval::days(30));
-    Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
 
-    View::addNamespace('Users', app_path('Modules/Users/Views'));
+        Passport::tokensExpireIn(CarbonInterval::days(15));
+        Passport::refreshTokensExpireIn(CarbonInterval::days(30));
+        Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
 
-    $settings = Settings::first();
-    View::share('settings', $settings);
-}
+        View::addNamespace('Users', app_path('Modules/Users/Views'));
 
-
+        $settings = Settings::first();
+        View::share('settings', $settings);
+    }
 }

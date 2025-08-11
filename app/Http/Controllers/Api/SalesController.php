@@ -8,21 +8,46 @@ use App\Models\Sales;
 
 class SalesController extends Controller
 {
+    // public function index()
+    // {
+    //     $sales = Sales::all();
+    //     if ($sales->isEmpty()) {
+    //         return response()->json([
+    //             'message' => 'Sales Details Not Found',
+    //             'data' => [],
+    //             'status' => 0
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'message' => 'Sales Details',
+    //             'data' => $sales,
+    //             'status' => 1
+    //         ], 200);
+    //     }
+    // }
     public function index()
     {
-        $sales = Sales::all();
-        if ($sales->isEmpty()) {
+        try {
+            $user = auth()->user();
+
+            if (in_array($user->user_level, [1, 4])) {
+                // Store admin sees all stores
+                $sales = Sales::all();
+            } else {
+                // Other users see only their own stores
+                $sales = Sales::where('user_id', $user->id)->get();
+            }
+
             return response()->json([
-                'message' => 'Sales Details Not Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
-        } else {
+                'message' => 'Sales Detail Fetch Successfully',
+                'status' => 1,
+                'data' => $sales
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Sales Details',
-                'data' => $sales,
-                'status' => 1
-            ], 200);
+                'status' => 0,
+                'message' => 'Failed to retrieve Sales: Unauthorozied or data not found',
+            ], 500);
         }
     }
     public function store(Request $request)

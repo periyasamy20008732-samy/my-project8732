@@ -9,9 +9,10 @@ use App\Models\Notification;
 class NotificationController extends Controller
 {
     //
-    public function store(Request $request){
-        $notification= Notification::create($request->all());
-         return response()->json([
+    public function store(Request $request)
+    {
+        $notification = Notification::create($request->all());
+        return response()->json([
             'status' => 1,
             'message' => 'Notification created successfully',
             'data' => $notification
