@@ -25,7 +25,7 @@ class CategoryController extends Controller
 
             if ($storeId) {
                 $storeIds = [trim($storeId)];
-            } elseif (!empty($user->store_id) && $user->store_id !== '0') {
+            } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
                 $storeIds = [trim($user->store_id)];
             } else {
                 // fallback to stores owned by user
@@ -73,17 +73,12 @@ class CategoryController extends Controller
                 'status' => 1,
             ], 200);
         } catch (\Throwable $e) {
-            Log::error('Category index failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'user_id' => optional(auth()->user())->id,
-                'store_id' => $request->query('store_id'),
-            ]);
             return response()->json([
                 'message' => 'Internal server error',
-                'data' => [],
+                'data' => $e,
                 'total' => 0,
                 'status' => 500,
+
             ], 500);
         }
     }
@@ -269,5 +264,104 @@ class CategoryController extends Controller
             'total' => $totalCategory,
             'status' => 0
         ], 404);
+    }
+
+    public function getItemsBasedOnCateId(Request $request, $categoryId)
+    {
+        try {
+            $user = auth()->user();
+
+            // Step 1: Validate category and get store_id
+            $category = DB::table('categories')->where('id', $categoryId)->first();
+            if (!$category) {
+                return response()->json([
+                    'message' => 'Category not found',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 404);
+            }
+
+            $categoryStoreId = $category->store_id;
+
+            // Step 2: Determine user type & store IDs
+            $storeIds = [];
+
+            if (!empty($user->store_id) && ($user->store_id != '0' && $user->store_id != 0)) {
+                // Store user (assigned to one store)
+                $storeIds = [trim($user->store_id)];
+            } else {
+                // Possible store admin (owns one or more stores)
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
+            }
+
+            // Step 3: Logic based on role
+            if (!empty($user->store_id) && $user->store_id !== '0') {
+                // Store user → must match category store
+                if ((string)$categoryStoreId !== (string)$user->store_id) {
+                    return response()->json([
+                        'message' => 'You do not have permission to view items for this category',
+                        'data' => [],
+                        'total' => 0,
+                        'status' => 0,
+                    ], 403);
+                }
+            } else {
+                // Store admin → check if category store belongs to them
+                if (!in_array((string)$categoryStoreId, $storeIds)) {
+                    return response()->json([
+                        'message' => 'You do not have permission to view items for this category',
+                        'data' => [],
+                        'total' => 0,
+                        'status' => 0,
+                    ], 403);
+                }
+            }
+
+            // Step 4: Fetch items (include category + store names)
+            $items = DB::table('items')
+                ->leftJoin('categories', 'items.category_id', '=', 'categories.id')
+                ->leftJoin('store', 'items.store_id', '=', 'store.id')
+                ->select(
+                    'items.*',
+                    'categories.category_name as category_name',
+                    'store.store_name as store_name'
+                )
+                ->whereIn(
+                    'items.store_id',
+                    !empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0
+                        ? [$user->store_id] // Store user → single store
+                        : $storeIds         // Store admin → multiple stores
+                )
+                ->where(function ($query) use ($categoryId) {
+                    $query->where('items.category_id', $categoryId)
+                        ->orWhereNull('items.category_id');
+                })
+                ->get();
+
+            return response()->json([
+                'message' => 'Items fetched successfully',
+                'data' => $items,
+                'total' => $items->count(),
+                'status' => 200,
+            ], 200);
+        } catch (\Throwable $e) {
+            Log::error('getItemsBasedOnCateId failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => optional(auth()->user())->id,
+                'category_id' => $categoryId,
+            ]);
+            return response()->json([
+                'message' => 'Internal server error',
+                'data' => $e,
+                'total' => $user,
+                'status' => 500,
+            ], 500);
+        }
     }
 }

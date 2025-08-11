@@ -172,13 +172,12 @@ Route::middleware('auth:api')->group(function () {
 
 
   //Category CRUD
-
-  Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
-  Route::post('/category-view', [CategoryController::class, 'store_show']);
+  // Route::post('/category-view', [CategoryController::class, 'store_show']);
   Route::post('/category-create', [CategoryController::class, 'store']);
+  Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);
   Route::delete('/category-delete/{id}', [CategoryController::class, 'destroy']);
-
+  Route::get('/category/{categoryId}/items', [CategoryController::class, 'getItemsBasedOnCateId']);
   //Item CRUD 
   Route::get('/items-view', [ItemController::class, 'index']);
   Route::get('/items-view/{id}', [ItemController::class, 'index']);
