@@ -5,33 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
 {
-    // View all brand
-    /* public function index()
-    {
-        $brand = Brand::all();
 
-
-        if ($brand->isEmpty()) {
-
-            return response()->json([
-                'message' => 'Brand Detail Not Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
-
-        } else {
-
-            return response()->json([
-                'message' => 'Brand List',
-                'data' => $brand,
-                'status' => 1
-            ], 200);
-
-        }
-    } */
     public function index(Request $request)
     {
         try {
@@ -100,33 +80,67 @@ class BrandController extends Controller
         ], 200);
     }
 
-    // Store a new Brand
     public function store(Request $request)
     {
-        $request->validate([
+        // Validate required fields
+        $validator = Validator::make($request->all(), [
             'brand_name' => 'required|string',
             'brand_code' => 'required|string',
-            'brand_image' => 'required'
-
+            'store_id' => 'required', // optional: enforce if needed
+            // other fields can be validated as needed
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
-        $file = $request->brand_image;
-        $directory = 'storage/public/brand/';
-        $imageName = time() . '.' . $file->getClientOriginalname();
-        $file->move(public_path($directory), $imageName);
-        //  $data -> image = $directory.$imageName;
-        $data = $request->all();
-        $data['brand_image'] = $directory . $imageName;
+        try {
+            // Prepare data to insert
+            $data = $request->only([
+                'store_id',
+                'slug',
+                'count_id',
+                'brand_code',
+                'brand_name',
+                'description',
+                'status',
+                'inapp_view',
+            ]);
 
-        //  $brand = Brand::create($request->all());
+            // Handle brand image only if a valid file is uploaded
+            if ($request->hasFile('brand_image') && $request->file('brand_image')->isValid()) {
+                $file = $request->file('brand_image');
+                $directory = 'storage/public/brand/';
+                $imageName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path($directory), $imageName);
+                $data['brand_image'] = $directory . $imageName;
+            }
 
-        $brand = Brand::create($data);
-        return response()->json([
-            'status' => 1,
-            'message' => 'Brand created successfully',
-            'data' => $brand
-        ], 201);
+            // Create brand
+            $brand = Brand::create($data);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Brand created successfully',
+                'data' => $brand,
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error('Brand creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'payload' => $request->all(),
+            ]);
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to create brand',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
+            ], 500);
+        }
     }
 
     // Update an existing Brand

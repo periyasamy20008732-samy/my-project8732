@@ -65,6 +65,7 @@ class UserController extends Controller
                 $result = User::create($data);
                 DB::Commit();
                 $token = $result->createToken('access_token')->accessToken;
+
                 $store = Store::create([
                     'user_id' => $result->id,
                     'store_name' => 'Default Store',
@@ -98,6 +99,7 @@ class UserController extends Controller
                     'store_id' => $store->id,
                     'supplier_name' => 'Default Supplier',
                 ]);
+
             } catch (\Exception $e) {
                 DB::rollBack();
                 // p($e->getMessage());
@@ -323,6 +325,11 @@ class UserController extends Controller
     }
 
 
+    public function checkSession(Request $request)
+    {
+        try {
+            $user = auth()->user(); // token-authenticated user
+
 
     public function checkSession(Request $request)
     {
@@ -365,6 +372,44 @@ class UserController extends Controller
             $settings = Settings::first();
 
             if ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1) {
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'is_logged_in' => false,
+                    'user_exists' => false,
+                    'message' => 'Session expired or invalid. Please login.',
+                    'status' => 401,
+                ], 401);
+            }
+
+            $userData = User::find($user->id);
+
+            if (!$userData) {
+                return response()->json([
+                    'success' => false,
+                    'is_logged_in' => false,
+                    'user_exists' => false,
+                    'message' => 'User does not exist.',
+                    'status' => 404,
+                ], 404);
+            }
+
+            if ($userData->is_blocked || $userData->status === 'inactive' || $userData->deleted_at) {
+                return response()->json([
+                    'success' => true,
+                    'is_logged_in' => false,
+                    'user_exists' => true,
+                    'user_blocked' => true,
+                    'message' => 'User is blocked or deactivated.',
+                    'status' => 403,
+                ], 403);
+            }
+
+            $settings = Settings::first();
+
+            if ($settings && ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1)) {
+
                 return response()->json([
                     'success' => true,
                     'is_logged_in' => false,
@@ -390,6 +435,7 @@ class UserController extends Controller
                     'status' => $userData->status,
                 ],
                 'settings' => [
+
                     // 'latest_version' => $settings->app_version,
                     //'announcement' => $settings->site_description ?? '',
                     'settings' => $settings,
@@ -398,6 +444,16 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('CheckSession Error: ' . $e->getMessage());
+
+                    'settings' => $settings,
+                ],
+                'status' => 200,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('CheckSession Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
 
             return response()->json([
                 'success' => false,
@@ -443,4 +499,85 @@ class UserController extends Controller
             'message' => 'Password reset successfully.',
         ]);
     }
+
+
+    public function getStoreUsers(Request $request)
+    {
+        $authUser = auth()->user();
+        $storeId = $request->query('store_id');
+
+        $finalUsers = collect();
+
+        if ($storeId) {
+            $storeId = trim($storeId);
+
+            // Fetch store name
+            $storeName = DB::table('store')
+                ->where('id', $storeId)
+                ->value('store_name');
+
+            // Fetch users who belong to this store
+            $storeUsers = DB::table('users')
+                ->where('store_id', $storeId)
+                ->get()
+                ->map(function ($user) use ($storeName) {
+                    $user->store_name = $storeName;
+                    return $user;
+                });
+
+            // Fetch the store owner (user_id from store table)
+            $storeOwnerId = DB::table('store')
+                ->where('id', $storeId)
+                ->value('user_id');
+
+            if ($storeOwnerId) {
+                $storeOwner = DB::table('users')->where('id', $storeOwnerId)->first();
+                if ($storeOwner) {
+                    $storeOwner->store_name = $storeName;
+                    $finalUsers->push($storeOwner);
+                }
+            }
+
+            $finalUsers = $finalUsers->merge($storeUsers)->unique('id')->values();
+        } else {
+            // Get all store IDs owned by this user
+            $storeIds = DB::table('store')
+                ->where('user_id', $authUser->id)
+                ->pluck('id')
+                ->toArray();
+
+            if (empty($storeIds)) {
+                return response()->json([
+                    'message' => 'No stores found for this user',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+
+            // Get store names mapped by ID
+            $stores = DB::table('store')
+                ->whereIn('id', $storeIds)
+                ->pluck('store_name', 'id'); // [id => store_name]
+
+            // Get users who belong to these stores
+            $storeUsers = DB::table('users')
+                ->whereIn('store_id', $storeIds)
+                ->get()
+                ->map(function ($user) use ($stores) {
+                    $user->store_name = $stores[$user->store_id] ?? null;
+                    return $user;
+                });
+
+            $finalUsers = $storeUsers;
+        }
+
+        return response()->json([
+            'message' => 'Store users fetched successfully',
+            'data' => $finalUsers,
+            'total' => $finalUsers->count(),
+            'status' => 1,
+        ], 200);
+    }
+
 }

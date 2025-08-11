@@ -6,18 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BusinessProfile;
 use Illuminate\Support\Facades\Validator;
+
 class BusinessProfileController extends Controller
 {
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
-         $request->validate([
-        'profileImagePath' => 'sometimes|file|image|max:2048',
-        'signatureImagePath' => 'sometimes|file|image|max:2048'
-        
-      
-    ]);
-      
+        $request->validate([
+            'profileImagePath' => 'sometimes|file|image|max:2048',
+            'signatureImagePath' => 'sometimes|file|image|max:2048'
+
+
+        ]);
+
         $file = $request->file('profileImagePath');
         $directory = 'storage/public/profile/';
         $imageName = time() . '.' . $file->getClientOriginalExtension();
@@ -33,7 +34,7 @@ class BusinessProfileController extends Controller
         $data['signatureImagePath'] = $directory1 . $imageName1;
 
 
-      //  $store = Store::create($request->all());
+        //  $store = Store::create($request->all());
         $profile = BusinessProfile::create($data);
 
         return response()->json([
@@ -43,7 +44,7 @@ class BusinessProfileController extends Controller
         ], 200);
     }
 
-    
+
     public function profileshow(string $id)
     {
         $profile = BusinessProfile::find($id);
@@ -77,7 +78,7 @@ class BusinessProfileController extends Controller
         // Define your validation rules here
         $validator = Validator::make($request->all(), [
             // Replace with actual fields you expect to update
-           
+
         ]);
 
         if ($validator->fails()) {
