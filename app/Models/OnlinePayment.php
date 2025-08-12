@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,17 +10,19 @@ class OnlinePayment extends Model
     //
     use HasFactory;
 
-    protected $table = 'payment'; // only needed if the table is not 'payments'
+    protected $table = 'online_payment';
 
     protected $fillable = [
         'user_id',
-        'store_id',
-        'item_id',
-        'unique_order_id',
-        'amount',
-        'gateway',
-        'status',
+        'order_id',
         'payment_id',
-        'purpose',
+        'gateway',
+        'price',
+        'tax',
+        'tax_amount',
+        'price_tax',
+        'payment_status',
+        'status',
+
     ];
 }

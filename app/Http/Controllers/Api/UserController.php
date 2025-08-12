@@ -22,6 +22,80 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    // public function register(Request $request)
+    // {
+
+
+    //     $validator = Validator::make(
+
+    //         $request->all(),
+    //         [
+    //             'name' => ['required'],
+    //             'email' => ['email', 'unique:users,email'],
+    //             'country_code' => ['required'],
+    //             'mobile' => ['required', 'numeric', 'unique:users,mobile'],
+    //             'password' => ['required', 'min:8', 'confirmed'],
+    //             'password_confirmation' => ['required']
+
+
+    //         ]
+    //     );
+
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'errors' => $validator->errors()
+    //         ], 400); // or 422, your choice
+    //     } else {
+
+    //         $data = [
+    //             'user_level' => $request->user_level,
+    //             'store_id' => $request->store_id,
+    //             'name' => $request->name,
+    //             'email' => $request->email,
+    //             'country_code' => $request->country_code,
+    //             'mobile' => $request->mobile,
+    //             //'password'=>Hash::make($request->password)
+    //             'license_key' => $randomInt = rand(1000, 9999),
+    //             'password' => md5($request->password)
+    //         ];
+
+    //         DB::beginTransaction();
+
+    //         try {
+
+    //             $result = User::create($data);
+    //             DB::Commit();
+    //             $token = $result->createToken('access_token')->accessToken;
+    //         } catch (\Exception $e) {
+    //             DB::rollBack();
+    //             // p($e->getMessage());
+    //             echo '<pre>';
+    //             print_r($e->getMessage());
+    //             echo '</pre>';
+    //             $result = null;
+    //         }
+    //         if ($result != null) {
+    //             //ok
+
+    //             return response()->json([
+    //                 'status' => true,
+    //                 'message' => 'User Register Successfully',
+    //                 'access_token' => $token,
+    //                 'data' => $result,
+    //                 'is_existing_user' => true
+    //             ], 200);
+    //         } else {
+    //             return response()->json([
+
+    //                 'message' => 'Internal server error',
+    //                 'status' => false,
+    //             ], 500);
+    //         }
+    //     }
+    // }
+
     public function register(Request $request)
     {
 
@@ -125,7 +199,9 @@ class UserController extends Controller
             }
         }
     }
-
+    /**
+     * Display the specified resource.
+     */
 
     public function login(Request $request)
     {
@@ -323,11 +399,10 @@ class UserController extends Controller
     }
 
 
-
     public function checkSession(Request $request)
     {
         try {
-            $user = auth()->user(); // Auth from token (e.g., Laravel Passport)
+            $user = auth()->user(); // token-authenticated user
 
             if (!$user) {
                 return response()->json([
@@ -335,11 +410,11 @@ class UserController extends Controller
                     'is_logged_in' => false,
                     'user_exists' => false,
                     'message' => 'Session expired or invalid. Please login.',
-                    'status' => 401
+                    'status' => 401,
                 ], 401);
             }
 
-            $userData = User::find($user->id); // or $user if already loaded
+            $userData = User::find($user->id);
 
             if (!$userData) {
                 return response()->json([
@@ -347,31 +422,31 @@ class UserController extends Controller
                     'is_logged_in' => false,
                     'user_exists' => false,
                     'message' => 'User does not exist.',
-                    'status' => 404
+                    'status' => 404,
                 ], 404);
             }
 
-            if ($userData->is_blocked || $userData->status == 'inactive' || $userData->deleted_at) {
+            if ($userData->is_blocked || $userData->status === 'inactive' || $userData->deleted_at) {
                 return response()->json([
                     'success' => true,
                     'is_logged_in' => false,
                     'user_exists' => true,
                     'user_blocked' => true,
                     'message' => 'User is blocked or deactivated.',
-                    'status' => 403
+                    'status' => 403,
                 ], 403);
             }
 
             $settings = Settings::first();
 
-            if ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1) {
+            if ($settings && ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1)) {
                 return response()->json([
                     'success' => true,
                     'is_logged_in' => false,
                     'user_exists' => true,
                     'maintenance' => true,
                     'message' => 'App is under maintenance.',
-                    'status' => 503
+                    'status' => 503,
                 ], 503);
             }
 
@@ -390,19 +465,19 @@ class UserController extends Controller
                     'status' => $userData->status,
                 ],
                 'settings' => [
-                    // 'latest_version' => $settings->app_version,
-                    //'announcement' => $settings->site_description ?? '',
                     'settings' => $settings,
                 ],
-                'status' => 200
-            ]);
+                'status' => 200,
+            ], 200);
         } catch (\Exception $e) {
-            \Log::error('CheckSession Error: ' . $e->getMessage());
+            Log::error('CheckSession Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             return response()->json([
                 'success' => false,
                 'message' => 'Internal server error. Please try again later.',
-                'status' => 500
+                'status' => 500,
             ], 500);
         }
     }

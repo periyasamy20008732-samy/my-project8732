@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,4 +30,17 @@ class SubscriptionPurchase extends Model
         'if_numberof_store',
     ];
 
+
+    public function package()
+    {
+        return $this->belongsTo(Packages::class, 'package_id', 'id');
+    }
+    // public function payment()
+    // {
+    //     return $this->belongsTo(OnlinePayment::class, 'payment_id', 'id');
+    // }
+    public function payment()
+    {
+        return $this->belongsTo(\App\Models\OnlinePayment::class, 'payment_id', 'id');
+    }
 }

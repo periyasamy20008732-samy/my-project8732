@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller; // ✅ This line is required
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Store;
 use App\Models\Warehouse;
@@ -12,76 +12,57 @@ use App\Models\AcAccount;
 class StoreController extends Controller
 {
 
-    /*    public function index(Request $request)
-    {
-        $storeCode = $request->input('store_code'); // Get store_code from Postman
-
-        if ($storeCode) {
-            $store = Store::where('store_code', $storeCode)->get();
-
-            if (!$store) {
-                return response()->json([
-                    'message' => 'Store Not Found',
-                    'data' => [],
-                    'status' => 0
-                ], 200);
-            }
-
-            return response()->json([
-                'message' => 'Store Details',
-                'data' => $store,
-                'status' => 1
-            ], 200);
-        }
-
-        // If no store_code is passed, return all stores
-        $stores = Store::all();
-        $totalstores = $stores->count();
-
-        if ($stores->isEmpty()) {
-            return response()->json([
-                'message' => 'No Stores Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
-        }
-
-        return response()->json([
-            'message' => 'Store List',
-            'data' => $stores,
-            'totalstore'=> $totalstores,
-            'status' => 1
-        ], 200);
-    } */
-
-    /* public function index(Request $request)
+    public function index(Request $request)
     {
         try {
-            $user = $request->user(); // From token authentication
+            $storeCode = $request->input('store_code');
+            $user = auth()->user();
 
+            // Require authenticated user
             if (!$user) {
                 return response()->json([
-                    'status' => false,
-                    'message' => 'Unauthorized'
+                    'message' => 'Unauthenticated user',
+                    'data'    => [],
+                    'totalstore' => 0,
+                    'status'  => 0
                 ], 401);
             }
 
-            $products = Store::where('user_id', $user->id)->get();
+            $stores = [];
+
+            // 1. If store_code provided
+            if ($storeCode) {
+                $stores = $this->getStoresBySql("s.store_code = ?", [$storeCode]);
+            }
+            // 2. If user's store_id is set
+            elseif (!empty($user->store_id) && $user->store_id !== '0') {
+                $stores = $this->getStoresBySql("s.id = ?", [$user->store_id]);
+            }
+            // 3. Stores owned by user
+            else {
+                $stores = $this->getStoresBySql("s.user_id = ?", [$user->id]);
+            }
+
+            $totalstores = count($stores);
 
             return response()->json([
-                'status' => true,
-                'message' => 'Store fetched successfully',
-                'data' => $products
+                'message'     => $totalstores > 0 ? 'Store List' : 'No Stores Found',
+                'data'        => $stores,
+                'totalstore'  => $totalstores,
+                'status'      => $totalstores > 0 ? 1 : 0
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json([
-                'status' => false,
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
+                'message' => 'Internal server error',
+                'data'    => [],
+                'totalstore' => 0,
+                'status'  => 500,
             ], 500);
         }
-    }*/
-    public function index()
+    }
+
+
+    /* public function index()
     {
         try {
             $user = auth()->user();
@@ -105,15 +86,14 @@ class StoreController extends Controller
                 'message' => 'Failed to retrieve stores: ' . $e->getMessage()
             ], 500);
         }
-    }
+    } */
 
 
-
-    // Store a new store
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'store_code' => 'required|string',
+
             'slug' => 'required|string',
             'store_logo' => 'sometimes|file|image|max:2048'
 
@@ -135,72 +115,142 @@ class StoreController extends Controller
         $imageName = time() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path($directory), $imageName);
 
-        $data = $request->all();
-        $data['store_logo'] = $directory . $imageName;
+
+
+
+        $existingStore = Store::where('store_code', $request->store_code)
+            ->orWhere('slug', $request->slug)
+            ->first();
+
 
         //  $store = Store::create($request->all());
         $store = store::create($data);
 
+        if ($existingStore) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Store already exists with given store code or slug.',
+                'data'    => $existingStore
+            ], 409);
+        }
+
+        if ($request->hasFile('store_logo')) {
+            $file = $request->file('store_logo');
+            $directory = 'storage/public/store/';
+            $imageName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path($directory), $imageName);
+            $request['store_logo'] = $directory . $imageName;
+        }
+
+        $store = Store::create($request->all());
+
+
         if ($store) {
-            $account = AcAccount::create($request->all());
+            AcAccount::create($request->all());
         }
 
         return response()->json([
-            'status' => 1,
+            'status'  => 1,
             'message' => 'Store created successfully',
-            'data' => $store
+            'data'    => $store
         ], 200);
     }
 
-    // Update an existing Store
+    /**
+     * Update an existing Store
+     */
     public function update(Request $request, $id)
     {
         $store = Store::findOrFail($id);
-
         $store->update($request->all());
 
         return response()->json([
-            'status' => 1,
+            'status'  => 1,
             'message' => 'Store Details updated successfully',
-            'data' => $store
+            'data'    => $store
         ]);
     }
 
-    // View a single Store
+    /**
+     * View a single Store
+     */
     public function show($id)
     {
-        $store = Store::findOrFail($id);
-        return response()->json($store);
+        return response()->json(Store::findOrFail($id));
     }
+
+    /**
+     * Delete a Store
+     */
     public function destroy($id)
     {
-        $store = Store::findOrFail($id);
-        $store->delete();
+        Store::findOrFail($id)->delete();
         return response()->json(['message' => 'Store deleted']);
     }
 
-
+    /**
+     * Single store by store_code
+     */
     public function single_show(Request $request)
     {
-        $storeid = $request->query('store_code');
-        //  $userid = $request->query('user_id');
+        $store = Store::where('store_code', $request->query('store_code'))->get();
 
-        $store = Store::where('store_code', $storeid)
-            // ->where('user_id', $userid)
-            ->get();
+        return $this->jsonResponse($store, 'Store Detail', 'Store Detail Not Found', 404);
+    }
 
-        if ($store->isNotEmpty()) {
+    /**
+     * Helper to run SQL and fetch stores with category count
+     */
+    private function getStoresBySql($whereClause, $params)
+    {
+        return DB::select("
+        SELECT 
+            s.id,
+            s.user_id,
+            s.store_code,
+            s.store_name,
+            s.address,
+            s.phone,
+            s.email,
+            s.created_at,
+            s.updated_at,
+            COUNT(DISTINCT c.id) AS category_count,
+            COUNT(DISTINCT w.id) AS warehouse_count
+        FROM store s
+        LEFT JOIN categories c ON c.store_id = s.id
+        LEFT JOIN warehouse w ON w.store_id = s.id
+        WHERE {$whereClause}
+        GROUP BY 
+            s.id,
+            s.user_id,
+            s.store_code,
+            s.store_name,
+            s.address,
+            s.phone,
+            s.email,
+            s.created_at,
+            s.updated_at
+    ", $params);
+    }
+
+    /**
+     * Helper to format JSON response
+     */
+    private function jsonResponse($data, $successMsg, $failMsg = 'No Data Found', $failStatus = 0)
+    {
+        if (empty($data)) {
             return response()->json([
-                'message' => 'Store Detail',
-                'data' => $store,
-                'status' => 1
+                'message' => $failMsg,
+                'data'    => [],
+                'status'  => $failStatus,
             ], 200);
         }
 
         return response()->json([
-            'message' => 'Store Detail Not Found',
-            'data' => [],
-            'status' => 0
-        ], 404);
+            'message'    => $successMsg,
+            'data'       => $data,
+            'totalstore' => is_array($data) ? count($data) : $data->count(),
+            'status'     => 1,
+        ], 200);
     }
 }

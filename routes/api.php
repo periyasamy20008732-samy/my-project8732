@@ -52,12 +52,12 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\WarehouseItemContrtoller;
 use App\Http\Controllers\Api\BusinessProfileController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\BusinessTypeController;
+use App\Http\Controllers\Api\storeReportController;
+use App\Http\Controllers\Api\SubscriptionPurchaseController;
 
 
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:api');
 Route::get('/settings-view/{id}', [SettingsController::class, 'settingshow']);
 Route::put('/settings-update/{id}', [SettingsController::class, 'settingsupdate']);
 Route::post('/register', [UserController::class, 'register']);
@@ -67,16 +67,23 @@ Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 
 
-//['auth:api', 'api.auth'])-
 Route::middleware('auth:api')->group(function () {
+
   Route::get('/dashboard', [DashboardController::class, 'getDashboard']);
   Route::get('/search', [DashboardController::class, 'search']);
+
+
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
 
 
   Route::get('/user/{id}', [UserController::class, 'getUser']);
+  Route::get('/store-users', [UserController::class, 'getStoreUsers']);
   Route::put('/user-update/{id}', [UserController::class, 'update']);
+
+  //subscription-purchase
+  Route::get('/subscription-purchase', [SubscriptionPurchaseController::class, 'index']);
+
 
   //Store CRUD
   Route::get('/store-view', [StoreController::class, 'index']);
@@ -163,30 +170,29 @@ Route::middleware('auth:api')->group(function () {
 
   //Warhouse CRUD
   Route::get('/warehouse-view', [WarehouseController::class, 'index']);
-  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'show ']);
+  Route::get('/warehouse-view/{id}', [WarehouseController::class, 'index']);
   Route::post('/warehouse-create', [WarehouseController::class, 'store']);
   Route::put('/warehouse-update/{id}', [WarehouseController::class, 'update']);
   Route::delete('/warehouse-delete/{id}', [WarehouseController::class, 'destroy']);
 
   //Supplier CRUD
   Route::get('/supplier-view', [SupplierController::class, 'index']);
-  Route::get('/supplier-view/{id}', [SupplierController::class, 'show']);
+  Route::get('/supplier-view/{store_id}', [SupplierController::class, 'show']);
   Route::post('/supplier-create', [SupplierController::class, 'store']);
   Route::put('/supplier-update/{id}', [SupplierController::class, 'update']);
   Route::delete('/supplier-delete/{id}', [SupplierController::class, 'destroy']);
 
 
   //Category CRUD
-  Route::get('/category-view', [CategoryController::class, 'index']);
-  Route::get('/category-view/{id}', [CategoryController::class, 'show']);
-  Route::post('/category-view', [CategoryController::class, 'store_show']);
+  // Route::post('/category-view', [CategoryController::class, 'store_show']);
   Route::post('/category-create', [CategoryController::class, 'store']);
+  Route::get('/category-view/{id?}', [CategoryController::class, 'index']);
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);
   Route::delete('/category-delete/{id}', [CategoryController::class, 'destroy']);
-
+  Route::get('/category/{categoryId}/items', [CategoryController::class, 'getItemsBasedOnCateId']);
   //Item CRUD 
   Route::get('/items-view', [ItemController::class, 'index']);
-  Route::get('/items-view/{id}', [ItemController::class, 'show']);
+  Route::get('/items-view/{id}', [ItemController::class, 'index']);
   //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
   //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
   Route::post('/items-view', [ItemController::class, 'store_show']);
@@ -401,6 +407,22 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/notification-create', [NotificationController::class, 'store']);
   // Route::get('/profile-view/{id}', [NotificationController::class, 'profileshow']);
   // Route::put('/profile-update/{id}', [NotificationController::class, 'profileupdate']); 
+
+
+
+  //Unit CRUD 
+  Route::get('/unit-view', [UnitsController::class, 'index']);
+  // Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
+  Route::post('/unit-create', [UnitsController::class, 'store']);
+  Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
+  Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
+
+  // Mobile App Sales purchase report controller latest - created by savio
+
+  Route::post('/reports/purchase-report', [storeReportController::class, 'purchase_report']);
+  Route::post('/reports/sales-report', [storeReportController::class, 'sales_report']);
+  Route::post('/reports/purchase-item-report', [storeReportController::class, 'purchase_item_report']);
+  Route::post('/reports/sales-item-report', [storeReportController::class, 'sales_item_report']);
 });
 
 //Packages CRUD
@@ -408,13 +430,6 @@ Route::get('/packages-view', [PackageController::class, 'index']);
 Route::get('/packages-view/{id}', [PackageController::class, 'show']);
 Route::post('/packages-create', [PackageController::class, 'store']);
 Route::put('/packages-update/{id}', [PackageController::class, 'update']);
-
-//Unit CRUD 
-Route::get('/unit-view', [UnitsController::class, 'index']);
-Route::get('/unit-view/{id}', [UnitsController::class, 'show']);
-Route::post('/unit-create', [UnitsController::class, 'store']);
-Route::put('/unit-update/{id}', [UnitsController::class, 'update']);
-Route::delete('/unit-delete/{id}', [UnitsController::class, 'destroy']);
 
 
 //OnesignalIdController CRUD 
@@ -437,3 +452,7 @@ Route::get('/tax-view/{id}', [taxController::class, 'show']);
 Route::post('/tax-create', [taxController::class, 'store']);
 Route::put('/tax-update/{id}', [taxController::class, 'update']);
 Route::delete('/tax-delete/{id}', [taxController::class, 'destroy']);
+
+
+//Business Type
+Route::get('/business-types', [BusinessTypeController::class, 'index']);

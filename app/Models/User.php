@@ -90,9 +90,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User_level::class, 'user_level');
     }
-
-    public function stores()
-    {
-        return $this->hasMany(Store::class);
-    }
 }

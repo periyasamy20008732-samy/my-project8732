@@ -37,6 +37,7 @@ class Item extends Model
     'expiry_date'
   ];
 
+
   protected $casts = [
     'item_image' => 'array',
   ];

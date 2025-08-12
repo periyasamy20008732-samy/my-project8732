@@ -6,6 +6,10 @@ use App\Http\Controllers\Auth\WebLoginController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\BusinessTypeController;
+use App\Http\Controllers\Admin\BusinessCategoryController;
+use App\Http\Controllers\Admin\PagesController;
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\UnitController;
@@ -49,7 +53,6 @@ Route::get('/contact-us', function () {
     return view('contact');
 });
 
-//Route::get('/paynow', [RazorpayPaymentController::class, 'index']);
 
 Route::get('/paynow/{mobile}/{package_id}', [PaymentController::class, 'paynow'])->name('paynow');
 
@@ -58,11 +61,11 @@ Route::post('/paynow/razorpay/order', [RazorpayPaymentController::class, 'create
 Route::post('/paynow/razorpay/success', [RazorpayPaymentController::class, 'paymentSuccess'])->name('razorpay.success');
 
 Route::get('/paynow/success', function () {
-    return view('success'); //No "razorpay." prefix
+    return view('success');
 })->name('razorpay.success.view');
 
 Route::get('/paynow/failed', function () {
-    return view('fail'); // No "razorpay." prefix
+    return view('fail');
 })->name('razorpay.fail.view');
 
 //razorpay paymentgateway end
@@ -87,9 +90,7 @@ Route::post('/account/getotp', [WebLoginController::class, 'getotp'])->name('get
 Route::post('/account/verify', [WebLoginController::class, 'verifyotp'])->name('verifyotp');
 Route::post('/account/login-password', [WebLoginController::class, 'accountlogin'])->name('accountlogin');
 
-
 Route::prefix('account')->middleware(['auth'])->name('account.')->group(function () {
-
     Route::get('/dashboard', [WebLoginController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard', [AccountDashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [WebLoginController::class, 'logout'])->name('logout');
@@ -102,7 +103,6 @@ Route::prefix('account')->middleware(['auth'])->name('account.')->group(function
 //Admin Login routes
 Route::get('/admin', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/login', [LoginController::class, 'login'])->name('login');
-//Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
 
@@ -115,6 +115,13 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
     Route::resource('tax', TaxController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('country', UnitController::class);
+    Route::resource('business-types', BusinessTypeController::class);
+    Route::resource('business-category', BusinessCategoryController::class);
+    Route::resource('pages', PagesController::class);
+    Route::get('add-page', [PagesController::class, 'addpage'])->name('addpage');
+
+    Route::get('edit-page/{id}', [PagesController::class, 'editpage'])->name('editpage');
+    Route::put('update-page/{id}', [PagesController::class, 'update'])->name('updatepage');
 
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
@@ -138,8 +145,8 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
     Route::get('items/get_warehouse', [ItemController::class, 'getwarehouse'])->name('item.get_warehouse');
 
     Route::post('/store/logout', [StoreLoginController::class, 'logout'])->name('logout');
-
     Route::resource('package', PackageController::class);
+
     Route::resource('sales', SalesController::class);
     Route::resource('customer', StoreCustomerController::class);
     Route::resource('brand', BrandController::class);
@@ -158,13 +165,6 @@ Route::prefix('store')->middleware(['auth'])->name('store.')->group(function () 
 
 
 
+
     Route::get('/dashboard', [DashboardController::class, 'store_index'])->name('dashboard');
-
-    //::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-
-
 });
-
-
-// ---------- Store Side End ----------//

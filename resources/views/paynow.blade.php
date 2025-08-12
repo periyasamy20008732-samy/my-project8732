@@ -7,6 +7,12 @@
     <title>{{ $settings->site_title ?? 'Green Biller' }} | Paynow </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('home-assets/css/paynow.css')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js">
+    </script>
 </head>
 
 <body>
@@ -54,21 +60,60 @@
 
 
         <div class="payment-methods">
-            <!-- <div class="payment-method-title">
-                <i class="fas fa-credit-card"></i> Payment Method
-            </div> -->
-
-            <div class="payment-tabs">
-                <!-- <div class="payment-tab active" data-tab="card">
-                    <i class="fas fa-credit-card"></i> Razorpay
-                </div> -->
-                <!-- <div class="payment-tab" data-tab="bank">
-                    <i class="fas fa-university"></i> Bank
+            <center>
+                <div class="payment-method-title">
+                    <i class="fas fa-credit-card"></i> Payment Method
                 </div>
-                <div class="payment-tab" data-tab="crypto">
+            </center>
+
+
+            <div class="payment-tabs" id="pills-tab" role="tablist">
+                <div class="payment-tab active" data-tab="card" id="pills-razorpay-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-razorpay" type="button" role="tab" aria-controls="pills-razorpay"
+                    aria-selected="true">
+                    <i class="fas fa-credit-card"></i> Razorpay
+                </div>
+                <div class="payment-tab" data-tab="card" id="pills-phonepe-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-phonepe" type="button" role="tab" aria-controls="pills-razorpay"
+                    aria-selected="true">
+                    <i class="fas fa-credit-card"></i> PhonePe
+                </div>
+                <!-- <div class="payment-tab" data-tab="crypto">
                     <i class="fab fa-bitcoin"></i> Crypto
                 </div> -->
             </div>
+
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-razorpay" role="tabpanel"
+                    aria-labelledby="pills-razorpay-tab" tabindex="0">
+                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                    <form method="POST" action="{{ route('razorpay.order') }}">
+                        @csrf
+                        <input type="text" name="username" value="{{ $user->name }}" hidden>
+                        <input type="text" name="user_id" id="user_id" value="{{ $user->id }}" hidden>
+                        <input type="text" name="store_id" id="store_id" value="{{ $user->store_id }}" hidden>
+                        <input type="text" name="mobile" value="{{ $user->mobile }}" hidden>
+                        <input type="text" name="email" value="{{ $user->email }}" hidden>
+                        <input type="text" name="package_id" value="{{ $package->id }}" hidden>
+                        <input type="text" name="amount" value="{{ $package->price }}" hidden>
+                        <!-- <button type="submit">Pay Now</button> -->
+                        <button class="checkout-btn" type="submit" id="checkoutBtn">
+                            <i class="fas fa-lock"></i> Paynow
+                        </button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="pills-phonepe" role="tabpanel" aria-labelledby="pills-phonepe-tab"
+                    tabindex="0">.
+                    <form action="{{ route('phonepe.payment') }}" method="POST">
+                        @csrf
+                        <!-- <button type="submit">Pay with PhonePe</button> -->
+                        <button class="checkout-btn" type="submit" id="checkoutBtn">
+                            <i class="fas fa-lock"></i> Paynow
+                        </button>
+                    </form>
+                </div>
+            </div>
+
 
             <!-- <div class="payment-content" id="cardContent">
                 <div class="saved-cards">
@@ -179,32 +224,6 @@
             </div>
         </form> -->
 
-            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
-            <form method="POST" action="{{ route('razorpay.order') }}">
-                @csrf
-                <input type="text" name="username" value="{{ $user->name }}" hidden>
-                <input type="text" name="user_id" id="user_id" value="{{ $user->id }}" hidden>
-                <input type="text" name="store_id" id="store_id" value="{{ $user->store_id }}" hidden>
-
-                <input type="text" name="mobile" value="{{ $user->mobile }}" hidden>
-                <input type="text" name="email" value="{{ $user->email }}" hidden>
-                <input type="text" name="package_id" value="{{ $package->id }}" hidden>
-                <input type="text" name="amount" value="{{ $package->price }}" hidden>
-                <!-- <button type="submit">Pay Now</button> -->
-
-
-                <button class="checkout-btn" type="submit" id="checkoutBtn">
-                    <i class="fas fa-lock"></i> Paynow
-                </button>
-
-            </form>
-
-            <form action="{{ route('phonepe.payment') }}" method="POST">
-                @csrf
-                <button type="submit">Pay with PhonePe</button>
-            </form>
 
 
             <!-- <div class="checkout-success" id="checkoutSuccess" style="display:none;">
@@ -216,11 +235,9 @@
             </div> -->
         </div>
     </div>
-    <center style="margin-top: 50px;">
-        <div class="text-muted">Copyright &copy; {{ date('Y') }} {{ $settings->site_title}}
-            v{{ $settings->app_version  }}
-        </div>
-
+    <center style="margin-top: 50px; color:azure !important">
+        Copyright &copy; {{ date('Y') }} {{ $settings->site_title}}
+        v{{ $settings->app_version  }}
     </center>
 
     @if(isset($orderId))
