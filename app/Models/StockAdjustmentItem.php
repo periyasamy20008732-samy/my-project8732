@@ -12,7 +12,7 @@ class StockAdjustmentItem extends Model
         'store_id',
         'warehouse_id',
         'adjustment_id',
-        ' item_id',
+        'item_id',
         'adjustment_qty',
         'status',
         'description'

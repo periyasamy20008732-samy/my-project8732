@@ -30,7 +30,11 @@ class SalesItemReturn extends Model
         'status',
         'seller_points',
         'purchase_price'
-
-
     ];
+
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

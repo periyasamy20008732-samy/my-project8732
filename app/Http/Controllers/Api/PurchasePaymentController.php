@@ -25,7 +25,6 @@ class PurchasePaymentController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -33,7 +32,6 @@ class PurchasePaymentController extends Controller
                 'data' => $purchasepayment,
                 'status' => 1
             ], 200);
-
         }
     }
     public function store(Request $request)
@@ -58,5 +56,4 @@ class PurchasePaymentController extends Controller
             'data' => $purchasepayment
         ]);
     }
-
 }

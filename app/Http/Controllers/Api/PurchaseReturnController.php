@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturn;
-
+use App\Models\Item;
+use App\Models\Warehouse;
+use App\Models\WarehouseItem;
 
 class PurchaseReturnController extends Controller
 {
@@ -24,7 +26,6 @@ class PurchaseReturnController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -32,7 +33,6 @@ class PurchaseReturnController extends Controller
                 'data' => $purchase,
                 'status' => 1
             ], 200);
-
         }
     }
 
@@ -47,6 +47,9 @@ class PurchaseReturnController extends Controller
          ]);*/
 
         $purchase = PurchaseReturn::create($request->all());
+
+
+
 
         return response()->json([
             'status' => 1,

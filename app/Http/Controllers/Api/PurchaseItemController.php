@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PurchaseItem;
+use App\Models\Item;
+use App\Models\Warehouse;
+use App\Models\WarehouseItem;
+use  DB;
 
 class PurchaseItemController extends Controller
 {
@@ -21,7 +25,6 @@ class PurchaseItemController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -29,7 +32,6 @@ class PurchaseItemController extends Controller
                 'data' => $purchaseitem,
                 'status' => 1
             ], 200);
-
         }
     }
 
@@ -37,13 +39,41 @@ class PurchaseItemController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'stock' => 'required|string',
-            'if_batch' => 'required|string',
-            'batch_no' => 'required|string',
-            'if_expirydate' => 'required|string',
+            'purchase_qty' => 'required|numeric',
+            'item_id' => 'required|numeric',
+            // 'if_batch' => 'required|string',
+            // 'batch_no' => 'required|string',
+            //'if_expirydate' => 'required|string',
+            'store_id' => 'required|numeric',
         ]);
 
         $purchaseitem = Purchaseitem::create($request->all());
+
+        // Fetch actual models
+        $item = Item::find($request->item_id);
+        $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
+
+        if ($warehouseitem) {
+            // Update existing stock
+            $newstock = $warehouseitem->available_qty + $request->purchase_qty;
+            $warehouseitem->update(['available_qty' => $newstock]);
+            $item->update(['Opening_Stock' => $newstock]);
+        } else {
+            // Create new warehouse stock entry
+            WarehouseItem::firstOrCreate(
+                [
+                    'store_id' => $request->store_id,
+                    'warehouse_id' => $item->warehouse_id,
+                    'item_id' => $request->item_id,
+                ],
+                [
+                    'available_qty' => $request->purchase_qty
+                ]
+            );
+
+            // Sync Opening_Stock in items table
+            $item->update(['Opening_Stock' => $request->purchase_qty]);
+        }
 
         return response()->json([
             'status' => 1,
@@ -51,6 +81,7 @@ class PurchaseItemController extends Controller
             'data' => $purchaseitem
         ], 201);
     }
+
 
     // Update an existing Purchaseitem
     public function update(Request $request, $id)
@@ -72,14 +103,62 @@ class PurchaseItemController extends Controller
         $purchaseitem = Purchaseitem::findOrFail($id);
         return response()->json($purchaseitem);
     }
+
+
     public function destroy($id)
     {
-        $purchaseitem = Purchaseitem::findOrFail($id);
-        $purchaseitem->delete();
-        return response()->json([
-            'status' => '1',
-            'message' => 'Purchaseitem Deleted'
-        ]);
+        try {
+            \DB::beginTransaction();
+
+            $purchaseitem = Purchaseitem::findOrFail($id);
+
+            $item = Item::findOrFail($purchaseitem->item_id);
+            $warehouseitem = WarehouseItem::where('item_id', $purchaseitem->item_id)->first();
+
+            // Delete purchase item
+            $purchaseitem->delete();
+
+            if ($warehouseitem) {
+                // Reduce existing stock
+                $newstock = $warehouseitem->available_qty - $purchaseitem->stock;
+                $warehouseitem->update(['available_qty' => $newstock]);
+                $item->update(['Opening_Stock' => $newstock]);
+            } else {
+
+                WarehouseItem::firstOrCreate(
+                    [
+                        'store_id' => $purchaseitem->store_id,
+                        'warehouse_id' => $item->warehouse_id,
+                        'item_id' => $purchaseitem->item_id,
+                    ],
+                    [
+                        'available_qty' => $purchaseitem->stock
+                    ]
+                );
+
+                $item->update(['Opening_Stock' => $purchaseitem->stock]);
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Purchaseitem deleted successfully'
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            \DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => 'Purchaseitem not found'
+            ], 404);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => 'An error occurred while deleting the purchase item',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
 

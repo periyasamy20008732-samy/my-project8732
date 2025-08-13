@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
-
+use App\Models\Warehouse;
+use App\Models\WarehouseItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -113,43 +114,9 @@ class ItemController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    /*    public function store(Request $request)
     {
 
-        $request->validate([
-            'store_id' => 'required|string',
-            'user_id' => 'required|string',
-           
-            'item_name' => 'required|string',
-            'item_image' => '',
-            'SKU' => 'required|string',
-            'HSN_code' => 'required|string',
-            'Item_code' => 'required|string',
-            'Barcode' => 'required|string',
-            'Unit' => 'required|string',
-            'Purchase_price' => 'required|string',
-            'Tax_type' => 'required|string',
-            'Tax_rate' => 'required|string',
-            'Sales_Price' => 'required|string',
-            'MRP' => 'required|string',
-            'Discount_type' => 'required|string',
-            'Discount' => 'required|string',
-            'Profit_margin' => 'required|string',
-            'Warhouse' => 'required|string',
-            'Opening_stock' => 'required|string',
-            'Alert_Quantity' => 'required|string',
-
-        ]);
-
-        /* $file = $request->item_image;
-          $directory = 'storage/public/item/';
-          $imageName = time() . '.' . $file->getClientOriginalname();
-          $file->move(public_path($directory), $imageName);
-          //  $data -> image = $directory.$imageName;
-          $data = $request->all();
-          $data['item_image'] = $directory . $imageName;*/
-        $data = $request->all();
-        $item = Item::create($data);
 
         try {
             $request->validate([
@@ -172,7 +139,7 @@ class ItemController extends Controller
                 'Discount_type' => 'required|string',
                 'Discount' => 'required|string',
                 'Profit_margin' => 'required|numeric|min:0|max:99999.99',
-                'Opening_stock' => 'required|string',
+                'Opening_Stock' => 'required|string',
                 'Alert_Quantity' => 'required|string',
             ]);
 
@@ -190,6 +157,92 @@ class ItemController extends Controller
             }
 
             $item = Item::create($data);
+            if ($item) {
+
+                $lastId = $item->id;
+                $opening_stack = $request->Opening_stock;
+                if ($opening_stack > 0) {
+                    warehouseItem::firstOrCreate(attributes: [
+                        'store_id' => $request->store_id,
+                        'warehouse_id' => $request->Warhouse,
+                        'available_qty' => $request->Opening_stock,
+                        'item_id' => $lastId,
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Item created successfully',
+                'data' => $item
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error('Item Store Error: ' . $e->getMessage());
+            Log::error('Stack Trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to create item',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    } */
+
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'store_id' => 'required|string',
+                'user_id' => 'required|string',
+                'category_id' => 'required|string',
+                'brand_id' => 'required|string',
+                'item_name' => 'required|string',
+                'item_image' => 'nullable|file|image|max:5120',
+                'SKU' => 'required|string',
+                'HSN_code' => 'required|string',
+                'Item_code' => 'required|string',
+                'Barcode' => 'required|string',
+                'Unit' => 'required|string',
+                'Purchase_price' => 'required|string',
+                'Tax_type' => 'required|string',
+                'Tax_rate' => 'required|string',
+                'Sales_Price' => 'required|string',
+                'MRP' => 'required|string',
+                'Discount_type' => 'required|string',
+                'Discount' => 'required|string',
+                'Profit_margin' => 'required|numeric|min:0|max:99999.99',
+                'Opening_Stock' => 'required|numeric',
+                'Alert_Quantity' => 'required|string',
+                'Warehouse' => 'required|string', // Added to store in warehouse table
+            ]);
+
+            $data = $request->all();
+
+            // Handle file upload
+            if ($request->hasFile('item_image')) {
+                $file = $request->file('item_image');
+                $directory = 'storage/item_images/';
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path($directory), $filename);
+                $data['item_image'] = $directory . $filename;
+            }
+
+            // Create item
+            $item = Item::create($data);
+
+            if ($item && $request->Opening_Stock > 0) {
+                WarehouseItem::firstOrCreate(
+                    [
+                        'store_id' => $request->store_id,
+                        'warehouse_id' => $request->Warehouse,
+                        'item_id' => $item->id,
+                    ],
+                    [
+                        'available_qty' => $request->Opening_Stock
+                    ]
+                );
+            }
 
             return response()->json([
                 'status' => 1,
@@ -208,19 +261,53 @@ class ItemController extends Controller
         }
     }
 
+
     // Update an existing Item
     public function update(Request $request, $id)
     {
-        $item = Item::findOrFail($id);
+        try {
 
-        $item->update($request->all());
+            $validated = $request->validate([
+                'store_id' => 'required|integer',
+                'Warehouse' => 'required|integer',
+                'Opening_Stock' => 'required|numeric',
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Item updated successfully',
-            'data' => $item
-        ]);
+            ]);
+
+            // Find item
+            $item = Item::findOrFail($id);
+            $item->update($validated + $request->only([
+                // other allowed fields here
+                'item_name',
+                'SKU',
+                'HSN_code'
+            ]));
+
+            // Update or create warehouse item
+            WarehouseItem::updateOrCreate(
+                [
+                    'store_id' => $validated['store_id'],
+                    'warehouse_id' => $validated['Warehouse'],
+                    'item_id' => $item->id,
+                ],
+                [
+                    'available_qty' => $validated['Opening_Stock']
+                ]
+            );
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Item updated successfully',
+                'data' => $item
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Error updating item: ' . $e->getMessage()
+            ], 500);
+        }
     }
+
 
     // View a single Item
     public function show($storeid, $userid)
