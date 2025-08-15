@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
-use App\Models\Warehouse;
+use App\Models\SalesItem;
+use App\Models\SalesItemReturn;
+use App\Models\Purchaseitem;
+use App\Models\PurchaseitemReturn;
 use App\Models\WarehouseItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -349,8 +352,31 @@ class ItemController extends Controller
 
     public function destroy($id)
     {
-        $item = Item::findOrFail($id);
-        $item->delete();
-        return response()->json(['message' => 'Item deleted']);
+        try {
+            $item = Item::findOrFail($id);
+
+
+            SalesItem::where('item_id', $id)->delete();
+            SalesItemReturn::where('item_id', $id)->delete();
+            Purchaseitem::where('item_id', $id)->delete();
+            PurchaseitemReturn::where('item_id', $id)->delete();
+            WarehouseItem::where('item_id', $id)->delete();
+            $item->delete();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Item and related records deleted successfully'
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Item not found'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

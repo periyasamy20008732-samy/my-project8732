@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -28,11 +29,38 @@
 
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert("This function is not allowed here.!");
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "F12") {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.shiftKey && 
+               (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j' || e.key.toLowerCase() === 'c')) {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+        });
+    </script>
 </head>
 
 <body class="account-page">
 
-    <div id="global-loader"><div class="whirly-loader"> </div></div>
+    <div id="global-loader">
+        <div class="whirly-loader"> </div>
+    </div>
 
     <div class="main-wrapper">
         <div class="account-content">
@@ -48,14 +76,14 @@
 
                         <!-- SweetAlert error popup -->
                         @if ($errors->any())
-                            <script>
-                                Swal.fire({
+                        <script>
+                            Swal.fire({
                                     icon: 'error',
                                     title: 'Login Failed',
                                     text: '{{ $errors->first() }}',
                                     confirmButtonColor: '#d33',
                                 });
-                            </script>
+                        </script>
                         @endif
 
                         <!-- Login Form -->
@@ -117,7 +145,8 @@
     <div class="customizer-links" id="setdata">
         <ul class="sticky-sidebar">
             <li class="sidebar-icons">
-                <a href="#" class="navigation-add" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Theme">
+                <a href="#" class="navigation-add" data-bs-toggle="tooltip" data-bs-placement="left"
+                    data-bs-original-title="Theme">
                     <i data-feather="settings" class="feather-five"></i>
                 </a>
             </li>
@@ -132,7 +161,7 @@
     <script src="{{ asset('admin-assets/js/script.js') }}"></script>
 
     @push('scripts')
-  
+
 
     @if(session('success'))
     <script>
@@ -148,4 +177,5 @@
     @endpush
 
 </body>
+
 </html>

@@ -87,16 +87,61 @@ class SalesItemController extends Controller
     // Update an existing SalesItem
     public function update(Request $request, $id)
     {
-        $salesitem = SalesItem::findOrFail($id);
+        try {
+            $request->validate([
+                'sales_qty' => 'required|numeric',
+                'item_id' => 'required|numeric',
+                'store_id' => 'required|numeric',
+            ]);
 
-        $salesitem->update($request->all());
+            $salesitem = SalesItem::findOrFail($id);
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'SalesItem updated successfully',
-            'data' => $salesitem
-        ]);
+            // Old quantities
+            $oldQty = $salesitem->sales_qty;
+            $newQty = $request->sales_qty;
+            $difference = $newQty - $oldQty;
+
+            // Update sales item
+            $salesitem->update($request->all());
+
+            // Fetch 
+            $item = Item::findOrFail($request->item_id);
+            $warehouseitem = WarehouseItem::where('item_id', $request->item_id)
+                ->where('store_id', $request->store_id)
+                ->firstOrFail();
+
+            // Adjust stock
+            $newStock = $warehouseitem->available_qty - $difference;
+            if ($newStock < 0) {
+                throw new \Exception('Not enough stock available to update sales quantity.');
+            }
+
+            $warehouseitem->update(['available_qty' => $newStock]);
+            $item->update(['Opening_Stock' => $newStock]);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'SalesItem updated successfully',
+                'data' => $salesitem
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 0,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Sales item or related records not found.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     // View a single SalesItem
     public function show($id)

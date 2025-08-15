@@ -91,70 +91,61 @@ class StoreController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'store_code' => 'required|string',
+        try {
+            // Validate request
+            $data = $request->validate([
+                'store_code' => 'required|string',
+                'slug'       => 'required|string',
+                'store_logo' => 'sometimes|file|image|max:2048'
+            ]);
 
-            'slug' => 'required|string',
-            'store_logo' => 'sometimes|file|image|max:2048'
+            //Check if store already exists
+            $existingStore = Store::where('store_code', $data['store_code'])
+                ->orWhere('slug', $data['slug'])
+                ->first();
 
+            if ($existingStore) {
+                return response()->json([
+                    'status'  => 0,
+                    'message' => 'Store already exists with given store code or slug.',
+                    'data'    => $existingStore
+                ], 409);
+            }
 
-        ]);
-        $existingStore = Store::where('store_code', $request->store_code)
-            ->orWhere('slug', $request->slug)
-            ->first();
+            //  Handle file upload (if present)
+            if ($request->hasFile('store_logo')) {
+                $file = $request->file('store_logo');
+                $directory = 'storage/store/'; // better to avoid "public" in the path
+                $imageName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path($directory), $imageName);
 
-        if ($existingStore) {
+                // Add uploaded file path to $data
+                $data['store_logo'] = $directory . $imageName;
+            }
+
+            // Create Store
+            $store = Store::create($data);
+
+            // 5 Create related Account (if needed)
+            AcAccount::create([
+                'store_id' => $store->id,
+                // Add other required fields for AcAccount
+            ]);
+
+            // 6 Return success response
             return response()->json([
-                'status' => 0,
-                'message' => 'Store already exists with given store code or slug.',
-                'data' => $existingStore
-            ], 409); // 409 Conflict
-        }
-        $file = $request->file('store_logo');
-        $directory = 'storage/public/store/';
-        $imageName = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($directory), $imageName);
-
-
-
-
-        $existingStore = Store::where('store_code', $request->store_code)
-            ->orWhere('slug', $request->slug)
-            ->first();
-
-
-        //  $store = Store::create($request->all());
-        $store = store::create($data);
-
-        if ($existingStore) {
+                'status'  => 1,
+                'message' => 'Store created successfully',
+                'data'    => $store
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'status'  => 0,
-                'message' => 'Store already exists with given store code or slug.',
-                'data'    => $existingStore
-            ], 409);
+                'message' => 'Something went wrong: ' . $e->getMessage()
+            ], 500);
         }
-
-        if ($request->hasFile('store_logo')) {
-            $file = $request->file('store_logo');
-            $directory = 'storage/public/store/';
-            $imageName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path($directory), $imageName);
-            $request['store_logo'] = $directory . $imageName;
-        }
-
-        $store = Store::create($request->all());
-
-
-        if ($store) {
-            AcAccount::create($request->all());
-        }
-
-        return response()->json([
-            'status'  => 1,
-            'message' => 'Store created successfully',
-            'data'    => $store
-        ], 200);
     }
+
 
     /**
      * Update an existing Store

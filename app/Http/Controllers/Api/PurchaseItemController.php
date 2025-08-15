@@ -8,7 +8,8 @@ use App\Models\PurchaseItem;
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Models\WarehouseItem;
-use  DB;
+use Illuminate\Support\Facades\DB;
+
 
 class PurchaseItemController extends Controller
 {
@@ -86,16 +87,63 @@ class PurchaseItemController extends Controller
     // Update an existing Purchaseitem
     public function update(Request $request, $id)
     {
-        $purchaseitem = Purchaseitem::findOrFail($id);
+        try {
+            $request->validate([
+                'purchase_qty' => 'required|numeric',
+                'item_id' => 'required|numeric',
+                'store_id' => 'required|numeric',
+            ]);
 
-        $purchaseitem->update($request->all());
+            $purchaseitem = Purchaseitem::findOrFail($id);
 
-        return response()->json([
-            'status' => '1',
-            'message' => 'Purchaseitem updated successfully',
-            'data' => $purchaseitem
-        ]);
+            // Get old and new qty
+            $oldQty = $purchaseitem->purchase_qty;
+            $newQty = $request->purchase_qty;
+            $difference = $newQty - $oldQty; // positive = increase stock, negative = decrease stock
+
+            // Update purchase record
+            $purchaseitem->update($request->all());
+
+            // Get related records
+            $item = Item::findOrFail($request->item_id);
+            $warehouseitem = WarehouseItem::where('item_id', $request->item_id)
+                ->where('store_id', $request->store_id)
+                ->firstOrFail();
+
+            // Adjust stock correctly based on difference
+            $newStock = $warehouseitem->available_qty + $difference;
+            if ($newStock < 0) {
+                throw new \Exception('Stock cannot be negative.');
+            }
+
+            // Update both warehouse and item table
+            $warehouseitem->update(['available_qty' => $newStock]);
+            $item->update(['Opening_Stock' => $newStock]);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Purchaseitem updated successfully',
+                'data' => $purchaseitem
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 0,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Purchase item or related records not found.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+
+
 
     // View a single Purchaseitem
     public function show($id)

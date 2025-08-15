@@ -46,7 +46,31 @@
         <!-- Main CSS -->
         <link rel="stylesheet" href="{{ asset('admin-assets/css/style.css') }}">
 
-
+        <script>
+            document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert("This function is not allowed here.!");
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "F12") {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.key.toLowerCase() === 'u') {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+            if (e.ctrlKey && e.shiftKey && 
+               (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j' || e.key.toLowerCase() === 'c')) {
+                e.preventDefault();
+                alert("This function is not allowed here.!");
+            }
+        });
+        </script>
 
 
 

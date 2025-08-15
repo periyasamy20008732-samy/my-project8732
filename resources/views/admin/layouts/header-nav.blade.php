@@ -65,15 +65,15 @@
 					</span>
 					<span class="user-detail">
 						<span class="user-name">{{ Auth::user()->name }}</span>
-						<<<<<<< HEAD
-							<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager'
+						<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' :
+							'Manager'
 							}}
+						</span>
+
+						<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager'
+							}}</span>
+
 					</span>
-					=======
-					<span
-						class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager' }}</span>
-					>>>>>>> origin/master
-				</span>
 				</span>
 			</a>
 			<div class="dropdown-menu menu-drop-user">
@@ -84,32 +84,35 @@
 							<span class="status online"></span></span>
 						<div class="profilesets">
 							<h6>{{ Auth::user()->name }}</h6>
-							<<<<<<< HEAD
-								<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
+							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' :
+								(Auth::user()->user_level == 2 ?
 								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}</h5>
-								=======
-								<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ? 'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}
-								</h5>
-								>>>>>>> origin/master
+
+							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
+								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}
+							</h5>
+
 
 						</div>
 					</div>
 					<hr class="m-0">
 					<a class="dropdown-item" href="profile.html"> <i class="me-2" data-feather="user"></i> My
 						Profile</a>
-					<<<<<<< HEAD
-						<a class="dropdown-item" href="general-settings.html"><i class="me-2"
+					<a class="dropdown-item" href="general-settings.html"><i class="me-2"
 							data-feather="settings"></i>Settings</a>
-						<hr class="m-0">
-						{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}"><img======={{-- <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}"><img>>>>>>> origin/master
-						src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout</a> --}}
-						<a class="dropdown-item logout pb-0" href="#"
-							onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
-								data-feather="log-out"></i>Logout
-						</a>
-						<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-							@csrf
-						</form>
+					<hr class="m-0">
+					{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}">
+						<img======={{-- <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}">
+							<img>>>>>>> origin/master
+							src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout
+					</a> --}}
+					<a class="dropdown-item logout pb-0" href="#"
+						onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
+							data-feather="log-out"></i>Logout
+					</a>
+					<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+						@csrf
+					</form>
 
 				</div>
 			</div>
@@ -123,19 +126,19 @@
 			aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 		<div class="dropdown-menu dropdown-menu-right">
 			<a class="dropdown-item" href="profile.html">My Profile</a>
-			<<<<<<< HEAD
-				<a class="dropdown-item" href="general-settings.html">Settings</a>
-				<a class="dropdown-item" href="signin.html">Logout</a>
-				=======
 
-				<a class="dropdown-item logout pb-0" href="#"
-					onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
-						data-feather="log-out"></i>Logout
-				</a>
-				<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-					@csrf
-				</form>
-				>>>>>>> origin/master
+			<a class="dropdown-item" href="general-settings.html">Settings</a>
+			<a class="dropdown-item" href="signin.html">Logout</a>
+
+
+			<a class="dropdown-item logout pb-0" href="#"
+				onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
+					data-feather="log-out"></i>Logout
+			</a>
+			<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+				@csrf
+			</form>
+
 		</div>
 	</div>
 	<!-- /Mobile Menu -->
