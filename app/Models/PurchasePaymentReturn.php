@@ -23,4 +23,20 @@ class PurchasePaymentReturn extends Model
         'short_code',
         'created_by'
     ];
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    // Account relation
+    public function account()
+    {
+        return $this->belongsTo(AcAccount::class, 'account_id');
+    }
+
+    // Purchase Return relation
+    public function purchaseReturn()
+    {
+        return $this->belongsTo(PurchaseReturn::class, 'return_id');
+    }
 }
