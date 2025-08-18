@@ -15,13 +15,31 @@ use Exception;
 
 class PurchasePaymentController extends Controller
 {
-    /**
-     * Display a listing of purchase payments
-     */
+
     public function index()
     {
-        $payments = PurchasePayment::with(['supplier', 'account'])->latest()->paginate(20);
-        return view('purchase_payments.index', compact('payments'));
+        try {
+            $user = auth()->user();
+
+            if (in_array($user->user_level, [1, 4])) {
+
+                $payment = PurchasePayment::all();
+            } else {
+
+                $payment = PurchasePayment::where('created_by', $user->id)->get();
+            }
+
+            return response()->json([
+                'message' => 'PurchasePayment Detail Fetch Successfully',
+                'status' => 1,
+                'data' => $payment
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to retrieve Sales: Unauthorozied or data not found',
+            ], 500);
+        }
     }
 
 

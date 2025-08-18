@@ -12,33 +12,31 @@ use Illuminate\Support\Facades\Validator;
 class BrandController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
         try {
-            $user = $request->user(); // From token authentication
+            $user = auth()->user();
 
-            if (!$user) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Unauthorized'
-                ], 401);
+            if (in_array($user->user_level, [1, 4])) {
+                $brand = Brand::all();
+            } else {
+                $brand = Brand::where('store_id', $user->store_id)->get();
             }
 
-            $products = Brand::where('user_id', $user->id)->get();
-
             return response()->json([
-                'status' => true,
-                'message' => 'Products fetched successfully',
-                'data' => $products
-            ], 200);
+                'message' => 'Brand details fetched successfully',
+                'status'  => 1,
+                'data'    => $brand
+            ]);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => false,
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
+                'status'  => 0,
+                'message' => 'Failed to retrieve Brand: Unauthorized or data not found',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function store_show(Request $request)
     {

@@ -47,10 +47,6 @@ class PurchaseReturnController extends Controller
          ]);*/
 
         $purchase = PurchaseReturn::create($request->all());
-
-
-
-
         return response()->json([
             'status' => 1,
             'message' => 'Purchase Return Added successfully',

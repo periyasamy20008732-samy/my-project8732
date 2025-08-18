@@ -190,10 +190,12 @@ Route::middleware('auth:api')->group(function () {
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);
   Route::delete('/category-delete/{id}', [CategoryController::class, 'destroy']);
   Route::get('/category/{categoryId}/items', [CategoryController::class, 'getItemsBasedOnCateId']);
+
+
   //Item CRUD 
   Route::get('/items-view', [ItemController::class, 'index']);
   Route::get('/items-view/{id}', [ItemController::class, 'index']);
-  //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
+  Route::post('/item-bulk', [ItemController::class, 'item_bulkpost']);
   //Route::get('/items-views/{user_id}/{store_id}', [ItemController::class, 'show']);
   Route::post('/items-view', [ItemController::class, 'store_show']);
   Route::post('/items-create', [ItemController::class, 'store']);

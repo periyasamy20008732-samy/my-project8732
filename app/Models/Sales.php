@@ -9,6 +9,8 @@ class Sales extends Model
     protected $fillable = [
         'store_id',
         'warehouse_id',
+        'item_id',
+        'sale_qty',
         'init_code',
         'count_id',
         'sales_code',

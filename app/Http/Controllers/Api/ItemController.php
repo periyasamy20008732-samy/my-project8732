@@ -12,10 +12,13 @@ use App\Models\PurchaseitemReturn;
 use App\Models\WarehouseItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Collection;
 
 class ItemController extends Controller
 {
-
     public function index(Request $request, $storeId = null)
     {
         $user = auth()->user();
@@ -75,8 +78,6 @@ class ItemController extends Controller
             ], 200);
         }
     }
-
-
     public function store_show(Request $request)
     {
         $storeid = $request->input('store_id'); // Get store_code from Postman
@@ -190,14 +191,12 @@ class ItemController extends Controller
             ], 500);
         }
     } */
-
-
     public function store(Request $request)
     {
         try {
             $request->validate([
                 'store_id' => 'required|string',
-                'user_id' => 'required|string',
+                //   'user_id' => 'required|string',
                 'category_id' => 'required|string',
                 'brand_id' => 'required|string',
                 'item_name' => 'required|string',
@@ -221,6 +220,7 @@ class ItemController extends Controller
             ]);
 
             $data = $request->all();
+            $data['user_id'] = auth()->id();
 
             // Handle file upload
             if ($request->hasFile('item_image')) {
@@ -263,8 +263,6 @@ class ItemController extends Controller
             ], 500);
         }
     }
-
-
     // Update an existing Item
     public function update(Request $request, $id)
     {
@@ -347,9 +345,6 @@ class ItemController extends Controller
         return response()->json(['message' => 'Item not found', 'data' => [], 'status' => 0], 404);
     }
 
-
-
-
     public function destroy($id)
     {
         try {
@@ -376,6 +371,117 @@ class ItemController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function item_bulkpost(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,txt|max:5120'
+        ]);
+
+
+        try {
+
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $save_path = $file->storeAs('item_bulk_import', $filename, 'private');
+            }
+
+            $path = $request->file('file')->getRealPath();
+
+
+            // Load file using PhpSpreadsheet
+            $spreadsheet = IOFactory::load($path);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
+
+            // First row is header
+            $header = array_map('strtolower', array_shift($rows));
+
+            $insertData = [];
+            $skipped    = [];
+
+            foreach ($rows as $row) {
+                $data = array_combine($header, $row);
+                $item_name       = trim($data['item_name'] ?? '');
+                $hsn_code        = trim($data['hsn_code'] ?? '');
+                $purchase_price  = is_numeric($data['purchase_price'] ?? null) ? (float)$data['purchase_price'] : 0;
+                $tax_type        = trim($data['tax_type'] ?? '');
+                $tax_rate        = is_numeric($data['tax_rate'] ?? null) ? (float)$data['tax_rate'] : 0;
+                $sales_price     = is_numeric($data['sales_price'] ?? null) ? (float)$data['sales_price'] : 0;
+                $mrp             = is_numeric($data['mrp'] ?? null) ? (float)$data['mrp'] : 0;
+                $discount_type   = trim($data['discount_type'] ?? '');
+                $discount        = is_numeric($data['discount'] ?? null) ? (float)$data['discount'] : 0;
+                $opening_stock   = is_numeric($data['opening_stock'] ?? null) ? (float)$data['opening_stock'] : 0;
+                $sku             = trim($data['sku'] ?? '');
+                $description     = $data['description'] ?? null;
+
+
+                // Skip empty rows
+                if (!$item_name || !$sku) {
+                    $skipped[] = [
+                        'item_name' => $item_name,
+                        'SKU'       => $sku,
+                        'reason'    => 'Missing item_name or SKU'
+                    ];
+                    continue;
+                }
+
+                // Skip if item_name OR SKU already exists
+                if (Item::where('item_name', $item_name)->orWhere('SKU', $sku)->exists()) {
+                    $skipped[] = [
+                        'item_name' => $item_name,
+                        'SKU'       => $sku,
+                        'reason'    => 'Already exists'
+                    ];
+                    continue;
+                }
+
+                $insertData[] = [
+                    'user_id' => auth()->id(),
+                    'store_id' => auth()->user()->store_id,
+                    'item_name'   => $item_name,
+                    'HSN_code' => $hsn_code,
+                    'Purchase_price' => $purchase_price,
+                    'Tax_type'  => $tax_type,
+                    'Tax_rate'  => $tax_rate,
+                    'Sales_Price' => $sales_price,
+                    'MRP' => $mrp,
+                    'Discount_type'  =>  $discount_type,
+                    'Discount'  => $discount,
+                    'Opening_Stock' => $opening_stock,
+                    'SKU'         => $sku,
+                    'description' => $description,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ];
+            }
+
+            if (!empty($insertData)) {
+                Item::insert($insertData);
+            }
+
+            // if ($request->hasFile('file')) {
+            //     $file = $request->file('file');
+            //     $filename = time() . '_' . $file->getClientOriginalName();
+            //     $save_path = $file->storeAs('item_bulk_import', $filename, 'private');
+            // }
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Bulk import completed',
+                'inserted_count' => count($insertData),
+                'inserted' => $insertData,
+                'skipped_count' => count($skipped),
+                'skipped'  => $skipped,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Import failed',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }

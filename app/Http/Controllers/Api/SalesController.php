@@ -8,7 +8,9 @@ use App\Models\Sales;
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Models\WarehouseItem;
-use DB;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
@@ -23,7 +25,7 @@ class SalesController extends Controller
                 $sales = Sales::all();
             } else {
                 // Other users see only their own stores
-                $sales = Sales::where('user_id', $user->id)->get();
+                $sales = Sales::where('created_by', $user->id)->get();
             }
 
             return response()->json([
@@ -65,70 +67,149 @@ class SalesController extends Controller
         $request->validate([
             'store_id' => 'required|integer',
             'item_id' => 'required|integer',
-            'stock' => 'required|numeric|min:1'
+            'sale_qty' => 'required|numeric',
+
         ]);
 
-        DB::transaction(function () use ($request) {
-            // Create sales record
-            $sales = Sales::create($request->all());
+        try {
+            $result = DB::transaction(function () use ($request) {
+                // Create sales record
 
-            $item = Item::findOrFail($request->item_id);
-            $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
+                $salesData = $request->all();
+                $salesData['created_by'] = auth()->id();
+                $salesData['status'] = 1;
 
-            if ($warehouseitem) {
+                $sales = Sales::create($salesData);
 
-                $newstock = max(0, $warehouseitem->available_qty - $request->stock);
 
-                $warehouseitem->update(['available_qty' => $newstock]);
-                $item->update(['Opening_Stock' => $newstock]);
-            } else {
-                // Create new warehouse entry with negative or zero stock
-                WarehouseItem::firstOrCreate(
-                    [
-                        'store_id' => $request->store_id,
-                        'warehouse_id' => $item->warehouse_id,
-                        'item_id' => $request->item_id,
-                    ],
-                    [
-                        'available_qty' => max(0, 0 - $request->stock)
-                    ]
-                );
+                $item = Item::findOrFail($request->item_id);
+                $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
 
-                $item->update(['Opening_Stock' => max(0, 0 - $request->stock)]);
-            }
+                if ($warehouseitem) {
+                    // Update existing stock
+                    $newstock = max(0, $warehouseitem->available_qty - $request->sale_qty);
 
-            // Return success
+                    $warehouseitem->update(['available_qty' => $newstock]);
+                    $item->update(['Opening_Stock' => $newstock]);
+                } else {
+                    // Create new warehouse entry with adjusted stock
+                    WarehouseItem::firstOrCreate(
+                        [
+                            'store_id' => $request->store_id,
+                            'warehouse_id' => $item->warehouse_id,
+                            'item_id' => $request->item_id,
+                        ],
+                        [
+                            'available_qty' => max(0, 0 - $request->sale_qty)
+                        ]
+                    );
+
+                    $item->update(['Opening_Stock' => max(0, 0 - $request->sale_qty)]);
+                }
+
+                return [
+                    'message' => 'Sales Created Successfully',
+                    'data' => $sales,
+                    'status' => 1
+                ];
+            });
+
+            return response()->json($result, 201);
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Sales Detail Created Successfully',
-                'data' => $sales,
-                'status' => 1
-            ], 201);
-        });
+                'message' => 'An error occurred while creating sales',
+                'error' => $e->getMessage(),
+                'status' => 0
+            ], 500);
+        }
     }
+
 
     public function update(Request $request, $id)
     {
-        $sales = Sales::findOrFail($id);
-
-        $sales->update($request->all());
-
-        return response()->json([
-            'message' => 'Sales Details Updated Successfully',
-            'data' => $sales,
-            'status' => 1
+        $request->validate([
+            'store_id' => 'required|integer',
+            'item_id' => 'required|integer',
+            'sale_qty' => 'required|numeric'
         ]);
+
+        try {
+            $result = DB::transaction(function () use ($request, $id) {
+                $sales = Sales::findOrFail($id);
+
+                // Old stock before update
+                $oldStock = $sales->sale_qty;
+                $item = Item::findOrFail($sales->item_id);
+                $warehouseitem = WarehouseItem::where('item_id', $sales->item_id)->first();
+
+                // First return old stock (undo previous sale)
+                if ($warehouseitem) {
+                    $warehouseitem->update(['available_qty' => $warehouseitem->available_qty + $oldStock]);
+                    $item->update(['Opening_Stock' => $warehouseitem->available_qty]);
+                }
+
+                // Now apply new sale
+                $sales->update($request->all());
+
+                $item = Item::findOrFail($request->item_id);
+                $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
+
+                if ($warehouseitem) {
+                    $newStock = max(0, $warehouseitem->available_qty - $request->sale_qty);
+                    $warehouseitem->update(['available_qty' => $newStock]);
+                    $item->update(['Opening_Stock' => $newStock]);
+                }
+
+                return [
+                    'message' => 'Sales Updated Successfully',
+                    'data' => $sales,
+                    'status' => 1
+                ];
+            });
+
+            return response()->json($result, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating sales',
+                'error' => $e->getMessage(),
+                'status' => 0
+            ], 500);
+        }
     }
+
+
     public function destroy($id)
     {
-        $sales = Sales::findOrFail($id);
-        $sales->delete();
+        try {
+            $result = DB::transaction(function () use ($id) {
+                $sales = Sales::findOrFail($id);
+                $item = Item::findOrFail($sales->item_id);
+                $warehouseitem = WarehouseItem::where('item_id', $sales->item_id)->first();
 
-        return response()->json([
-            'message' => 'Sales Detail Deleted Successfully',
-            'status' => 1
+                if ($warehouseitem) {
+                    // Return stock back on delete
+                    $warehouseitem->update(['available_qty' => $warehouseitem->available_qty + $sales->sale_qty]);
+                    $item->update(['Opening_Stock' => $warehouseitem->available_qty]);
+                }
 
-        ]);
+                $sales->delete();
+
+                return [
+                    'message' => 'Sales Deleted Successfully',
+                    'status' => 1
+                ];
+            });
+
+            return response()->json($result, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while deleting sales',
+                'error' => $e->getMessage(),
+                'status' => 0
+            ], 500);
+        }
     }
+
 
     public function single_show(Request $request)
     {

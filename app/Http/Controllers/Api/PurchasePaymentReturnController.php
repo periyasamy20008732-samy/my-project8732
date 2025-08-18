@@ -124,7 +124,7 @@ class PurchasePaymentReturnController extends Controller
                 $creditAmt = $data['payment'] - $totalReturn;
             }
 
-            // 4. Save transaction
+
             Ac_Transactions::create([
                 'store_id'                 => $data['store_id'],
                 'payment_code'             => $payment->payment_code,
@@ -141,7 +141,7 @@ class PurchasePaymentReturnController extends Controller
                 'created_by'               => auth()->id(),
             ]);
 
-            // 5. Update account balance
+
             $account = AcAccount::find($data['account_id']);
             if ($account) {
                 $account->balance += $data['payment'];
@@ -267,6 +267,39 @@ class PurchasePaymentReturnController extends Controller
                 'paid'        => $data['payment'],
                 'debit_amt'   => $debitAmt,
                 'credit_amt'  => $creditAmt
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            $payment = PurchasePaymentReturn::findOrFail($id);
+
+            // Reverse account balance
+            $account = AcAccount::find($payment->account_id);
+            if ($account) {
+                $account->balance -= $payment->payment;
+                $account->save();
+            }
+
+            // Delete related transaction
+            Ac_Transactions::where('ref_purchasepaymentsreturn_id', $payment->id)->delete();
+
+            // Delete payment record
+            $payment->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Purchase Payment Return deleted successfully'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
