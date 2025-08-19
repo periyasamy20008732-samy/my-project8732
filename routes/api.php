@@ -55,6 +55,10 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\BusinessTypeController;
 use App\Http\Controllers\Api\storeReportController;
 use App\Http\Controllers\Api\SubscriptionPurchaseController;
+use App\Http\Controllers\Api\InvoiceSettingsController;
+use App\Http\Controllers\Api\SalesSettingsController;
+
+
 
 
 
@@ -402,8 +406,21 @@ Route::middleware('auth:api')->group(function () {
 
   //BusinessProfileController
   Route::post('/profile-create', [BusinessProfileController::class, 'store']);
-  Route::get('/profile-view/{id}', [BusinessProfileController::class, 'profileshow']);
+  Route::get('/profile-view', [BusinessProfileController::class, 'profileshow']);
+  //  Route::get('/profile-view/{id}', [BusinessProfileController::class, 'profileshow']);
   Route::put('/profile-update/{id}', [BusinessProfileController::class, 'profileupdate']);
+
+  //InvoiceSettingsController
+  Route::post('/invoice-create', [InvoiceSettingsController::class, 'store']);
+  Route::get('/invoice-view', [InvoiceSettingsController::class, 'index']);
+  Route::get('/invoice-view/{id}', [InvoiceSettingsController::class, 'show']);
+  Route::put('/invoice-update/{id}', [InvoiceSettingsController::class, 'update']);
+
+  //SalesSettingsController
+  Route::post('/salessettings-create', [SalesSettingsController::class, 'store']);
+  Route::get('/salessettings-view', [SalesSettingsController::class, 'index']);
+  Route::get('/salessettings-view/{id}', [SalesSettingsController::class, 'show']);
+  Route::put('/salessettings-update/{id}', [SalesSettingsController::class, 'update']);
 
   //NotificationController
   Route::post('/notification-create', [NotificationController::class, 'store']);

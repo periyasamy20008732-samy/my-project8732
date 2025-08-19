@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Settings;
+use App\Models\InvoiceSettings;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Services\SmsService;
@@ -171,6 +172,18 @@ class UserController extends Controller
                     //'user_id' => $result->id,
                     'store_id' => $store->id,
                     'supplier_name' => 'Default Supplier',
+                ]);
+                $lastInvoiceNo = InvoiceSettings::max('start_number') ?? 0;
+                $nextInvoiceNo = $lastInvoiceNo + 1;
+
+                $start_number = str_pad($nextInvoiceNo, 3, '0', STR_PAD_LEFT);
+                InvoiceSettings::firstOrCreate([
+                    'user_id' => $result->id,
+                    'store_id' => $store->id,
+                    'start_number' => $start_number,
+                    'business_name' => 'Default Bussiness',
+                    'invoice_notes' => 'Default Invoice'
+
                 ]);
             } catch (\Exception $e) {
                 DB::rollBack();

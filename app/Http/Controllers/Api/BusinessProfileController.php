@@ -15,8 +15,6 @@ class BusinessProfileController extends Controller
         $request->validate([
             'profileImagePath' => 'sometimes|file|image|max:2048',
             'signatureImagePath' => 'sometimes|file|image|max:2048'
-
-
         ]);
 
         $file = $request->file('profileImagePath');
@@ -32,6 +30,8 @@ class BusinessProfileController extends Controller
         $data = $request->all();
         $data['profileImagePath'] = $directory . $imageName;
         $data['signatureImagePath'] = $directory1 . $imageName1;
+        $data['user_id'] = auth()->id();
+        $data['store_id'] = auth()->user()->store_id;
 
 
         //  $store = Store::create($request->all());
@@ -45,23 +45,25 @@ class BusinessProfileController extends Controller
     }
 
 
-    public function profileshow(string $id)
+    public function profileshow()
     {
-        $profile = BusinessProfile::find($id);
+        try {
+            $user = auth()->user();
 
-        if (!$profile) {
+            $invoicesettings = BusinessProfile::where('user_id', $user->id)->get();
+
+
             return response()->json([
-                'status'  => 0,
-                'message' => 'Business Profile not found.',
-                'data'    => null
-            ], 404);
+                'message' => 'BusinessProfile Detail Fetch Successfully',
+                'status' => 1,
+                'data' => $invoicesettings
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to retrieve BusinessProfile: Unauthorozied or data not found',
+            ], 500);
         }
-
-        return response()->json([
-            'status'  => 1,
-            'message' => 'Business Profile retrieved successfully.',
-            'data'    => $profile
-        ], 200);
     }
 
     public function profileupdate(Request $request, $id)
@@ -75,10 +77,11 @@ class BusinessProfileController extends Controller
             ], 404);
         }
 
-        // Define your validation rules here
         $validator = Validator::make($request->all(), [
-            // Replace with actual fields you expect to update
-
+            'bussiness_name' => 'required|string|max:255',
+            'email'         => 'nullable|email',
+            'phone'         => 'nullable|string|max:20',
+            'address'       => 'nullable|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -91,11 +94,12 @@ class BusinessProfileController extends Controller
 
         $data = $request->only($profile->getFillable());
         $profile->update($data);
+        $profile->refresh();
 
         return response()->json([
             'status'  => true,
             'message' => 'Business Profile updated successfully.',
             'data'    => $profile
-        ]);
+        ], 200);
     }
 }
