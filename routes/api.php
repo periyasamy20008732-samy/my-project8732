@@ -68,7 +68,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/sendotp', [UserController::class, 'sendOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
-Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
+
 
 
 Route::middleware('auth:api')->group(function () {
