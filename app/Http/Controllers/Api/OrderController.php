@@ -22,7 +22,6 @@ class OrderController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -30,32 +29,37 @@ class OrderController extends Controller
                 'data' => $order,
                 'status' => 1
             ], 200);
-
         }
     }
 
     // Store a new order
     public function store(Request $request)
     {
-        $request->validate([
-            'unique_order_id' => 'required|string',
-            'orderstatus_id' => 'required|string',
-            'store_id' => ' required|string',
-            'user_id' => 'required|string',
-            'if_sales' => 'required|string',
-            'sales_id' => 'required|string',
-            'shipping_address_id' => 'required|string',
-            'if_redeem' => 'required|string',
-            'deliveryboy_id' => 'required|string',
-            'notifi_deliveryboy' => 'required|string'
-        ]);
+        try {
+            $request->validate([
+                'unique_order_id' => 'required|string',
+                'orderstatus_id' => 'required|string',
+                'if_sales' => 'required|string',
+                'sales_id' => 'required|string',
+                'shipping_address_id' => 'required|string',
+                'customer_id' => 'required|string',
+                'paid_amount' => 'required|string',
 
-        $order = Order::create($request->all());
-
-        return response()->json([
-            'message' => 'Order created successfully',
-            'data' => $order
-        ], 201);
+            ]);
+            $data = $request->all();
+            $data['user_id'] = auth()->id();
+            $data['store_id'] = auth()->user()->store_id;
+            $order = Order::create($data);
+            return response()->json([
+                'message' => 'Order created successfully',
+                'data' => $order
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // Update an existing order

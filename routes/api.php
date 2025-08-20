@@ -194,7 +194,7 @@ Route::middleware('auth:api')->group(function () {
   Route::put('/category-update/{id}', [CategoryController::class, 'update']);
   Route::delete('/category-delete/{id}', [CategoryController::class, 'destroy']);
   Route::get('/category/{categoryId}/items', [CategoryController::class, 'getItemsBasedOnCateId']);
-
+  Route::post('/category-bulk', [CategoryController::class, 'category_bulkpost']);
 
   //Item CRUD 
   Route::get('/items-view', [ItemController::class, 'index']);

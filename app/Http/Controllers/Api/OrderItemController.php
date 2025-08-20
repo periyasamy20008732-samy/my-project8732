@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -21,7 +22,6 @@ class OrderItemController extends Controller
                 'data' => [],
                 'status' => 0
             ], 200);
-
         } else {
 
             return response()->json([
@@ -29,7 +29,6 @@ class OrderItemController extends Controller
                 'data' => $order,
                 'status' => 1
             ], 200);
-
         }
     }
 

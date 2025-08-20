@@ -9,6 +9,10 @@ use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Collection;
 
 class CategoryController extends Controller
 {
@@ -211,9 +215,6 @@ class CategoryController extends Controller
             'status' => 1
         ]);
     }
-
-
-
     // View a single category
     public function show($id)
     {
@@ -361,6 +362,75 @@ class CategoryController extends Controller
                 'data' => $e,
                 'total' => $user,
                 'status' => 500,
+            ], 500);
+        }
+    }
+
+    public function category_bulkpost(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,txt|max:5120'
+        ]);
+        try {
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $save_path = $file->storeAs('category_bulk_import', $filename, 'private');
+            }
+            $path = $request->file('file')->getRealPath();
+            $spreadsheet = IOFactory::load($path);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
+            $header = array_map('strtolower', array_shift($rows));
+            $insertData = [];
+            $skipped    = [];
+            foreach ($rows as $row) {
+                $data = array_combine($header, $row);
+                $category_name   = trim($data['category_name'] ?? '');
+                $category_code   = trim($data['category_code'] ?? '');
+                $description     = $data['description'] ?? null;
+                if (!$category_name || !$category_code) {
+                    $skipped[] = [
+                        'category_name' => $category_name,
+                        'category_code'       => $category_code,
+                        'reason'    => 'Missing category_name or category_code'
+                    ];
+                    continue;
+                }
+                if (Category::where('category_name', $category_name)->orWhere('category_code', $category_code)->exists()) {
+                    $skipped[] = [
+                        'category_name' => $category_name,
+                        'category_code'       => $category_code,
+                        'reason'    => 'Already exists'
+                    ];
+                    continue;
+                }
+                $insertData[] = [
+
+                    'store_id' => auth()->user()->store_id,
+                    'category_name'   => $category_name,
+                    'category_code' => $category_code,
+                    'description' => $description,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ];
+            }
+            if (!empty($insertData)) {
+                Category::insert($insertData);
+            }
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Bulk import completed',
+                'inserted_count' => count($insertData),
+                'inserted' => $insertData,
+                'skipped_count' => count($skipped),
+                'skipped'  => $skipped,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Import failed',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }

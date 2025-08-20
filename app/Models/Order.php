@@ -11,8 +11,9 @@ class Order extends Model
     protected $fillable = [
         'unique_order_id',
         'orderstatus_id',
-        'store_id',
         'user_id',
+        'store_id',
+        'customer_id',
         'if_sales',
         'sales_id',
         'customer_latitude',
@@ -33,6 +34,7 @@ class Order extends Model
         'redeem_point',
         'redeem_cash',
         'after_redeem_bill_amt',
+        'paid_amount',
         'payment_mode',
         'map_distance',
         'delivery_pin',
