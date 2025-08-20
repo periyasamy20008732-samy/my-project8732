@@ -81,7 +81,7 @@ class PurchasePaymentController extends Controller
                 'account_id'    => $data['account_id'],
                 'supplier_id'   => $data['supplier_id'],
                 'short_code'    => 'PURPAY',
-                'created_by'    => auth()->id(),
+                'created_by'    => auth()->user()->id,
             ]);
 
 
@@ -130,7 +130,19 @@ class PurchasePaymentController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \Log::error('Purchase Payment Error', [
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'trace'   => $e->getTraceAsString(),
+            ], 500);
         }
     }
     public function update(Request $request, $id)

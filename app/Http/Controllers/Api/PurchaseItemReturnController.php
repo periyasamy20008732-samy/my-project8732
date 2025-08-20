@@ -206,4 +206,19 @@ class PurchaseItemReturnController extends Controller
             ], 500);
         }
     }
+
+
+    public function items($id)
+    {
+        $items = PurchaseItemReturn::with(['item'])
+            ->where('return_id', $id)
+            ->get();
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Returned items retrieved successfully',
+            'data' => $items
+        ]);
+    }
+
 }

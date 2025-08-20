@@ -31,12 +31,7 @@ class Purchase extends Model
     'status',
     'return_bit',
     'created_by'
-
-
-
   ];
-
-
   public function scopeBetweenDates($query, $from, $to)
   {
     return $query->whereBetween('created_at', [$from, $to]);
@@ -46,9 +41,27 @@ class Purchase extends Model
   {
     return $this->belongsTo(Store::class);
   }
+  public function items()
+  {
+    return $this->hasMany(PurchaseItem::class, 'purchase_id', 'id');
+  }
 
   public function supplier()
   {
     return $this->belongsTo(Supplier::class);
+  }
+
+  public function purchaseItems()
+  {
+    return $this->hasMany(PurchaseItem::class, 'purchase_id', 'id');
+  }
+
+  public function payments()
+  {
+    return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
+  }
+  public function warehouse()
+  {
+    return $this->belongsTo(Warehouse::class, 'warehouse_id');
   }
 }

@@ -52,17 +52,20 @@ class PurchasePaymentReturnController extends Controller
                 ], 200);
             }
 
+
             return response()->json([
                 'message' => 'Purchase Payment Return List',
                 'data' => $purchasepayment_return,
                 'status' => 1
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
                 'data' => [],
                 'status' => 0
             ], 500);
+
         }
     }
 
@@ -184,6 +187,7 @@ class PurchasePaymentReturnController extends Controller
         DB::beginTransaction();
         try {
 
+
             $payment = PurchasePaymentReturn::findOrFail($id);
 
             $purchaseReturn = PurchaseReturn::find($data['return_id']);
@@ -275,6 +279,7 @@ class PurchasePaymentReturnController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+
     }
     public function destroy($id)
     {

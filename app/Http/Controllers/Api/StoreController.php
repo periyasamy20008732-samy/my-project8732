@@ -5,45 +5,97 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Store;
-use App\Models\Warehouse;
-use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
 use App\Models\AcAccount;
 
 class StoreController extends Controller
 {
-
     public function index(Request $request)
     {
         try {
-            $storeCode = $request->input('store_code');
             $user = auth()->user();
+            $storeId = $request->query('store_id');
 
-            // Require authenticated user
-            if (!$user) {
+            // Determine effective store IDs
+            $storeIds = [];
+
+            if ($storeId) {
+                $storeIds = [trim($storeId)];
+            } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+                $storeIds = [trim($user->store_id)];
+            } else {
+                // fallback to stores owned by user
+                $storeIds = \App\Models\Store::where('user_id', $user->id)
+                    ->pluck('id')
+                    ->toArray();
+            }
+
+            if (empty($storeIds)) {
                 return response()->json([
-                    'message' => 'Unauthenticated user',
+                    'message' => 'No stores found for this user',
                     'data'    => [],
-                    'totalstore' => 0,
-                    'status'  => 0
-                ], 401);
+                    'total'   => 0,
+                    'status'  => 0,
+                ], 200);
             }
 
-            $stores = [];
+            // Fetch stores with relations + counts
+            $stores = \App\Models\Store::with('user:id,name,email')
+                ->withCount([
+                    'suppliers',
+                    'customers',
+                    'purchases',
+                    'purchaseReturns',
+                    'sales',
+                    'salesReturns',
+                    'warehouses',
+                    'categories'
+                ])
+                ->whereIn('id', $storeIds)
+                ->orderBy('store_name')
+                ->get()
+                ->map(function ($store) {
+                    return [
+                        'id'                => $store->id,
+                        'store_name'        => $store->store_name,
+                        'store_code'        => $store->store_code,
+                        'store_logo'        => $store->store_logo,
+                        'store_phone'       => $store->mobile ?? $store->phone,
+                        'store_email'       => $store->email,
+                        'store_address'     => $store->address,
+                        'store_city'        => $store->city,
+                        'store_state'       => $store->state,
+                        'store_country'     => $store->country,
+                        'store_postal_code' => $store->postcode,
+                        'currency'          => $store->currency_id,
+                        'currency_symbol'   => $store->currencywsymbol_id,
+                        'currency_position' => $store->currency_placement,
+                        'timezone'          => $store->timezone,
+                        'language'          => $store->language_id,
+                        'date_format'       => $store->date_format,
+                        'time_format'       => $store->time_format,
+                        'fiscal_year'       => null, // not in schema
+                        'tax_number'        => $store->gst_no ?? $store->vat_no ?? $store->pan_no,
+                        'website'           => $store->website ?? $store->store_website,
+                        'status'            => $store->status,
+                        'created_at'        => $store->created_at,
+                        'updated_at'        => $store->updated_at,
+                        'owner_name'        => $store->user->name ?? null,
+                        'owner_email'       => $store->user->email ?? null,
 
-            // 1. If store_code provided
-            if ($storeCode) {
-                $stores = $this->getStoresBySql("s.store_code = ?", [$storeCode]);
-            }
-            // 2. If user's store_id is set
-            elseif (!empty($user->store_id) && $user->store_id !== '0') {
-                $stores = $this->getStoresBySql("s.id = ?", [$user->store_id]);
-            }
-            // 3. Stores owned by user
-            else {
-                $stores = $this->getStoresBySql("s.user_id = ?", [$user->id]);
-            }
+                        // Counts
+                        'suppliers_count'       => $store->suppliers_count,
+                        'customers_count'       => $store->customers_count,
+                        'purchases_count'       => $store->purchases_count,
+                        'purchase_returns_count' => $store->purchase_returns_count,
+                        'sales_count'           => $store->sales_count,
+                        'sales_returns_count'   => $store->sales_returns_count,
+                        'warehouses_count'       => $store->warehouses_count,
+                        'categories_count'       => $store->categories_count,
+                    ];
+                });
 
-            $totalstores = count($stores);
+            $totalstores = $stores->count();
 
             return response()->json([
                 'message'     => $totalstores > 0 ? 'Store List' : 'No Stores Found',
@@ -53,14 +105,16 @@ class StoreController extends Controller
             ], 200);
         } catch (\Throwable $e) {
             return response()->json([
-                'message' => 'Internal server error',
-                'data'    => [],
-                'totalstore' => 0,
-                'status'  => 500,
+                'message'     => 'Internal server error',
+                'error'       => $e->getMessage(),
+                'file'        => $e->getFile(),
+                'line'        => $e->getLine(),
+                'data'        => [],
+                'totalstore'  => 0,
+                'status'      => 0,
             ], 500);
         }
     }
-
 
     /* public function index()
     {
@@ -92,14 +146,18 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validate request
-            $data = $request->validate([
+            // 1. Validate the mandatory fields
+            $request->validate([
+                'user_id'    => 'required|integer|exists:users,id',
                 'store_code' => 'required|string',
                 'slug'       => 'required|string',
                 'store_logo' => 'sometimes|file|image|max:2048'
             ]);
 
-            //Check if store already exists
+            // 2. Take all request data
+            $data = $request->all();
+
+            // 3. Check if store already exists
             $existingStore = Store::where('store_code', $data['store_code'])
                 ->orWhere('slug', $data['slug'])
                 ->first();
@@ -112,27 +170,25 @@ class StoreController extends Controller
                 ], 409);
             }
 
-            //  Handle file upload (if present)
+            // 4. Handle file upload (if present)
             if ($request->hasFile('store_logo')) {
                 $file = $request->file('store_logo');
-                $directory = 'storage/store/'; // better to avoid "public" in the path
+                $directory = 'storage/store/';
                 $imageName = time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path($directory), $imageName);
 
-                // Add uploaded file path to $data
                 $data['store_logo'] = $directory . $imageName;
             }
 
-            // Create Store
+            // 5. Create Store (all fillable fields allowed)
             $store = Store::create($data);
 
-            // 5 Create related Account (if needed)
+            // 6. Create related Account (if needed)
             AcAccount::create([
                 'store_id' => $store->id,
-                // Add other required fields for AcAccount
+                // Add other required fields
             ]);
 
-            // 6 Return success response
             return response()->json([
                 'status'  => 1,
                 'message' => 'Store created successfully',
@@ -141,7 +197,8 @@ class StoreController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => 0,
-                'message' => 'Something went wrong: ' . $e->getMessage()
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
