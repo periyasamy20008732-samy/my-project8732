@@ -4,33 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Purchase;
 
 class PurchaseController extends Controller
 {
-    // View all Purchase
-    public function index()
-    {
-        $purchase = Purchase::all();
-
-        if ($purchase->isEmpty()) {
-
-            return response()->json([
-                'message' => 'Purchase Details Not Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
-
-        } else {
-
-            return response()->json([
-                'message' => 'Purchase Details List',
-                'data' => $purchase,
-                'status' => 1
-            ], 200);
-
-        }
-    }
 
     // Store a new Purchase
     public function store(Request $request)
@@ -68,9 +47,38 @@ class PurchaseController extends Controller
     // View a single Purchase
     public function show($id)
     {
-        $purchase = Purchase::findOrFail($id);
-        return response()->json($purchase);
+        try {
+            $purchase = Purchase::with([
+                'items.item:id,item_name',
+                'payments',
+                'supplier:id,supplier_name',
+                'store:id,store_name',
+                'warehouse:id,warehouse_name'
+            ])->findOrFail($id);
+
+            return response()->json([
+                'status'  => 1,
+                'message' => 'Purchase details retrieved successfully',
+                'data'    => $purchase
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Purchase not found',
+                'error'   => $e->getMessage()
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error fetching purchase: ' . $e->getMessage());
+
+            return response()->json([
+                'status'  => 0,
+                'message' => 'An error occurred while retrieving purchase details',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
+
+
     public function destroy($id)
     {
         $purchase = Purchase::findOrFail($id);
@@ -103,5 +111,56 @@ class PurchaseController extends Controller
             'data' => [],
             'status' => 0
         ], 404);
+    }
+    //()s for the windows app created by save
+    // View all Purchase
+    public function index()
+    {
+        try {
+            $user = auth()->user();
+
+            // Step 1: Get store IDs linked to this user
+            if (!empty($user->store_id) && ($user->store_id != '0' && $user->store_id != 0)) {
+                // Store user (assigned to one store)
+                $storeIds = [trim($user->store_id)];
+            } else {
+                // Store admin (owns one or more stores)
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
+            }
+
+            // Step 2: Fetch purchase list for these store IDs
+            $purchases = Purchase::whereIn('store_id', $storeIds)->get();
+
+            // Step 3: Return JSON response
+            if ($purchases->isEmpty()) {
+                return response()->json([
+                    'message' => 'Purchase Details Not Found',
+                    'data'    => [],
+                    'status'  => 0
+                ], 200);
+            }
+
+            return response()->json([
+                'message' => 'Purchase Details List',
+                'data'    => $purchases,
+                'status'  => 1
+            ], 200);
+        } catch (\Throwable $e) {
+            // Log the error for debugging
+            Log::error('Error in PurchaseController@index', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Something went wrong while fetching purchase details',
+                'error'   => $e->getMessage(), // optional: remove in production for security
+                'status'  => 0
+            ], 500);
+        }
     }
 }

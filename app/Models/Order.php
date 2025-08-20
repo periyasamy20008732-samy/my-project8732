@@ -44,4 +44,15 @@ class Order extends Model
         'notifi_deliveryboy',
         'delivery_timeslote_id'
     ];
+
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id');
+    }
+    public function items()
+{
+    return $this->hasMany(OrderItem::class, 'order_id', 'id');
+}
+
 }

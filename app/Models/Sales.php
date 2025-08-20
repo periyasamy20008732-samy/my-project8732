@@ -61,6 +61,7 @@ class Sales extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
     public function warehouseitem()
     {
         return $this->belongsTo(Warehouseitem::class);
@@ -69,4 +70,5 @@ class Sales extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
 }

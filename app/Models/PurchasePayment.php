@@ -21,6 +21,9 @@ class PurchasePayment extends Model
     'supplier_id',
     'short_code',
     'created_by',
-
   ];
+  public function purchase()
+  {
+    return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
+  }
 }

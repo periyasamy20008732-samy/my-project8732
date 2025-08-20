@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SalesReturn;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SalesReturnController extends Controller
 {
-    // List Sales Returns
-    public function index()
+
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -21,26 +22,83 @@ class SalesReturnController extends Controller
             ], 401);
         }
 
-        // User level filter
-        if (in_array($user->user_level, [1, 4])) {
-            // Admin/Supervisor can see all
-            $salesreturns = SalesReturn::all();
+        // Resolve store IDs
+        $storeId = $request->query('store_id');
+        $storeIds = [];
+
+        if ($storeId) {
+            $storeIds = [trim($storeId)];
+        } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+            $storeIds = [trim($user->store_id)];
         } else {
-            // Others see only their created ones
-            $salesreturns = SalesReturn::where('created_by', $user->id)->get();
+            $storeIds = DB::table('store')
+                ->where('user_id', $user->id)
+                ->pluck('id')
+                ->map(fn($id) => (string)$id)
+                ->toArray();
         }
+
+        if (empty($storeIds)) {
+            return response()->json([
+                'message' => 'No stores found for this user',
+                'data' => [],
+                'total' => 0,
+                'status' => 0,
+            ], 200);
+        }
+
+        // Fetch sales returns with customer
+        $salesreturns = SalesReturn::with('customer')
+            ->whereIn('store_id', $storeIds)
+            ->get();
 
         if ($salesreturns->isEmpty()) {
             return response()->json([
                 'message' => 'Sales Return Details Not Found',
                 'data'    => [],
+                'totals'  => [
+                    'total_return_count' => 0,
+                    'total_return_amount' => 0,
+                    'balance_due' => 0,
+                ],
                 'status'  => 0
             ], 200);
         }
 
+        // Totals
+        $totalReturnCount  = $salesreturns->count();
+        $totalReturnAmount = $salesreturns->sum('grand_total');
+        $balanceDue        = $salesreturns->sum(function ($sr) {
+            return floatval($sr->grand_total) - floatval($sr->paid_amount ?? 0);
+        });
+
+        // Transform response to append customer details
+        $data = $salesreturns->map(function ($sr) {
+            return [
+                'id'             => $sr->id,
+                'store_id'       => $sr->store_id,
+                'sales_id'       => $sr->sales_id,
+                'return_code'    => $sr->return_code,
+                'return_date'    => $sr->return_date,
+                'grand_total'    => $sr->grand_total,
+                'paid_amount'    => $sr->paid_amount,
+                'customer_id'    => $sr->customer_id,
+                'customer_name'  => $sr->customer->customer_name ?? null,
+                'customer_email' => $sr->customer->email ?? null,
+                'customer_phone' => $sr->customer->phone ?? $sr->customer->mobile ?? null,
+                'created_by'     => $sr->created_by,
+                'created_at'     => $sr->created_at,
+            ];
+        });
+
         return response()->json([
             'message' => 'Sales Return Details',
-            'data'    => $salesreturns,
+            'data'    => $data,
+            'totals'  => [
+                'total_return_count'  => $totalReturnCount,
+                'total_return_amount' => $totalReturnAmount,
+                'balance_due'         => $balanceDue,
+            ],
             'status'  => 1
         ], 200);
     }
@@ -50,7 +108,7 @@ class SalesReturnController extends Controller
     {
         $request->validate([
             'store_id'    => 'required|numeric',
-            'sales_id'    => 'required|numeric',
+            'sales_id'    => 'required|string',
             'return_code' => 'required|string',
             'grand_total' => 'required|numeric',
         ]);

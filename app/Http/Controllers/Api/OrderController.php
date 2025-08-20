@@ -5,32 +5,65 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
-
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $order = Order::all();
-        //$result= User::find($id);return response()->json($order);
+        $user = auth()->user();
+        $storeId = $request->query('store_id');
 
-        if ($order->isEmpty()) {
+        // Determine effective store IDs
+        $storeIds = [];
 
+        if ($storeId) {
+            $storeIds = [trim($storeId)];
+        } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+            $storeIds = [trim($user->store_id)];
+        } else {
+            // fallback to stores owned by user
+            $storeIds = DB::table('store')
+                ->where('user_id', $user->id)
+                ->pluck('id')
+                ->map(fn($id) => (string)$id)
+                ->toArray();
+        }
+
+        if (empty($storeIds)) {
+            return response()->json([
+                'message' => 'No stores found for this user',
+                'data' => [],
+                'total' => 0,
+                'status' => 0,
+            ], 200);
+
+        } else {
+
+        }
+
+        // Fetch orders belonging to the allowed store IDs
+        $orders = Order::whereIn('store_id', $storeIds)
+            ->with('items') // assumes you have an OrderItem relationship
+            ->get();
+
+
+        if ($orders->isEmpty()) {
             return response()->json([
                 'message' => 'Order Detail Not Found',
                 'data' => [],
-                'status' => 0
-            ], 200);
-        } else {
-
-            return response()->json([
-                'message' => 'Order List',
-                'data' => $order,
-                'status' => 1
+                'status' => 0,
             ], 200);
         }
+
+        return response()->json([
+            'message' => 'Order List',
+            'data' => $orders,
+            'status' => 1,
+        ], 200);
     }
+
 
     // Store a new order
     public function store(Request $request)

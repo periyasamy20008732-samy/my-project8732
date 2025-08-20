@@ -37,8 +37,9 @@ class SalesReturn extends Model
         'app_order',
         'order_id',
         'created_by'
-
-
-
     ];
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }

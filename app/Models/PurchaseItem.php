@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchaseItem extends Model
 
-    //class Purchase extends Model
+//class Purchase extends Model
 {
 
     protected $table = 'purchaseitems';
@@ -52,7 +52,11 @@ class PurchaseItem extends Model
     }
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'item_id', 'id');
     }
 
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
+    }
 }
