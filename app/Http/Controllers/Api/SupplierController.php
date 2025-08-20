@@ -190,6 +190,8 @@ class SupplierController extends Controller
     {
         $request->validate([
             'supplier_name' => 'required|string|unique:supplier,supplier_name',
+            'status' => 0
+
         ]);
 
         $supplier = Supplier::create($request->all());

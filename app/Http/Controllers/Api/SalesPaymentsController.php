@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Ac_Transactions;
 use App\Models\AcAccount;
 use App\Models\SalesItem;
+use App\Models\Sales;
+use App\Models\Supplier;
+use Illuminate\Support\Facades\Validator;
 
 class SalesPaymentsController extends Controller
 {
@@ -216,5 +219,101 @@ class SalesPaymentsController extends Controller
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+
+    public function paymentIn(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'customer_id' => 'required|integer',
+            'sale_id'     => 'required|integer|exists:sales,id',
+            'payment'      => 'required|numeric|min:0.01',
+            'payment_date'   => 'required|date'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $sale = Sales::find($request->sale_id);
+
+        if (!$sale) {
+            return response()->json(['status' => false, 'message' => 'Sale not found'], 404);
+        }
+
+        if ($request->amount > $sale->due_amount) {
+            return response()->json(['status' => false, 'message' => 'Payment exceeds due amount'], 400);
+        }
+
+        // Create Payment Record
+        $payment = SalesPayments::create([
+            'customer_id' => $request->customer_id,
+            'sale_id' => $request->sale_id,
+            'payment' => $request->payment,
+            'payment_date' => $request->payment_date,
+            'reference_no' => $request->reference_no,
+            'payment_note' => $request->payment_note,
+            'payment_type' => 'in'
+        ]);
+
+        // Update Sale Paid Amount
+        $sale->paid_amount += $request->payment;
+        $sale->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Payment In recorded',
+            'data' => [
+                'payment' => $payment,
+                'updated_sale' => $sale
+            ]
+        ]);
+    }
+
+    // Payment Out (Business pays supplier/vendor)
+    public function paymentOut(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'supplier_id' => 'required|integer|exists:supplier,id',
+            'payment'      => 'required|numeric|min:0.01',
+            'payment_date'   => 'required|date'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $supplier = Supplier::find($request->supplier_id);
+
+        if (!$supplier) {
+            return response()->json(['status' => false, 'message' => 'Supplier not found'], 404);
+        }
+
+        if ($request->payment > $supplier->purchase_due) {
+            return response()->json(['status' => false, 'message' => 'Payment exceeds supplier due'], 400);
+        }
+
+        // Create Payment Record
+        $payment = SalesPayments::create([
+            'supplier_id' => $request->supplier_id,
+            'payment' => $request->payment,
+            'payment_date' => $request->payment_date,
+            'reference_no' => $request->reference_no,
+            'payment_note' => $request->payment_note,
+            'payment_type' => 'out'
+        ]);
+
+        // Update Supplier Balance
+        $supplier->purchase_due -= $request->payment;
+        $supplier->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Payment Out recorded',
+            'data' => [
+                'payment' => $payment,
+                'updated_supplier' => $supplier
+            ]
+        ]);
     }
 }
