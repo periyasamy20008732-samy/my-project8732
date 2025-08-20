@@ -294,6 +294,9 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/salespayment-create', [SalesPaymentsController::class, 'store']);
   Route::put('/salespayment-update/{id}', [SalesPaymentsController::class, 'update']);
   Route::delete('/salespayment-delete/{id}', [SalesPaymentsController::class, 'destroy']);
+  Route::post('/salespayment-in', [SalesPaymentsController::class, 'paymentIn']);
+  Route::post('/salespayment-out', [SalesPaymentsController::class, 'paymentOut']);
+
 
   //SalesPaymentReturn CRUD
   Route::get('/salespaymentreturn-view', [SalesPaymentsReturnController::class, 'index']);
