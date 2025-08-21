@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Ac_Transactions;
 use App\Models\AcAccount;
 use App\Models\SalesItem;
+use App\Models\Sales;
+use Illuminate\Support\Facades\Validator;
 
 class SalesPaymentsController extends Controller
 {
-
 
     public function index()
     {
@@ -191,23 +192,17 @@ class SalesPaymentsController extends Controller
         return response()->json($salesitem);
     }
 
-
     public function destroy($id)
     {
         DB::beginTransaction();
         try {
             $payment = SalesPayments::findOrFail($id);
-
-
             Ac_Transactions::where('ref_salespayments_id', $payment->id)->delete();
-
-
             $account = AcAccount::find($payment->account_id);
             if ($account) {
                 $account->balance -= $payment->payment; // reverse payment
                 $account->save();
             }
-
             $payment->delete();
             DB::commit();
 
@@ -217,4 +212,110 @@ class SalesPaymentsController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+    public function paymentIn(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'customer_id' => 'required|integer',
+            'sale_id'     => 'required|integer|exists:sales,id',
+            'payment'      => 'required|numeric|min:0.01',
+            'payment_date'   => 'required|date'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 422);
+        }
+        $sale = Sales::find($request->sale_id);
+        if (!$sale) {
+            return response()->json(['status' => false, 'message' => 'Sale not found'], 404);
+        }
+        if ($request->amount > $sale->due_amount) {
+            return response()->json(['status' => false, 'message' => 'Payment exceeds due amount'], 400);
+        }
+        // Create Payment Record
+        $payment = SalesPayments::create([
+            'customer_id' => $request->customer_id,
+            'sale_id' => $request->sale_id,
+            'payment' => $request->payment,
+            'payment_date' => $request->payment_date,
+            'reference_no' => $request->reference_no,
+            'payment_note' => $request->payment_note,
+            'payment_type' => 'in'
+        ]);
+        // Update Sale Paid Amount
+        $sale->paid_amount += $request->payment;
+        $sale->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'Payment In recorded',
+            'data' => [
+                'payment' => $payment,
+                'updated_sale' => $sale
+            ]
+        ]);
+    }
+  
+    public function getPaymentIn(Request $request)
+    {
+        $user = auth()->user();
+        $storeId = $request->query('store_id');
+
+        $storeIds = [];
+        if ($storeId) {
+            $storeIds = [trim($storeId)];
+        } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+            $storeIds = [trim($user->store_id)];
+        } else {
+            $storeIds = DB::table('store')
+                ->where('user_id', $user->id)
+                ->pluck('id')
+                ->map(fn($id) => (string)$id)
+                ->toArray();
+        }
+
+        if (empty($storeIds)) {
+            return response()->json([
+                'message' => 'No stores found for this user',
+                'data' => [],
+                'total' => 0,
+                'status' => 0,
+            ], 200);
+        }
+
+        $payments = SalesPayments::with(['sale', 'customer'])
+            ->whereIn('store_id', $storeIds)
+            ->orderBy('payment_date', 'desc')
+            ->get()
+            ->map(function ($payment) {
+                return [
+                    'id'            => $payment->id,
+                    'payment_code'  => $payment->payment_code,
+                    'store_id'      => $payment->store_id,
+                    'sales_id'      => $payment->sales_id,
+                    'payment_date'  => $payment->payment_date,
+                    'payment_type'  => $payment->payment_type,
+                    'payment'       => $payment->payment,
+                    'payment_note'  => $payment->payment_note,
+                    'account_id'    => $payment->account_id,
+                    'short_code'    => $payment->short_code,
+                    'status'        => $payment->status,
+                    'created_by'    => $payment->created_by,
+
+                    // Customer fields flattened
+                    'customer_id'   => $payment->customer?->id,
+                    'customer_name' => $payment->customer?->customer_name,
+                    'customer_phone' => $payment->customer?->phone,
+                    'customer_mobile' => $payment->customer?->mobile,
+                    'customer_email' => $payment->customer?->email,
+                    'customer_address' => $payment->customer?->address,
+                ];
+            });
+
+        return response()->json([
+            'status' => 1,
+            'total' => $payments->count(),
+            'data' => $payments
+        ]);
+    }
+
+
+  
 }

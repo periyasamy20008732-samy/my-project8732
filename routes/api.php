@@ -249,7 +249,8 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/purchasepayment-create', [PurchasePaymentController::class, 'store']);
   Route::put('/purchasepayment-update/{id}', [PurchasePaymentController::class, 'update']);
   Route::delete('/purchasepayment-delete/{id}', [PurchasePaymentController::class, 'destroy']);
-
+  Route::post('/purchasepayment-out', [PurchasePaymentController::class, 'paymentOut']);
+  Route::get('/purchasepayment-out', [PurchasePaymentController::class, 'getPaymentOut']);
   //PurchasepaymentReturn  CRUD
   Route::get('/purchasepaymentreturn-view', [PurchasePaymentReturnController::class, 'index']);
   Route::get('/purchasepaymentreturn-view/{id}', [PurchasePaymentReturnController::class, 'show']);
@@ -292,6 +293,9 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/salespayment-create', [SalesPaymentsController::class, 'store']);
   Route::put('/salespayment-update/{id}', [SalesPaymentsController::class, 'update']);
   Route::delete('/salespayment-delete/{id}', [SalesPaymentsController::class, 'destroy']);
+  Route::get('/salespayment-in', [SalesPaymentsController::class, 'getPaymentIn']);
+  Route::post('/salespayment-in', [SalesPaymentsController::class, 'paymentIn']);
+
 
   //SalesPaymentReturn CRUD
   Route::get('/salespaymentreturn-view', [SalesPaymentsReturnController::class, 'index']);

@@ -9,8 +9,9 @@ use App\Models\Ac_Transactions;
 use App\Models\AcAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\PurchaseItem;
+use App\Models\Supplier;
 use Exception;
 
 class PurchasePaymentController extends Controller
@@ -240,5 +241,149 @@ class PurchasePaymentController extends Controller
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function paymentOut(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'supplier_id'  => 'required|integer|exists:supplier,id',
+            'payment'      => 'required|numeric|min:0.01',
+            'payment_date' => 'required|date',
+            'purchase_id'  => 'nullable|integer|exists:purchase,id',
+            'payment_type' => 'nullable|string|max:50', // Cash/Card/UPI/Cheque etc.
+            'payment_note' => 'nullable|string',
+            'account_id'   => 'nullable|integer',
+            'store_id'     => 'nullable|integer', // allow override
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        // Effective store id resolution
+        $user = auth()->user();
+        $explicitStoreId = $request->input('store_id');
+
+        if (!empty($explicitStoreId)) {
+            $effectiveStoreId = (int) $explicitStoreId;
+        } elseif (!empty($user->store_id) && $user->store_id != '0') {
+            $effectiveStoreId = (int) $user->store_id;
+        } else {
+            $effectiveStoreId = (int) DB::table('store')
+                ->where('user_id', $user->id)
+                ->value('id');
+        }
+
+        if (empty($effectiveStoreId)) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'No valid store found for this user',
+            ], 400);
+        }
+
+        $supplier = Supplier::find($request->supplier_id);
+        if (!$supplier) {
+            return response()->json(['status' => false, 'message' => 'Supplier not found'], 404);
+        }
+
+        // business rule: don’t allow overpay against supplier due (if you track it)
+        if (!is_null($supplier->purchase_due) && $request->payment > $supplier->purchase_due) {
+            return response()->json(['status' => false, 'message' => 'Payment exceeds supplier due'], 400);
+        }
+
+        // Create Purchase Payment
+        $payment = PurchasePayment::create([
+            'payment_code' => 'PP-' . time(),                 // simple unique code
+            'store_id'     => $effectiveStoreId,
+            'purchase_id'  => $request->purchase_id,          // nullable
+            'payment_date' => $request->payment_date,
+            'payment_type' => $request->payment_type ?? 'Cash',
+            'payment'      => $request->payment,
+            'payment_note' => $request->payment_note,
+            'status'       => 1,
+            'account_id'   => $request->account_id,
+            'supplier_id'  => $request->supplier_id,
+            'short_code'   => 'PURCPAY',
+            'created_by'   => $user->id,
+        ]);
+
+        // Update Supplier Balance (if you maintain it)
+        if (!is_null($supplier->purchase_due)) {
+            $supplier->purchase_due = max(0, $supplier->purchase_due - $request->payment);
+            $supplier->save();
+        }
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Payment Out recorded',
+            'data'    => $payment,
+        ], 201);
+    }
+
+    public function getPaymentOut(Request $request)
+    {
+        $user = auth()->user();
+        $storeId = $request->query('store_id');
+
+        // Determine effective store IDs
+        $storeIds = [];
+        if ($storeId) {
+            $storeIds = [trim($storeId)];
+        } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+            $storeIds = [trim($user->store_id)];
+        } else {
+            $storeIds = DB::table('store')
+                ->where('user_id', $user->id)
+                ->pluck('id')
+                ->map(fn($id) => (string)$id)
+                ->toArray();
+        }
+
+        if (empty($storeIds)) {
+            return response()->json([
+                'message' => 'No stores found for this user',
+                'data'    => [],
+                'total'   => 0,
+                'status'  => 0,
+            ], 200);
+        }
+
+        $payments = PurchasePayment::with(['purchase', 'supplier'])
+            ->whereIn('store_id', $storeIds)
+            ->orderBy('payment_date', 'desc')
+            ->get()
+            ->map(function ($p) {
+                return [
+                    // payment fields
+                    'id'           => $p->id,
+                    'payment_code' => $p->payment_code,
+                    'store_id'     => $p->store_id,
+                    'purchase_id'  => $p->purchase_id,
+                    'payment_date' => $p->payment_date,
+                    'payment_type' => $p->payment_type, // Cash/Card/UPI/Cheque
+                    'payment'      => $p->payment,
+                    'payment_note' => $p->payment_note,
+                    'status'       => $p->status,
+                    'account_id'   => $p->account_id,
+                    'short_code'   => $p->short_code,
+                    'created_by'   => $p->created_by,
+
+                    // supplier flattened
+                    'supplier_id'    => $p->supplier?->id,
+                    'supplier_name'  => $p->supplier?->supplier_name,
+                    'supplier_phone' => $p->supplier?->phone,
+                    'supplier_mobile' => $p->supplier?->mobile,
+                    'supplier_email' => $p->supplier?->email,
+                    'supplier_address' => $p->supplier?->address,
+
+                    // optional purchase details (flatten minimally, keep IDs lean)
+                    'purchase_ref'   => $p->purchase?->invoice_no ?? $p->purchase?->reference_no ?? null,
+                ];
+            });
+
+        return response()->json([
+            'status' => 1,
+            'total'  => $payments->count(),
+            'data'   => $payments,
+        ]);
     }
 }
