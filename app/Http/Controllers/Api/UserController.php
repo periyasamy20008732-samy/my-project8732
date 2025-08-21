@@ -313,11 +313,13 @@ class UserController extends Controller
     }
     public function verifyOtp(Request $request)
     {
-        try {
-            $request->validate([
-                'mobile' => 'required|string',
-                'otp' => 'required|string|digits:4'
-            ]);
+      try{
+        $request->validate([
+            'mobile' => 'required',
+            'country_code' => 'required|string',
+            'otp' => 'required'
+        ]);
+
 
             $mobile = $request->mobile;
             $cacheKey = 'otp_' . $mobile;
