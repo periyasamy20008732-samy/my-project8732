@@ -314,6 +314,7 @@ class UserController extends Controller
     {
         $request->validate([
             'mobile' => 'required',
+            'country_code' => 'required|string',
             'otp' => 'required'
         ]);
 
