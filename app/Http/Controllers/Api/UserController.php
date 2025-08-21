@@ -24,79 +24,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    // public function register(Request $request)
-    // {
-
-
-    //     $validator = Validator::make(
-
-    //         $request->all(),
-    //         [
-    //             'name' => ['required'],
-    //             'email' => ['email', 'unique:users,email'],
-    //             'country_code' => ['required'],
-    //             'mobile' => ['required', 'numeric', 'unique:users,mobile'],
-    //             'password' => ['required', 'min:8', 'confirmed'],
-    //             'password_confirmation' => ['required']
-
-
-    //         ]
-    //     );
-
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'errors' => $validator->errors()
-    //         ], 400); // or 422, your choice
-    //     } else {
-
-    //         $data = [
-    //             'user_level' => $request->user_level,
-    //             'store_id' => $request->store_id,
-    //             'name' => $request->name,
-    //             'email' => $request->email,
-    //             'country_code' => $request->country_code,
-    //             'mobile' => $request->mobile,
-    //             //'password'=>Hash::make($request->password)
-    //             'license_key' => $randomInt = rand(1000, 9999),
-    //             'password' => md5($request->password)
-    //         ];
-
-    //         DB::beginTransaction();
-
-    //         try {
-
-    //             $result = User::create($data);
-    //             DB::Commit();
-    //             $token = $result->createToken('access_token')->accessToken;
-    //         } catch (\Exception $e) {
-    //             DB::rollBack();
-    //             // p($e->getMessage());
-    //             echo '<pre>';
-    //             print_r($e->getMessage());
-    //             echo '</pre>';
-    //             $result = null;
-    //         }
-    //         if ($result != null) {
-    //             //ok
-
-    //             return response()->json([
-    //                 'status' => true,
-    //                 'message' => 'User Register Successfully',
-    //                 'access_token' => $token,
-    //                 'data' => $result,
-    //                 'is_existing_user' => true
-    //             ], 200);
-    //         } else {
-    //             return response()->json([
-
-    //                 'message' => 'Internal server error',
-    //                 'status' => false,
-    //             ], 500);
-    //         }
-    //     }
-    // }
 
     public function register(Request $request)
     {
@@ -376,13 +303,7 @@ class UserController extends Controller
                     'access_token' => $token,
                     'token_type' => 'Bearer',
                     'expires_in' => 3600, // 1 hour in seconds
-                    'data' => [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'mobile' => $user->mobile,
-                        'status' => $user->status
-                    ],
+                    'data' => $user,
                     'redirect_to' => '/homepage',
                     'is_existing_user' => true
                 ], 200);
