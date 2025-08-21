@@ -7,32 +7,44 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\PurchaseReturn;
+
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Models\WarehouseItem;
 
+
 class PurchaseReturnController extends Controller
 {
 
-    // View all Purchase
     public function index()
     {
-        $purchase = PurchaseReturn::all();
-
-        if ($purchase->isEmpty()) {
-
-            return response()->json([
-                'message' => 'Purchase Return Details Not Found',
-                'data' => [],
-                'status' => 0
-            ], 200);
-        } else {
+        try {
+            $returns = PurchaseReturn::with([
+                'supplier:id,supplier_name',
+                'store:id,store_name',
+                'warehouse:id,warehouse_name'
+            ])
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return response()->json([
-                'message' => 'Purchase Return Details List',
-                'data' => $purchase,
-                'status' => 1
+                'status'  => 1,
+                'message' => 'Purchase returns retrieved successfully',
+                'data'    => $returns
             ], 200);
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error fetching purchase returns: ' . $e->getMessage());
+
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Failed to retrieve purchase returns',
+                'error'   => $e->getMessage(), // remove in production if sensitive
+            ], 500);
+
         }
     }
 
@@ -71,9 +83,24 @@ class PurchaseReturnController extends Controller
     // View a single Purchase
     public function show($id)
     {
-        $purchase = PurchaseReturn::findOrFail($id);
-        return response()->json($purchase);
+        $return = PurchaseReturn::with([
+            'supplier',
+            'store',
+            'warehouse',
+            'items' => function ($query) {
+                $query->with(['item']);
+            },
+            'payments'
+        ])->findOrFail($id);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Purchase return details retrieved successfully',
+            'data' => $return
+        ]);
     }
+
+
     public function destroy($id)
     {
         $purchase = PurchaseReturn::findOrFail($id);

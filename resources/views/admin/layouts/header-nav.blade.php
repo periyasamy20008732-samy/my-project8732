@@ -49,6 +49,12 @@
 			</div>
 		</li>
 		<!-- /Search -->
+
+
+
+		{{-- <li class="nav-item nav-item-box">
+			<a href="general-settings.html"><i data-feather="settings"></i></a>
+		</li> --}}
 		<li class="nav-item dropdown has-arrow main-drop">
 			<a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
 				<span class="user-info">
@@ -59,8 +65,14 @@
 					</span>
 					<span class="user-detail">
 						<span class="user-name">{{ Auth::user()->name }}</span>
+						<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' :
+							'Manager'
+							}}
+						</span>
+
 						<span class="user-role">{{ Auth::user()->user_level == 1 && 2 ? 'Super Admin' : 'Manager'
 							}}</span>
+
 					</span>
 				</span>
 			</a>
@@ -75,6 +87,12 @@
 							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' :
 								(Auth::user()->user_level == 2 ?
 								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}</h5>
+
+							<h5>{{ Auth::user()->user_level == 1 ? 'Super Admin' : (Auth::user()->user_level == 2 ?
+								'Manager' : (Auth::user()->user_level == 3 ? 'Staff' : 'Unknown Role')) }}
+							</h5>
+
+
 						</div>
 					</div>
 					<hr class="m-0">
@@ -83,6 +101,11 @@
 					<a class="dropdown-item" href="general-settings.html"><i class="me-2"
 							data-feather="settings"></i>Settings</a>
 					<hr class="m-0">
+					{{-- <a class="dropdown-item logout pb-0" href="{{ route('logout') }}">
+						<img======={{-- <a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}">
+							<img>>>>>>> origin/master
+							src="admin-assets/img/icons/log-out.svg" class="me-2" alt="img">Logout
+					</a> --}}
 					<a class="dropdown-item logout pb-0" href="#"
 						onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i
 							data-feather="log-out"></i>Logout
@@ -96,6 +119,7 @@
 		</li>
 	</ul>
 	<!-- /Header Menu -->
+
 	<!-- Mobile Menu -->
 	<div class="dropdown mobile-user-menu">
 		<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
@@ -118,6 +142,5 @@
 		</div>
 	</div>
 	<!-- /Mobile Menu -->
-
 </div>
 <!-- /Header -->

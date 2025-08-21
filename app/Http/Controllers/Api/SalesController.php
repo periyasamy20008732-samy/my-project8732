@@ -11,6 +11,7 @@ use App\Models\WarehouseItem;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SalesController extends Controller
 {
@@ -41,85 +42,51 @@ class SalesController extends Controller
         }
     }
 
-
-    /*  $item = Item::where('id', $request->item_id)->first();
-        $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
-
-        if ($warehouseitem) {
-            //$warehouseid =  $item->warhouse_id;
-            //$stock =  $item->Opening_Stock;
-            $warehousestock = $warehouseitem->available_qty;
-            $newstock = $warehousestock - $request->stock;
-            WarehouseItem::where('item_id', $request->item_id)->update(['available_qty' => $newstock]);
-            Item::where('id', $request->item_id)->update(['Opening_Stock' => $newstock]);
-        } else {
-            $available_qty = (0 - ($request->stock));
-            warehouseItem::firstOrCreate(attributes: [
-                'store_id' => $request->store_id,
-                'warehouse_id' => $item->warhouse_id,
-                'available_qty' => $available_qty,
-                'item_id' => $request->item_id,
-
-            ]);
-        }*/
     public function store(Request $request)
     {
-        $request->validate([
-            'store_id' => 'required|integer',
-            'item_id' => 'required|integer',
-            'sale_qty' => 'required|numeric',
-
-        ]);
-
         try {
+            $request->validate([
+                'store_id' => 'required|integer',
+                // 'item_id' => 'required|integer',
+                // 'sale_qty' => 'required|numeric',
+            ]);
+
             $result = DB::transaction(function () use ($request) {
                 // Create sales record
-
                 $salesData = $request->all();
                 $salesData['created_by'] = auth()->id();
                 $salesData['status'] = 1;
 
                 $sales = Sales::create($salesData);
 
-
-                $item = Item::findOrFail($request->item_id);
-                $warehouseitem = WarehouseItem::where('item_id', $request->item_id)->first();
-
-                if ($warehouseitem) {
-                    // Update existing stock
-                    $newstock = max(0, $warehouseitem->available_qty - $request->sale_qty);
-
-                    $warehouseitem->update(['available_qty' => $newstock]);
-                    $item->update(['Opening_Stock' => $newstock]);
+                if ($sales) {
+                    return [
+                        'message' => 'Sales Created Successfully',
+                        'data'    => $sales,
+                        'status'  => 1
+                    ];
                 } else {
-                    // Create new warehouse entry with adjusted stock
-                    WarehouseItem::firstOrCreate(
-                        [
-                            'store_id' => $request->store_id,
-                            'warehouse_id' => $item->warehouse_id,
-                            'item_id' => $request->item_id,
-                        ],
-                        [
-                            'available_qty' => max(0, 0 - $request->sale_qty)
-                        ]
-                    );
-
-                    $item->update(['Opening_Stock' => max(0, 0 - $request->sale_qty)]);
+                    return [
+                        'message' => 'Sales Creation Failed',
+                        'data'    => null,
+                        'status'  => 0
+                    ];
                 }
-
-                return [
-                    'message' => 'Sales Created Successfully',
-                    'data' => $sales,
-                    'status' => 1
-                ];
             });
 
             return response()->json($result, 201);
         } catch (\Exception $e) {
+            // log error into storage/logs/laravel.log
+            Log::error('Sales store error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'input' => $request->all()
+            ]);
+
             return response()->json([
                 'message' => 'An error occurred while creating sales',
-                'error' => $e->getMessage(),
-                'status' => 0
+                'error'   => $e->getMessage(),   // only message returned
+                'status'  => 0
             ], 500);
         }
     }

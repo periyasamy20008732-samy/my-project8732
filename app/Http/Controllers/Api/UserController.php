@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -312,47 +313,108 @@ class UserController extends Controller
     }
     public function verifyOtp(Request $request)
     {
+      try{
         $request->validate([
             'mobile' => 'required',
             'country_code' => 'required|string',
             'otp' => 'required'
         ]);
 
-        $cached = cache()->get('otp_' . $request->mobile);
 
-        if (!$cached || $cached['otp'] != $request->otp || now()->greaterThan($cached['expires_at'])) {
+            $mobile = $request->mobile;
+            $cacheKey = 'otp_' . $mobile;
+            $cached = cache()->get($cacheKey);
+
+            // Check if OTP exists, matches, and is not expired
+            if (!$cached) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'OTP not found. Please request a new OTP.',
+                    'errors' => ['otp' => ['OTP has expired or not been generated']]
+                ], 400);
+            }
+
+            if ($cached['otp'] != $request->otp) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid OTP entered.',
+                    'errors' => ['otp' => ['The OTP code is incorrect']]
+                ], 401);
+            }
+
+            if (now()->greaterThan($cached['expires_at'])) {
+                cache()->forget($cacheKey); // Clean up expired OTP
+                return response()->json([
+                    'status' => false,
+                    'message' => 'OTP has expired. Please request a new one.',
+                    'errors' => ['otp' => ['OTP has expired']]
+                ], 401);
+            }
+
+            // OTP is valid — now check if mobile exists in DB
+            $user = User::where('mobile', $mobile)->first();
+
+            // Clear OTP after successful verification
+            cache()->forget($cacheKey);
+
+            if ($user) {
+                // Check if user is active
+                if ($user->status != 'active') {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Your account is not active. Please contact support.',
+                        'errors' => ['account' => ['User account is inactive']]
+                    ], 403);
+                }
+
+                // Generate login token
+                $token = $user->createToken('access_token')->accessToken;
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'OTP verified successfully. Login successful.',
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'expires_in' => 3600, // 1 hour in seconds
+                    'data' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'mobile' => $user->mobile,
+                        'status' => $user->status
+                    ],
+                    'redirect_to' => '/homepage',
+                    'is_existing_user' => true
+                ], 200);
+            } else {
+                // No user exists — redirect to registration
+                return response()->json([
+                    'status' => true,
+                    'message' => 'OTP verified successfully. Please complete your registration.',
+                    'redirect_to' => '/register',
+                    'is_existing_user' => false,
+                    'mobile' => $mobile // Include mobile for registration form
+                ], 200);
+            }
+        } catch (ValidationException $e) {
+            // Handle validation errors
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid or expired OTP.'
-            ], 401);
-        }
-
-        // OTP is valid — now check if mobile exists in DB
-        $user = User::where('mobile', $request->mobile)->first();
-
-        // Clear OTP after use
-        cache()->forget('otp_' . $request->mobile);
-
-        if ($user) {
-            // Generate login token
-            $token = $user->createToken('access_token')->accessToken;
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (Exception $e) {
+            // Log the error for debugging
+            Log::error('OTP Verification Error: ' . $e->getMessage(), [
+                'mobile' => $request->mobile ?? 'unknown',
+                'trace' => $e->getTraceAsString()
+            ]);
 
             return response()->json([
-                'status' => true,
-                'message' => 'OTP verified. Login successful.',
-                'access_token' => $token,
-                'data' => $user,
-                'redirect_to' => '/user/home',
-                'is_existing_user' => true
-            ]);
-        } else {
-            // No user exists — redirect to registration
-            return response()->json([
-                'status' => true,
-                'message' => 'OTP verified. Redirect to registration.',
-                'redirect_to' => '/register',
-                'is_existing_user' => false
-            ]);
+                'status' => false,
+                'message' => 'An unexpected error occurred. Please try again.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Server error'
+            ], 500);
         }
     }
 
@@ -531,5 +593,71 @@ class UserController extends Controller
             'status' => true,
             'message' => 'Password reset successfully.',
         ]);
+    }
+
+    public function getStoreUsers(Request $request)
+    {
+        $authUser = auth()->user();
+        $storeId = $request->query('store_id');
+        $finalUsers = collect();
+        if ($storeId) {
+            $storeId = trim($storeId);
+            $storeName = DB::table('store')
+                ->where('id', $storeId)
+                ->value('store_name');
+            // Fetch users who belong to this store
+            $storeUsers = DB::table('users')
+                ->where('store_id', $storeId)
+                ->get()
+                ->map(function ($user) use ($storeName) {
+                    $user->store_name = $storeName;
+                    return $user;
+                });
+            // Fetch the store owner (user_id from store table)
+            $storeOwnerId = DB::table('store')
+                ->where('id', $storeId)
+                ->value('user_id');
+            if ($storeOwnerId) {
+                $storeOwner = DB::table('users')->where('id', $storeOwnerId)->first();
+                if ($storeOwner) {
+                    $storeOwner->store_name = $storeName;
+                    $finalUsers->push($storeOwner);
+                }
+            }
+            $finalUsers = $finalUsers->merge($storeUsers)->unique('id')->values();
+        } else {
+            // Get all store IDs owned by this user
+            $storeIds = DB::table('store')
+                ->where('user_id', $authUser->id)
+                ->pluck('id')
+                ->toArray();
+            if (empty($storeIds)) {
+                return response()->json([
+                    'message' => 'No stores found for this user',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+            // Get store names maped by ID
+            $stores = DB::table('store')
+                ->whereIn('id', $storeIds)
+                ->pluck('store_name', 'id'); // [id => store_name]
+            // Get users who belong to these stores
+            $storeUsers = DB::table('users')
+                ->whereIn('store_id', $storeIds)
+                ->get()
+                ->map(function ($user) use ($stores) {
+                    $user->store_name = $stores[$user->store_id] ?? null;
+                    return $user;
+                });
+            $finalUsers = $storeUsers;
+        }
+        return response()->json([
+            'message' => 'Store users fetched successfully',
+            'data' => $finalUsers,
+            'total' => $finalUsers->count(),
+            'status' => 1,
+        ], 200);
     }
 }

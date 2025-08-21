@@ -105,12 +105,77 @@ class Store extends Model
     'previous_balancebit',
     'default_account_id',
     'status',
-    'created_by'
-
+    'created_by',
   ];
+
+  /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
 
   public function user()
   {
     return $this->belongsTo(User::class);
+  }
+
+  public function suppliers()
+  {
+    return $this->hasMany(Supplier::class);
+  }
+
+  public function customers()
+  {
+    return $this->hasMany(Customer::class);
+  }
+
+  public function purchases()
+  {
+    return $this->hasMany(Purchase::class);
+  }
+
+  public function purchaseReturns()
+  {
+    return $this->hasMany(PurchaseReturn::class);
+  }
+
+  public function sales()
+  {
+    return $this->hasMany(Sales::class);
+  }
+
+  public function salesReturns()
+  {
+    return $this->hasMany(SalesReturn::class);
+  }
+  public function warehouses()
+  {
+    return $this->hasMany(\App\Models\Warehouse::class, 'store_id');
+  }
+
+  public function categories()
+  {
+    return $this->hasMany(\App\Models\Category::class, 'store_id');
+  }
+
+  /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+  public function scopeWithAllCounts($query)
+  {
+    return $query->withCount([
+      'suppliers',
+      'customers',
+      'purchases',
+      'purchaseReturns',
+      'sales',
+      'salesReturns',
+      'expenses',
+      'warehouses',
+      'categories'
+    ]);
   }
 }

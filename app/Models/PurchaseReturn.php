@@ -33,4 +33,30 @@ class PurchaseReturn extends Model
         'status',
         'created_by'
     ];
+
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function purchaseItems()
+    {
+        return $this->hasMany(PurchaseItem::class, 'purchase_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(PurchasePayment::class, 'purchase_id', 'id');
+    }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
+    }
+
 }

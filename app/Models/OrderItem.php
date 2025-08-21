@@ -21,4 +21,8 @@ class OrderItem extends Model
         'total_price',
         'if_offer'
     ];
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
 }

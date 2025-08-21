@@ -68,14 +68,13 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/sendotp', [UserController::class, 'sendOtp']);
 Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
-Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
+
 
 
 Route::middleware('auth:api')->group(function () {
 
   Route::get('/dashboard', [DashboardController::class, 'getDashboard']);
   Route::get('/search', [DashboardController::class, 'search']);
-
 
   Route::post('/check-session', [UserController::class, 'checkSession']);
   Route::post('/logout', [UserController::class, 'logout']);
@@ -88,10 +87,9 @@ Route::middleware('auth:api')->group(function () {
   //subscription-purchase
   Route::get('/subscription-purchase', [SubscriptionPurchaseController::class, 'index']);
 
-
   //Store CRUD
-  Route::get('/store-view', [StoreController::class, 'index']);
-  Route::get('/store-view/{id}', [StoreController::class, 'show']);
+  Route::get('/store-view/{id?}', [StoreController::class, 'index']);
+  // Route::get('/store-view/{id}', [StoreController::class, 'show']);
   Route::post('/stores', [StoreController::class, 'index']);
   Route::post('/store-create', [StoreController::class, 'store']);
   Route::put('/store-update/{id}', [StoreController::class, 'update']);
@@ -294,9 +292,6 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/salespayment-create', [SalesPaymentsController::class, 'store']);
   Route::put('/salespayment-update/{id}', [SalesPaymentsController::class, 'update']);
   Route::delete('/salespayment-delete/{id}', [SalesPaymentsController::class, 'destroy']);
-  Route::post('/salespayment-in', [SalesPaymentsController::class, 'paymentIn']);
-  Route::post('/salespayment-out', [SalesPaymentsController::class, 'paymentOut']);
-
 
   //SalesPaymentReturn CRUD
   Route::get('/salespaymentreturn-view', [SalesPaymentsReturnController::class, 'index']);
