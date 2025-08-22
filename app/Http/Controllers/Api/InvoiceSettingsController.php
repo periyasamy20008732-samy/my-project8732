@@ -10,31 +10,42 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceSettingsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
+            $storeId = $request->query('store_id'); // fetch store_id from query params
 
             if (in_array($user->user_level, [1, 4])) {
-                // Store admin sees all stores
-                $invoicesettings = InvoiceSettings::all();
+                // Store admin can see all stores OR a specific one if store_id is passed
+                $query = InvoiceSettings::query();
+                if ($storeId) {
+                    $query->where('store_id', $storeId);
+                }
+                $invoicesettings = $query->get();
             } else {
-                // Other users see only their own stores
-                $invoicesettings = InvoiceSettings::where('user_id', $user->id)->get();
+                // Other users see only their own store(s)
+                $query = InvoiceSettings::where('user_id', $user->id);
+                if ($storeId) {
+                    $query->where('store_id', $storeId);
+                }
+                $invoicesettings = $query->get();
             }
 
             return response()->json([
-                'message' => 'InvoiceSettings Detail Fetch Successfully',
-                'status' => 1,
-                'data' => $invoicesettings
+                'message' => 'Invoice Settings fetched successfully',
+                'status'  => 1,
+                'data'    => $invoicesettings,
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 0,
-                'message' => 'Failed to retrieve InvoiceSettings: Unauthorozied or data not found',
+                'status'  => 0,
+                'message' => 'Failed to retrieve Invoice Settings: Unauthorized or data not found',
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }
+
     public function store(Request $request)
     {
 
