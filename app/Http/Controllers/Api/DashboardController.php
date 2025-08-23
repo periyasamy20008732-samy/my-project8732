@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Sales;
 use App\Models\Customer;
@@ -13,64 +15,183 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Store;
+use App\Models\Units;
 use App\Models\Warehouse;
 
 
 
 class DashboardController extends Controller
 {
+    // public function getDashboard()
+    // {
+    //     try {
+    //         $user = auth()->user();
+
+    //         // Date ranges
+    //         $currentStart = Carbon::now()->subDays(6)->startOfDay();
+    //         $previousStart = Carbon::now()->subDays(13)->startOfDay();
+    //         $previousEnd = Carbon::now()->subDays(7)->endOfDay();
+
+    //         // Base query
+    //         $salesQuery = Sales::query();
+    //         if (!in_array($user->user_level, [1, 4])) {
+    //             $salesQuery->where('created_by', $user->id);
+    //         }
+
+    //         // Current Period Totals 
+    //         $query = DB::table('sales');
+
+    //         if (in_array($user->user_level, [1, 4])) {
+    //             // admin sees all sales
+    //         } else {
+    //             $query->where('user_id', $user->id);
+    //         }
+
+    //         // If you're using date range:
+    //         $query->whereBetween('created_at', [
+    //             now()->startOfMonth(),
+    //             now()->endOfMonth()
+    //         ]);
+
+    //         $currentSales = $query->sum('grand_total');
+    //         $currentDue = (clone $salesQuery)
+    //             ->whereBetween('created_at', [$currentStart, now()])
+    //             ->sum('customer_total_due');
+
+    //         $currentItems = Item::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+    //             $q->whereIn('id', function ($sub) use ($user) {
+    //                 $sub->select('product_id')
+    //                     ->from('order_items')
+    //                     ->whereIn('order_id', Order::where('user_id', $user->id)->pluck('id'));
+    //             });
+    //         })->count();
+
+    //         $currentCustomers = Customer::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+    //             $q->where('created_by', $user->id);
+    //         })->count();
+
+    //         // Previous Period Totals 
+    //         $previousSales = (clone $salesQuery)
+    //             ->whereBetween('created_at', [$previousStart, $previousEnd])
+    //             ->sum('grand_total');
+
+    //         $previousDue = (clone $salesQuery)
+    //             ->whereBetween('created_at', [$previousStart, $previousEnd])
+    //             ->sum('customer_total_due');
+
+    //         $previousItems = Item::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+    //             $q->whereIn('id', function ($sub) use ($user) {
+    //                 $sub->select('product_id')
+    //                     ->from('order_items')
+    //                     ->whereIn('order_id', Order::where('user_id', $user->id)->pluck('id'));
+    //             });
+    //         })
+    //             ->whereBetween('created_at', [$previousStart, $previousEnd])
+    //             ->count();
+
+    //         $previousCustomers = Customer::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+    //             $q->where('created_by', $user->id);
+    //         })
+    //             ->whereBetween('created_at', [$previousStart, $previousEnd])
+    //             ->count();
+
+    //         // Percentage Change 
+    //         $salesChange = $this->calcChange($currentSales, $previousSales);
+    //         $dueChange = $this->calcChange($currentDue, $previousDue);
+    //         $itemsChange = $this->calcChange($currentItems, $previousItems);
+    //         $customersChange = $this->calcChange($currentCustomers, $previousCustomers);
+
+    //         // Sales Overview (Last 7 Days) 
+    //         $salesOverview = (clone $salesQuery)
+    //             ->selectRaw('DATE(created_at) as date, SUM(grand_total) as total')
+    //             ->where('created_at', '>=', $currentStart)
+    //             ->groupBy('date')
+    //             ->orderBy('date', 'asc')
+    //             ->get();
+
+    //         // Recent Transactions 
+    //         $recentTransactions = (clone $salesQuery)
+    //             ->with('customer:id,customer_name,email')
+    //             ->latest()
+    //             ->take(7)
+    //             ->get(['id', 'customer_id', 'grand_total', 'customer_total_due', 'status', 'created_at']);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'business_overview' => [
+    //                 'total_sales' => $currentSales,
+    //                 'sales_change' => $salesChange['value'],
+    //                 'sales_change_type' => $salesChange['type'],
+
+    //                 'total_due' => $currentDue,
+    //                 'due_change' => $dueChange['value'],
+    //                 'due_change_type' => $dueChange['type'],
+
+    //                 'total_items' => $currentItems,
+    //                 'items_change' => $itemsChange['value'],
+    //                 'items_change_type' => $itemsChange['type'],
+
+    //                 'total_customers' => $currentCustomers,
+    //                 'customers_change' => $customersChange['value'],
+    //                 'customers_change_type' => $customersChange['type']
+    //             ],
+    //             'sales_overview_last_7_days' => $salesOverview,
+    //             'recent_transactions' => $recentTransactions
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         Log::error('Dashboard fetch failed: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Something went wrong while fetching the dashboard data.',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+
     public function getDashboard()
     {
         try {
             $user = auth()->user();
+            $isAdmin = in_array($user->user_level, [1, 4]);
 
             // Date ranges
-            $currentStart = Carbon::now()->subDays(6)->startOfDay();
-            $previousStart = Carbon::now()->subDays(13)->startOfDay();
-            $previousEnd = Carbon::now()->subDays(7)->endOfDay();
+            $currentStart = now()->subDays(6)->startOfDay();
+            $previousStart = now()->subDays(13)->startOfDay();
+            $previousEnd = now()->subDays(7)->endOfDay();
 
-            // Base query
+            // Sales query base
             $salesQuery = Sales::query();
-            if (!in_array($user->user_level, [1, 4])) {
+            if (!$isAdmin) {
                 $salesQuery->where('created_by', $user->id);
             }
 
-            // Current Period Totals 
-            $query = DB::table('sales');
-
-            if (in_array($user->user_level, [1, 4])) {
-                // admin sees all sales
-            } else {
-                $query->where('user_id', $user->id);
-            }
-
-            // If you're using date range:
-            $query->whereBetween('created_at', [
-                now()->startOfMonth(),
-                now()->endOfMonth()
-            ]);
-
-            $currentSales = $query->sum('grand_total');
-
-
+            // Current period totals
+            $currentSales = (clone $salesQuery)
+                ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                ->sum('grand_total');
 
             $currentDue = (clone $salesQuery)
                 ->whereBetween('created_at', [$currentStart, now()])
                 ->sum('customer_total_due');
 
-            $currentItems = Item::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+            $currentItems = Item::when(!$isAdmin, function ($q) use ($user) {
                 $q->whereIn('id', function ($sub) use ($user) {
                     $sub->select('product_id')
                         ->from('order_items')
-                        ->whereIn('order_id', Order::where('user_id', $user->id)->pluck('id'));
+                        ->whereIn('order_id', Order::where('user_id', $user->id));
                 });
-            })->count();
+            })
+                ->whereBetween('created_at', [$currentStart, now()])
+                ->count();
 
-            $currentCustomers = Customer::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+            $currentCustomers = Customer::when(!$isAdmin, function ($q) use ($user) {
                 $q->where('created_by', $user->id);
-            })->count();
+            })
+                ->whereBetween('created_at', [$currentStart, now()])
+                ->count();
 
-            // Previous Period Totals 
+            // Previous period totals
             $previousSales = (clone $salesQuery)
                 ->whereBetween('created_at', [$previousStart, $previousEnd])
                 ->sum('grand_total');
@@ -79,37 +200,37 @@ class DashboardController extends Controller
                 ->whereBetween('created_at', [$previousStart, $previousEnd])
                 ->sum('customer_total_due');
 
-            $previousItems = Item::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+            $previousItems = Item::when(!$isAdmin, function ($q) use ($user) {
                 $q->whereIn('id', function ($sub) use ($user) {
                     $sub->select('product_id')
                         ->from('order_items')
-                        ->whereIn('order_id', Order::where('user_id', $user->id)->pluck('id'));
+                        ->whereIn('order_id', Order::where('user_id', $user->id));
                 });
             })
                 ->whereBetween('created_at', [$previousStart, $previousEnd])
                 ->count();
 
-            $previousCustomers = Customer::when(!in_array($user->user_level, [1, 4]), function ($q) use ($user) {
+            $previousCustomers = Customer::when(!$isAdmin, function ($q) use ($user) {
                 $q->where('created_by', $user->id);
             })
                 ->whereBetween('created_at', [$previousStart, $previousEnd])
                 ->count();
 
-            // Percentage Change 
+            // Percentage change
             $salesChange = $this->calcChange($currentSales, $previousSales);
             $dueChange = $this->calcChange($currentDue, $previousDue);
             $itemsChange = $this->calcChange($currentItems, $previousItems);
             $customersChange = $this->calcChange($currentCustomers, $previousCustomers);
 
-            // Sales Overview (Last 7 Days) 
+            // Sales overview (last 7 days)
             $salesOverview = (clone $salesQuery)
                 ->selectRaw('DATE(created_at) as date, SUM(grand_total) as total')
                 ->where('created_at', '>=', $currentStart)
                 ->groupBy('date')
-                ->orderBy('date', 'asc')
+                ->orderBy('date')
                 ->get();
 
-            // Recent Transactions 
+            // Recent transactions
             $recentTransactions = (clone $salesQuery)
                 ->with('customer:id,customer_name,email')
                 ->latest()
@@ -133,17 +254,17 @@ class DashboardController extends Controller
 
                     'total_customers' => $currentCustomers,
                     'customers_change' => $customersChange['value'],
-                    'customers_change_type' => $customersChange['type']
+                    'customers_change_type' => $customersChange['type'],
                 ],
                 'sales_overview_last_7_days' => $salesOverview,
-                'recent_transactions' => $recentTransactions
-            ], 200);
+                'recent_transactions' => $recentTransactions,
+            ]);
         } catch (\Exception $e) {
-            Log::error('Dashboard fetch failed: ' . $e->getMessage());
+            Log::error('Dashboard fetch failed', ['exception' => $e]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong while fetching the dashboard data.',
-                'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -159,75 +280,6 @@ class DashboardController extends Controller
     }
 
 
-
-    // public function search(Request $request)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'data' => 'required|string|max:255'
-    //         ]);
-
-    //         $term = $request->data;
-    //         $user = auth()->user();
-
-    //         $isFullAccess = in_array($user->user_level, [1, 4]);
-
-    //         // STORES 
-    //         $storesQuery = Store::query();
-    //         if (!$isFullAccess) {
-    //             $storesQuery->where('user_id', $user->id);
-    //         }
-    //         $stores = $storesQuery
-    //             ->where(function ($q) use ($term) {
-    //                 $q->where('store_name', 'LIKE', "%{$term}%")
-    //                     ->orWhere('store_code', 'LIKE', "%{$term}%");
-    //             })
-    //             ->limit(10)
-    //             ->get();
-
-    //         //  WAREHOUSES
-    //         $warehousesQuery = Warehouse::query();
-    //         if (!$isFullAccess) {
-    //             $warehousesQuery->where('user_id', $user->id);
-    //         }
-    //         $warehouses = $warehousesQuery
-    //             ->where(function ($q) use ($term) {
-    //                 $q->where('warehouse_name', 'LIKE', "%{$term}%")
-    //                     ->orWhere('warehouse_type', 'LIKE', "%{$term}%");
-    //             })
-    //             ->limit(10)
-    //             ->get();
-
-    //         //  ITEMS 
-    //         $itemsQuery = Item::query();
-    //         if (!$isFullAccess) {
-    //             $itemsQuery->where('user_id', $user->id);
-    //         }
-    //         $items = $itemsQuery
-    //             ->where(function ($q) use ($term) {
-    //                 $q->where('item_name', 'LIKE', "%{$term}%")
-    //                     ->orWhere('SKU', 'LIKE', "%{$term}%");
-    //             })
-    //             ->limit(10)
-    //             ->get();
-
-    //         return response()->json([
-    //             'status' => 1,
-    //             'message' => 'Search results fetched successfully',
-    //             'data' => [
-    //                 'stores' => $stores,
-    //                 'warehouses' => $warehouses,
-    //                 'items' => $items
-    //             ]
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status' => 0,
-    //             'message' => 'Something went wrong: ' . $e->getMessage(),
-    //             'data' => []
-    //         ], 500);
-    //     }
-    // }
 
 
     public function search(Request $request)
@@ -291,6 +343,51 @@ class DashboardController extends Controller
                 'status' => 0,
                 'message' => 'Something went wrong: ' . $e->getMessage(),
                 'data' => []
+            ], 500);
+        }
+    }
+
+
+    /*   public function item_dashboard()
+   {
+
+        $customers = Customer::latest()->get();
+        $totalCustomers = $customers->count();
+        $packages = Packages::latest()->get();
+        $totalPackage = $packages->count();
+    }*/
+
+    public function item_dashboard()
+    {
+        try {
+            $user = auth()->user();
+
+            if (in_array($user->user_level, [1, 4])) {
+
+                $item = Item::all();
+            } else {
+
+                //  $item = Item::all();
+                $item = Item::where('user_id', $user->id)->get();
+                $totalitem = $item->count();
+
+                // $unit = Units::where('store_id', $item->store_id)->get();
+                // $categories = Category::where('store_id', $item->store_id)->get();
+                // $brand = Brand::where('store_id', $item->store_id)->get();
+            }
+
+            return response()->json([
+                'message' => 'Detail Fetch Successfully',
+                'status' => 1,
+                'data' => $item,
+                'totalitem' => $totalitem
+
+
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to retrieve Sales: Unauthorozied or data not found',
             ], 500);
         }
     }
