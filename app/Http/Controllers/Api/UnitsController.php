@@ -11,68 +11,85 @@ use Illuminate\Support\Facades\Log;
 
 class UnitsController extends Controller
 {
-    public function index(Request $request)
+    // public function index(Request $request)
+    // {
+    //     try {
+    //         $user = auth()->user();
+    //         $storeId = $request->query('store_id');
+
+    //         // Resolve effective store IDs
+    //         $storeIds = [];
+    //         if ($storeId && $storeId !== '0' && trim($storeId) !== '') {
+    //             $storeIds = [trim($storeId)];
+    //         } elseif (!empty($user->store_id) && $user->store_id !== '0') {
+    //             $storeIds = [trim($user->store_id)];
+    //         } else {
+    //             // fallback to stores owned by user
+    //             $storeIds = DB::table('store')
+    //                 ->where('user_id', $user->id)
+    //                 ->pluck('id')
+    //                 ->filter(fn($v) => !is_null($v) && $v !== '')
+    //                 ->map(fn($id) => (string)$id)
+    //                 ->toArray();
+    //         }
+
+    //         if (empty($storeIds)) {
+    //             return response()->json([
+    //                 'message' => 'No stores found for this user',
+    //                 'data' => [],
+    //                 'total' => 0,
+    //                 'status' => 0,
+    //             ], 200);
+    //         }
+
+    //         // Fetch units belonging to those store IDs
+    //         $units = DB::table('units')
+    //             ->whereIn('store_id', $storeIds)
+    //             ->get();
+
+    //         if ($units->isEmpty()) {
+    //             return response()->json([
+    //                 'message' => 'Units Detail Not Found',
+    //                 'data' => [],
+    //                 'total' => 0,
+    //                 'status' => 0,
+    //             ], 200);
+    //         }
+
+    //         return response()->json([
+    //             'message' => 'Units List',
+    //             'data' => $units,
+    //             'total' => $units->count(),
+    //             'status' => 1,
+    //         ], 200);
+    //     } catch (\Throwable $e) {
+    //         print_r($e);
+    //         return response()->json([
+    //             'message' => 'Internal server error',
+    //             'data' => [],
+    //             'total' => 0,
+    //             'status' => 500,
+    //         ], 500);
+    //     }
+    // }
+
+    public function index()
     {
         try {
             $user = auth()->user();
-            $storeId = $request->query('store_id');
-
-            // Resolve effective store IDs
-            $storeIds = [];
-            if ($storeId && $storeId !== '0' && trim($storeId) !== '') {
-                $storeIds = [trim($storeId)];
-            } elseif (!empty($user->store_id) && $user->store_id !== '0') {
-                $storeIds = [trim($user->store_id)];
-            } else {
-                // fallback to stores owned by user
-                $storeIds = DB::table('store')
-                    ->where('user_id', $user->id)
-                    ->pluck('id')
-                    ->filter(fn($v) => !is_null($v) && $v !== '')
-                    ->map(fn($id) => (string)$id)
-                    ->toArray();
-            }
-
-            if (empty($storeIds)) {
-                return response()->json([
-                    'message' => 'No stores found for this user',
-                    'data' => [],
-                    'total' => 0,
-                    'status' => 0,
-                ], 200);
-            }
-
-            // Fetch units belonging to those store IDs
-            $units = DB::table('units')
-                ->whereIn('store_id', $storeIds)
-                ->get();
-
-            if ($units->isEmpty()) {
-                return response()->json([
-                    'message' => 'Units Detail Not Found',
-                    'data' => [],
-                    'total' => 0,
-                    'status' => 0,
-                ], 200);
-            }
-
+            $sales = Units::all();
             return response()->json([
-                'message' => 'Units List',
-                'data' => $units,
-                'total' => $units->count(),
+                'message' => 'Units Detail Fetch Successfully',
                 'status' => 1,
-            ], 200);
-        } catch (\Throwable $e) {
-            print_r($e);
+                'data' => $sales
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Internal server error',
-                'data' => [],
-                'total' => 0,
-                'status' => 500,
+                'status' => 0,
+                'message' => 'Failed to retrieve Units: Unauthorozied or data not found',
             ], 500);
         }
     }
-
     public function store(Request $request)
     {
         try {
