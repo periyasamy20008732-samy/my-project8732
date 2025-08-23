@@ -72,6 +72,8 @@ Route::post('/verifyotp', [UserController::class, 'verifyOtp']);
 Route::middleware('auth:api')->group(function () {
 
   Route::get('/dashboard', [DashboardController::class, 'getDashboard']);
+  Route::get('/item-dashboard', [DashboardController::class, 'item_dashboard']);
+
   Route::get('/search', [DashboardController::class, 'search']);
 
   Route::post('/check-session', [UserController::class, 'checkSession']);

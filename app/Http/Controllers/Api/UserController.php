@@ -57,6 +57,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'country_code' => $request->country_code,
                 'mobile' => $request->mobile,
+                'status' => 'active',
                 //'password'=>Hash::make($request->password)
                 'license_key' => $randomInt = rand(1000, 9999),
                 'password' => md5($request->password)
@@ -240,12 +241,12 @@ class UserController extends Controller
     }
     public function verifyOtp(Request $request)
     {
-      try{
-        $request->validate([
-            'mobile' => 'required',
-            'country_code' => 'required|string',
-            'otp' => 'required'
-        ]);
+        try {
+            $request->validate([
+                'mobile' => 'required',
+                'country_code' => 'required|string',
+                'otp' => 'required'
+            ]);
 
 
             $mobile = $request->mobile;
