@@ -57,6 +57,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'country_code' => $request->country_code,
                 'mobile' => $request->mobile,
+                'status' => 'active',
                 //'password'=>Hash::make($request->password)
                 'license_key' => $randomInt = rand(1000, 9999),
                 'password' => md5($request->password)
@@ -124,16 +125,20 @@ class UserController extends Controller
             if ($result != null) {
                 //ok
 
+                $user = User::with(['userLevel'])->find($result->id);
+
                 return response()->json([
                     'status' => true,
                     'message' => 'User Register Successfully',
                     'access_token' => $token,
-                    'data' => $result,
+                    'token_type' => 'Bearer',
+                    'expires_in' => 3600,
+                    'data' => $user,
+                    'redirect_to' => '/homepage',
                     'is_existing_user' => true
                 ], 200);
             } else {
                 return response()->json([
-
                     'message' => 'Internal server error',
                     'status' => false,
                 ], 500);
@@ -178,12 +183,11 @@ class UserController extends Controller
                     'status' => true,
                     'message' => 'User Login Successful.',
                     'access_token' => $token,
-                    'data' => $user->toArray(),
-                    'redirect_to' => '/user/home',
+                    'token_type' => 'Bearer',
+                    'expires_in' => 3600,
+                    'data' => $user,
+                    'redirect_to' => '/homepage',
                     'is_existing_user' => true
-
-
-
                 ], 200);
             } else {
                 return response()->json([
@@ -240,12 +244,12 @@ class UserController extends Controller
     }
     public function verifyOtp(Request $request)
     {
-      try{
-        $request->validate([
-            'mobile' => 'required',
-            'country_code' => 'required|string',
-            'otp' => 'required'
-        ]);
+        try {
+            $request->validate([
+                'mobile' => 'required',
+                'country_code' => 'required|string',
+                'otp' => 'required'
+            ]);
 
 
             $mobile = $request->mobile;

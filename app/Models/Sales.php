@@ -64,7 +64,7 @@ class Sales extends Model
 
     public function warehouseitem()
     {
-        return $this->belongsTo(Warehouseitem::class);
+        return $this->belongsTo(WarehouseItem::class);
     }
     public function item()
     {

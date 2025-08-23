@@ -38,7 +38,7 @@ class SalesController extends Controller
                     ->toArray();
             }
 
-            if (empty($storeIds)) {
+            if (empty($storeIds) && !in_array($user->user_level, [1, 4])) {
                 return response()->json([
                     'message' => 'No stores found for this user',
                     'data' => [],
@@ -47,24 +47,30 @@ class SalesController extends Controller
                 ], 200);
             }
 
-            // Fetch sales for matching stores
-            $sales = Sales::whereIn('store_id', $storeIds)
-                ->with(['store', 'customer', 'item', 'warehouseitem']) // eager load relationships
-                ->get();
+            // Admins can see all sales
+            if (in_array($user->user_level, [1, 4])) {
+                $sales = Sales::with(['store', 'customer', 'item', 'warehouseitem'])->get();
+            } else {
+                $sales = Sales::whereIn('store_id', $storeIds)
+                    ->with(['store', 'customer', 'item', 'warehouseitem'])
+                    ->get();
+            }
 
             return response()->json([
                 'message' => 'Sales Detail Fetch Successfully',
-                'status' => 1,
-                'total' => $sales->count(),
-                'data' => $sales
+                'status'  => 1,
+                'total'   => $sales->count(),
+                'stores'  => $storeIds,
+                'data'    => $sales,
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 0,
+                'status'  => 0,
                 'message' => 'Failed to retrieve Sales: ' . $e->getMessage(),
             ], 500);
         }
     }
+
 
     public function store(Request $request)
     {
