@@ -27,4 +27,16 @@ class SalesPayments extends Model
         'status',
         'created_by'
     ];
+    public function sale()
+    {
+        return $this->belongsTo(Sales::class, 'sale_id');
+    }
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }

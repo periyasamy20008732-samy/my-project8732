@@ -249,12 +249,17 @@ Route::middleware('auth:api')->group(function () {
   Route::delete('/purchasepayment-delete/{id}', [PurchasePaymentController::class, 'destroy']);
 
 
+
   //Purchasepayment CRUD
   Route::get('/expense-view', [ExpensesController::class, 'index']);
   Route::get('/expense-view/{id}', [ExpensesController::class, 'show']);
   Route::post('/expense-create', [ExpensesController::class, 'store']);
   Route::put('/expense-update/{id}', [ExpensesController::class, 'update']);
   Route::delete('/expense-delete/{id}', [ExpensesController::class, 'destroy']);
+
+
+  Route::post('/purchasepayment-out', [PurchasePaymentController::class, 'paymentOut']);
+  Route::get('/purchasepayment-out', [PurchasePaymentController::class, 'getPaymentOut']);
 
   //PurchasepaymentReturn  CRUD
   Route::get('/purchasepaymentreturn-view', [PurchasePaymentReturnController::class, 'index']);
@@ -298,6 +303,9 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/salespayment-create', [SalesPaymentsController::class, 'store']);
   Route::put('/salespayment-update/{id}', [SalesPaymentsController::class, 'update']);
   Route::delete('/salespayment-delete/{id}', [SalesPaymentsController::class, 'destroy']);
+  Route::get('/salespayment-in', [SalesPaymentsController::class, 'getPaymentIn']);
+  Route::post('/salespayment-in', [SalesPaymentsController::class, 'paymentIn']);
+
 
   //SalesPaymentReturn CRUD
   Route::get('/salespaymentreturn-view', [SalesPaymentsReturnController::class, 'index']);
