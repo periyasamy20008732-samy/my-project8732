@@ -12,16 +12,29 @@ use Illuminate\Support\Facades\Validator;
 class BrandController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
+            $storeId = $request->query('store_id');
 
-            if (in_array($user->user_level, [1, 4])) {
-                $brand = Brand::all();
+            // Determine effective store IDs
+            $storeIds = [];
+
+            if ($storeId) {
+                $storeIds = [trim($storeId)];
+            } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+                $storeIds = [trim($user->store_id)];
             } else {
-                $brand = Brand::where('store_id', $user->store_id)->get();
+                // fallback to stores owned by this user
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
             }
+
+            $brand = Brand::whereIn('store_id', $storeIds)->get();
 
             return response()->json([
                 'message' => 'Brand details fetched successfully',
