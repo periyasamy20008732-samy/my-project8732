@@ -57,9 +57,7 @@ use App\Http\Controllers\Api\storeReportController;
 use App\Http\Controllers\Api\SubscriptionPurchaseController;
 use App\Http\Controllers\Api\InvoiceSettingsController;
 use App\Http\Controllers\Api\SalesSettingsController;
-
-
-
+use App\Http\Controllers\Api\ExpensesController;
 
 
 Route::get('/settings-view/{id}', [SettingsController::class, 'settingshow']);
@@ -249,8 +247,20 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/purchasepayment-create', [PurchasePaymentController::class, 'store']);
   Route::put('/purchasepayment-update/{id}', [PurchasePaymentController::class, 'update']);
   Route::delete('/purchasepayment-delete/{id}', [PurchasePaymentController::class, 'destroy']);
+
+
+
+  //Purchasepayment CRUD
+  Route::get('/expense-view', [ExpensesController::class, 'index']);
+  Route::get('/expense-view/{id}', [ExpensesController::class, 'show']);
+  Route::post('/expense-create', [ExpensesController::class, 'store']);
+  Route::put('/expense-update/{id}', [ExpensesController::class, 'update']);
+  Route::delete('/expense-delete/{id}', [ExpensesController::class, 'destroy']);
+
+
   Route::post('/purchasepayment-out', [PurchasePaymentController::class, 'paymentOut']);
   Route::get('/purchasepayment-out', [PurchasePaymentController::class, 'getPaymentOut']);
+
   //PurchasepaymentReturn  CRUD
   Route::get('/purchasepaymentreturn-view', [PurchasePaymentReturnController::class, 'index']);
   Route::get('/purchasepaymentreturn-view/{id}', [PurchasePaymentReturnController::class, 'show']);
