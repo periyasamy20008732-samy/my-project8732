@@ -123,7 +123,6 @@ class UserController extends Controller
                 $result = null;
             }
             if ($result != null) {
-                //ok
 
                 $user = User::with(['userLevel'])->find($result->id);
 
@@ -457,14 +456,7 @@ class UserController extends Controller
                 'is_logged_in' => true,
                 'user_exists' => true,
                 'user_blocked' => false,
-                'user' => [
-                    'id' => $userData->id,
-                    'name' => $userData->name,
-                    'email' => $userData->email,
-                    'mobile' => $userData->mobile,
-                    'profile_image' => $userData->profile_image ?? '',
-                    'status' => $userData->status,
-                ],
+                'user' => $userData,
                 'settings' => [
                     'settings' => $settings,
                 ],
