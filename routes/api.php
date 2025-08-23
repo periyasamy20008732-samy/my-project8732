@@ -260,7 +260,6 @@ Route::middleware('auth:api')->group(function () {
 
   //Sales CRUD
   Route::get('/sales-view', [SalesController::class, 'index']);
-  Route::get('/sales-view/{id}', [SalesController::class, 'show']);
   Route::post('/sales-create', [SalesController::class, 'store']);
   Route::put('/sales-update/{id}', [SalesController::class, 'update']);
   Route::delete('/sales-delete/{id}', [SalesController::class, 'destroy']);

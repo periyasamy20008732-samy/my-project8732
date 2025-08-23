@@ -16,28 +16,52 @@ use Illuminate\Support\Facades\Log;
 class SalesController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         try {
             $user = auth()->user();
+            $storeId = $request->query('store_id');
 
-            if (in_array($user->user_level, [1, 4])) {
-                // Store admin sees all stores
-                $sales = Sales::all();
+            // Determine effective store IDs
+            $storeIds = [];
+
+            if ($storeId) {
+                $storeIds = [trim($storeId)];
+            } elseif (!empty($user->store_id) && $user->store_id != '0' && $user->store_id != 0) {
+                $storeIds = [trim($user->store_id)];
             } else {
-                // Other users see only their own stores
-                $sales = Sales::where('created_by', $user->id)->get();
+                // fallback to stores owned by this user
+                $storeIds = DB::table('store')
+                    ->where('user_id', $user->id)
+                    ->pluck('id')
+                    ->map(fn($id) => (string)$id)
+                    ->toArray();
             }
+
+            if (empty($storeIds)) {
+                return response()->json([
+                    'message' => 'No stores found for this user',
+                    'data' => [],
+                    'total' => 0,
+                    'status' => 0,
+                ], 200);
+            }
+
+            // Fetch sales for matching stores
+            $sales = Sales::whereIn('store_id', $storeIds)
+                ->with(['store', 'customer', 'item', 'warehouseitem']) // eager load relationships
+                ->get();
 
             return response()->json([
                 'message' => 'Sales Detail Fetch Successfully',
                 'status' => 1,
+                'total' => $sales->count(),
                 'data' => $sales
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
-                'message' => 'Failed to retrieve Sales: Unauthorozied or data not found',
+                'message' => 'Failed to retrieve Sales: ' . $e->getMessage(),
             ], 500);
         }
     }
