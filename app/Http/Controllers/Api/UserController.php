@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Settings;
+use App\Models\SubscriptionPurchase;
 use App\Models\InvoiceSettings;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -178,6 +179,9 @@ class UserController extends Controller
                     $token = null; // or generate token your way if needed
                 }
 
+                if ($user) {
+                    $usersubcription = SubscriptionPurchase::where('user_id', $user->id)->get();
+                }
                 return response()->json([
                     'status' => true,
                     'message' => 'User Login Successful.',
@@ -185,6 +189,9 @@ class UserController extends Controller
                     'token_type' => 'Bearer',
                     'expires_in' => 3600,
                     'data' => $user,
+                    'usersubcription' => [
+                        'usersubcription' => $usersubcription ? $usersubcription : 'Purchase Details Not Found',
+                    ],
                     'redirect_to' => '/homepage',
                     'is_existing_user' => true
                 ], 200);
@@ -296,7 +303,9 @@ class UserController extends Controller
                         'errors' => ['account' => ['User account is inactive']]
                     ], 403);
                 }
-
+                if ($user) {
+                    $usersubcription = SubscriptionPurchase::where('user_id', $user->id)->get();
+                }
                 // Generate login token
                 $token = $user->createToken('access_token')->accessToken;
 
@@ -307,6 +316,9 @@ class UserController extends Controller
                     'token_type' => 'Bearer',
                     'expires_in' => 3600, // 1 hour in seconds
                     'data' => $user,
+                    'usersubcription' => [
+                        'usersubcription' => $usersubcription ? $usersubcription : 'Purchase Details Not Found',
+                    ],
                     'redirect_to' => '/homepage',
                     'is_existing_user' => true
                 ], 200);
@@ -436,7 +448,6 @@ class UserController extends Controller
                     'status' => 403,
                 ], 403);
             }
-
             $settings = Settings::first();
 
             if ($settings && ($settings->maintenance_mode == 1 || $settings->app_maintenance_mode == 1)) {
@@ -449,7 +460,9 @@ class UserController extends Controller
                     'status' => 503,
                 ], 503);
             }
-
+            if ($user) {
+                $usersubcription = SubscriptionPurchase::where('user_id', $user->id)->get();
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'User is logged in.',
@@ -459,6 +472,9 @@ class UserController extends Controller
                 'user' => $userData,
                 'settings' => [
                     'settings' => $settings,
+                ],
+                'usersubcription' => [
+                    'usersubcription' => $usersubcription ? $usersubcription : 'Purchase Details Not Found',
                 ],
                 'status' => 200,
             ], 200);
