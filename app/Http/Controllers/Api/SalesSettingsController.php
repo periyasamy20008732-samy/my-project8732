@@ -72,7 +72,8 @@ class SalesSettingsController extends Controller
 
         return response()->json([
             'message' => 'SalesSettings updated successfully',
-            'data' => $salesettings
+            'data' => $salesettings,
+            'status' => 1
         ]);
     }
 }
