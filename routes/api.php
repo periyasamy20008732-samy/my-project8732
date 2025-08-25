@@ -19,7 +19,6 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\ItemController;
-use App\Http\Controllers\Api\ItemSerialNumberController;
 use App\Http\Controllers\Api\PurchaseController;
 use App\Http\Controllers\Api\PurchaseReturnController;
 use App\Http\Controllers\Api\PurchaseItemController;
@@ -204,11 +203,6 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/items-create', [ItemController::class, 'store']);
   Route::put('/items-update/{id}', [ItemController::class, 'update']);
   Route::delete('/items-delete/{id}', [ItemController::class, 'destroy']);
-
-  //ItemSerialNumberController CRUD 
-  Route::get('/items/serialnumber-view', [ItemSerialNumberController::class, 'index']);
-  Route::post('/items/serialnumber-create', [ItemSerialNumberController::class, 'store']);
-
 
   //Brand CRUD
   Route::get('/brand-view', [BrandController::class, 'index']);
