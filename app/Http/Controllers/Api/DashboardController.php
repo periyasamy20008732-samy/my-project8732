@@ -363,13 +363,23 @@ class DashboardController extends Controller
             $user = auth()->user();
 
             if (in_array($user->user_level, [1, 4])) {
-
                 $item = Item::all();
             } else {
 
-                //  $item = Item::all();
-                $item = Item::where('user_id', $user->id)->get();
-                $totalitem = $item->count();
+                $user_id = $user->id();
+
+
+
+
+
+
+
+
+                // $storeIds = Item::where('user_id', $user->id)->pluck('store_id');
+                // $totalitem = $storeIds->count();
+                // $category = Category::where('store_id', $storeIds->store_id);
+                // $totalcategory = $category->count();
+                //  $totalitem = $storeItems->count();
 
                 // $unit = Units::where('store_id', $item->store_id)->get();
                 // $categories = Category::where('store_id', $item->store_id)->get();
@@ -379,7 +389,9 @@ class DashboardController extends Controller
             return response()->json([
                 'message' => 'Detail Fetch Successfully',
                 'status' => 1,
-                'data' => $item,
+                'data' => $storeIds,
+                'category' => $category,
+                'totalcategory' => $totalcategory,
                 'totalitem' => $totalitem
 
 
@@ -388,6 +400,8 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => 0,
                 'message' => 'Failed to retrieve Sales: Unauthorozied or data not found',
+                'mdessage' => $e->getMessage(),
+
             ], 500);
         }
     }
