@@ -32,7 +32,7 @@ return new class extends Migration
             // Location
             $table->string('country')->nullable();
             $table->string('state')->nullable();
-  
+
             $table->string('city')->nullable();
             $table->string('address')->nullable();
             $table->integer('postcode')->nullable();
@@ -43,7 +43,7 @@ return new class extends Migration
             $table->integer('if_vat')->nullable();
             $table->string('vat_no')->nullable();
             $table->string('pan_no')->nullable();
-            
+
 
             // UPI & bank
             $table->string('upi_id')->nullable();
@@ -114,7 +114,7 @@ return new class extends Migration
             $table->text('sms_msg')->nullable();
 
             // Optional features
-            
+
             $table->boolean('if_cod')->default(false);
             $table->boolean('if_pickupatestore')->default(false);
             $table->boolean('if_fixeddelivery')->default(false);
@@ -134,7 +134,7 @@ return new class extends Migration
             $table->boolean('if_onesignal')->default(false);
             $table->string('onesignal_id')->nullable();
             $table->string('onesignal_key')->nullable();
-            
+
 
             // Subscription & account
             $table->unsignedBigInteger('current_subscription_id')->nullable();
