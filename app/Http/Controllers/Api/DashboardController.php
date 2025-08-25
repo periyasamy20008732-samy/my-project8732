@@ -279,9 +279,6 @@ class DashboardController extends Controller
         return ['value' => abs($change), 'type' => $change > 0 ? 'up' : ($change < 0 ? 'down' : 'no-change')];
     }
 
-
-
-
     public function search(Request $request)
     {
         try {
@@ -363,38 +360,52 @@ class DashboardController extends Controller
             $user = auth()->user();
 
             if (in_array($user->user_level, [1, 4])) {
-                $item = Item::all();
+                $store_item = Item::all();
+                $totalitem = $store_item->count();
+                $categories = Category::all();
+                $totalcategory = $categories->count();
+                $brands = Brand::all();
+                $totalbrand = $brands->count();
+                $units = Units::all();
+                $totalunit = $units->count();
             } else {
+                //user item based on user id   
+                $user_id = $user->id;
+                $store_item = Item::where('user_id', $user_id)->get();
+                $totalitem = $store_item->count();
 
-                $user_id = $user->id();
+                //user category based on store id   
+                $categories = collect();
+                foreach ($store_item as $item) {
+                    $cats = Category::where('store_id', $item->store_id)->get();
+                    $categories = $categories->merge($cats);
+                }
+                $totalcategory = $categories->count();
 
+                //user brands based on store id   
+                $brands = collect();
+                foreach ($store_item as $item) {
+                    $bra = Brand::where('store_id', $item->store_id)->get();
+                    $brands = $brands->merge($bra);
+                }
+                $totalbrand = $brands->count();
 
-
-
-
-
-
-
-                // $storeIds = Item::where('user_id', $user->id)->pluck('store_id');
-                // $totalitem = $storeIds->count();
-                // $category = Category::where('store_id', $storeIds->store_id);
-                // $totalcategory = $category->count();
-                //  $totalitem = $storeItems->count();
-
-                // $unit = Units::where('store_id', $item->store_id)->get();
-                // $categories = Category::where('store_id', $item->store_id)->get();
-                // $brand = Brand::where('store_id', $item->store_id)->get();
+                //total units
+                $units = Units::all();
+                $totalunit = $units->count();
             }
 
             return response()->json([
                 'message' => 'Detail Fetch Successfully',
                 'status' => 1,
-                'data' => $storeIds,
-                'category' => $category,
+                'store_item' => $store_item,
+                'totalitem' => $totalitem,
+                'category' => $categories,
                 'totalcategory' => $totalcategory,
-                'totalitem' => $totalitem
-
-
+                'brands' => $brands,
+                'totalbrands' => $totalbrand,
+                'unit' => $units,
+                'totalunit' => $totalunit
             ]);
         } catch (\Exception $e) {
             return response()->json([
